@@ -1,18 +1,42 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Amount } from "./Amount";
-import "./Credit.css";
+import "./Credit.less";
 import { Gross } from "./Gross";
 import { Period } from "./Period";
 import { Wibor } from "./Wibor";
-import { Line } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
 import { countIntallment, odsetki } from "../../Utils/Helpers";
 import { Options } from "./Options";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { rounder } from "../../Utils/Helpers";
-import { OverPayments } from "./Overpayments";
+import { Overpayments } from "./Overpayments";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement
+);
+
+export type OptionsObj = {
+  constRateOverpayment: boolean,
+  constRateOverpaymentValue: number,
+}
+
+export type OverpaymentObj = {
+  date: Date,
+  repeatPeriod?: string,
+  value: number
+}
 
 const Credit = () => {
   let today = new Date();
@@ -25,7 +49,7 @@ const Credit = () => {
 
   const [totalCost, setTotalCost] = useState(0);
 
-  const [installment, setInstallment] = useState(
+  const [installment, setInstallment] = useState<number[]>(
     Array(userInput.enteredPeriod).fill(1)
   );
 
@@ -35,12 +59,12 @@ const Credit = () => {
     )
   );
 
-  const [options, setOptions] = useState({
+  const [options, setOptions] = useState<OptionsObj>({
     constRateOverpayment: false,
     constRateOverpaymentValue: installment[0],
   });
 
-  const [overpayments, setOverpayments] = useState([]);
+  const [overpayments, setOverpayments] = useState<OverpaymentObj[]>([]);
 
   const overpaymentDates = useMemo(() => {
     let result = [];
@@ -54,7 +78,7 @@ const Credit = () => {
         if (overpayment.repeatPeriod === "month") {
           temp.setMonth(temp.getMonth() + 1);
         } else if (overpayment.repeatPeriod === "year") {
-          temp.setFullyear(temp.getFullYear() + 1);
+          temp.setFullYear(temp.getFullYear() + 1);
         }
       }
     }
@@ -135,7 +159,7 @@ const Credit = () => {
       <form>
         <Amount
           value={userInput.enteredAmount}
-          onAmountChange={(value) =>
+          onAmountChange={(value: number) =>
             setUserInput({
               ...userInput,
               enteredAmount: value,
@@ -144,7 +168,7 @@ const Credit = () => {
         />
         <Gross
           value={userInput.enteredBankGross}
-          onGrossChange={(value) =>
+          onGrossChange={(value: number) =>
             setUserInput({
               ...userInput,
               enteredBankGross: value,
@@ -153,7 +177,7 @@ const Credit = () => {
         />
         <Wibor
           value={userInput.enteredWibor}
-          onWiborChange={(value) =>
+          onWiborChange={(value: number) =>
             setUserInput({
               ...userInput,
               enteredWibor: value,
@@ -162,7 +186,7 @@ const Credit = () => {
         />
         <Period
           value={userInput.enteredPeriod}
-          onPeriodChange={(value) =>
+          onPeriodChange={(value: number) =>
             setUserInput({
               ...userInput,
               enteredPeriod: value,
@@ -184,10 +208,10 @@ const Credit = () => {
       </Container>
 
       <div>
-        <Line data={dataForChart} />
+        {<Line data={dataForChart} />}
       </div>
       <Options options={options} setOptionsHandler={setOptions} />
-      <OverPayments
+      <Overpayments
         overpayments={overpayments}
         overpaymentsHandler={setOverpayments}
       />

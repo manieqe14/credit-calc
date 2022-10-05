@@ -1,7 +1,8 @@
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { rounder } from "../../Utils/Helpers";
+import React from 'react';
 
-export const Period = ({ value, onPeriodChange }) => {
+export const Period = ({ value, onPeriodChange } : { value: number, onPeriodChange: (value: number) => void}) => {
   return (
     <div>
       <label>Okres kredytowania</label>

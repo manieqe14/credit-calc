@@ -1,6 +1,7 @@
 import { BiPlus, BiMinus } from "react-icons/bi";
+import React from 'react';
 
-export const Amount = ({ value, onAmountChange }) => {
+export const Amount = ({ value, onAmountChange } : {value: number, onAmountChange: (value: number) => void}) => {
   return (
     <div>
       <label>Kwota</label>

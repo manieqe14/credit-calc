@@ -3,6 +3,7 @@ import "./App.css";
 import Credit from "./components/Credit/Credit";
 import Card from "./components/UI/Card";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React from 'react';
 
 function App() {
   const [showCredit, setShowCredit] = useState(false);

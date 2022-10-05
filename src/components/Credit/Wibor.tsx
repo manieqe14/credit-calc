@@ -1,7 +1,8 @@
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { rounder } from "../../Utils/Helpers";
+import React from 'react';
 
-export const Wibor = ({ value, onWiborChange }) => {
+export const Wibor = ({ value, onWiborChange } : {value: number, onWiborChange: (value: number) => void}) => {
   return (
     <div>
       <label>WIBOR</label>

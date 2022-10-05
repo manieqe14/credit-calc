@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {ChangeEvent, useState} from "react";
 import {
   Container,
   ListGroup,
@@ -9,26 +9,30 @@ import {
   Badge,
 } from "react-bootstrap";
 import { zeroPad } from "../../Utils/Helpers";
+import React from 'react';
+import {OverpaymentObj} from "./Credit";
 
-export const OverPayments = ({ overpayments, overpaymentsHandler }) => {
+export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpayments: OverpaymentObj[], overpaymentsHandler: (value: OverpaymentObj[]) => void}) => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
   const [repeatPeriod, setRepeatPeriod] = useState("month");
 
-  const setDateHandler = (event) => {
+  const setDateHandler = (event: ChangeEvent<HTMLInputElement>) => {
     let newDate = new Date();
-    let results = event.target.value.match(
+    let results = event.target?.value.match(
       /(?<year>\d{4})-(?<month>\d+)-(?<date>\d+)/
     );
-    newDate.setDate(results.groups.date);
-    newDate.setMonth(results.groups.month);
-    newDate.setFullYear(results.groups.year);
-    setDate(newDate);
+    if(results !== null && results.groups !== undefined){
+      newDate.setDate(parseInt(results.groups.date));
+      newDate.setMonth(parseInt(results.groups.month));
+      newDate.setFullYear(parseInt(results.groups.year));
+      setDate(newDate);
+    }
   };
 
   const addItem = () => {
-    let newValue = { date, value };
+    let newValue: OverpaymentObj = { date, value };
     if (repeat) {
       newValue = { ...newValue, repeatPeriod };
     }
@@ -79,7 +83,7 @@ export const OverPayments = ({ overpayments, overpaymentsHandler }) => {
                 <option value="year">year</option>
               </Form.Select>
             </Form.Group>
-            <Button background="primary" onClick={addItem}>
+            <Button onClick={addItem}>
               Add
             </Button>
           </Form>

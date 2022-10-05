@@ -1,7 +1,8 @@
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { rounder } from "../../Utils/Helpers";
+import React from 'react';
 
-export const Gross = ({ value, onGrossChange }) => {
+export const Gross = ({ value, onGrossChange } : { value: number, onGrossChange: (value: number) => void}) => {
   return (
     <div>
       <label>Marża banku</label>
