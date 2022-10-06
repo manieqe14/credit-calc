@@ -1,17 +1,21 @@
-form {
+form, .calc-table {
   display: flex;
   flex-direction: column;
 
   label {
-    text-align: right;
+    text-align: center;
     width: 40%;
-    margin: 10px;
+    margin: .25rem;
   }
 
   div {
-    margin: 10px;
+    margin: .25rem;
     display: flex;
     align-items: center;
+  }
+
+  & > div:not(:last-child) {
+    border-bottom: 1px solid rgba(0.1, 0.1, 0.1, 10%);
   }
 }
 
@@ -48,8 +52,4 @@ input[type="number"] {
   & > div, & > input, & > button {
     margin: 1rem;
   }
-}
-
-.subtitle {
-
 }

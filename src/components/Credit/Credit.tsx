@@ -12,8 +12,6 @@ import { Period } from './Period';
 import { Wibor } from './Wibor';
 import { countIntallment, odsetki, rounder } from '../../Utils/Helpers';
 import { Options } from './Options';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 import { Overpayments } from './Overpayments';
 import {
@@ -196,16 +194,16 @@ const Credit = (): ReactElement => {
           />
         </form>
         <div className="card-sm h-fit">
-          <Row>
-            <Col>Sumaryczne oprocentowanie</Col>
-            <Col>
+          <div className="flex-container w-equal-2">
+            <span>Sumaryczne oprocentowanie</span>
+            <span>
               {rounder(userInput.enteredWibor + userInput.enteredBankGross)} %
-            </Col>
-          </Row>
-          <Row>
-            <Col>Total cost</Col>
-            <Col>{rounder(totalCost)} PLN</Col>
-          </Row>
+            </span>
+          </div>
+          <div className="flex-container w-equal-2">
+            <span>Total cost</span>
+            <span>{rounder(totalCost)} PLN</span>
+          </div>
         </div>
       </div>
 

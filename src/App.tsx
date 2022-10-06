@@ -14,7 +14,7 @@ function App(): ReactElement {
   return (
     <div className="App">
       <Card>
-        <h2 onClick={showModule}>Kalkulator rat kredytu</h2>
+        <h1 onClick={showModule}>Kalkulator rat kredytu</h1>
         <Credit />
       </Card>
       {/* <Card>
@@ -24,4 +24,4 @@ function App(): ReactElement {
   );
 }
 
-export default App
+export default App;
