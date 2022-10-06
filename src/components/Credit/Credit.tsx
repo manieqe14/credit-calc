@@ -1,45 +1,45 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Amount } from "./Amount";
-import "./Credit.less";
-import { Gross } from "./Gross";
-import { Period } from "./Period";
-import { Wibor } from "./Wibor";
-import { countIntallment, odsetki } from "../../Utils/Helpers";
-import { Options } from "./Options";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { rounder } from "../../Utils/Helpers";
-import { Overpayments } from "./Overpayments";
+import React, {
+  ReactElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Amount } from './Amount';
+import './Credit.less';
+import { Gross } from './Gross';
+import { Period } from './Period';
+import { Wibor } from './Wibor';
+import { countIntallment, odsetki, rounder } from '../../Utils/Helpers';
+import { Options } from './Options';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+import { Overpayments } from './Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement
+  LineElement,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
-export type OptionsObj = {
-  constRateOverpayment: boolean,
-  constRateOverpaymentValue: number,
+export interface OptionsObj {
+  constRateOverpayment: boolean;
+  constRateOverpaymentValue: number;
 }
 
-export type OverpaymentObj = {
-  date: Date,
-  repeatPeriod?: string,
-  value: number
+export interface OverpaymentObj {
+  date: Date;
+  repeatPeriod?: string;
+  value: number;
 }
 
-const Credit = () => {
-  let today = new Date();
+const Credit = (): ReactElement => {
+  const today = new Date();
   const [userInput, setUserInput] = useState({
     enteredAmount: 300000,
     enteredWibor: 6.5,
@@ -50,12 +50,12 @@ const Credit = () => {
   const [totalCost, setTotalCost] = useState(0);
 
   const [installment, setInstallment] = useState<number[]>(
-    Array(userInput.enteredPeriod).fill(1)
+    Array(userInput.enteredPeriod).fill(0)
   );
 
   const dates = useRef(
     Array.from(Array(userInput.enteredPeriod).keys()).map(
-      (index) => new Date(today.setMonth(today.getMonth() + 1))
+      () => new Date(today.setMonth(today.getMonth() + 1))
     )
   );
 
@@ -66,41 +66,41 @@ const Credit = () => {
 
   const [overpayments, setOverpayments] = useState<OverpaymentObj[]>([]);
 
-  const overpaymentDates = useMemo(() => {
-    let result = [];
-    for (const overpayment of overpayments) {
-      let temp = overpayment.date;
-      while (
-        overpayment.repeatPeriod &&
-        temp.getTime() < dates.current[dates.current.length - 1].getTime()
-      ) {
-        result.push({ date: temp, value: overpayment.value });
-        if (overpayment.repeatPeriod === "month") {
-          temp.setMonth(temp.getMonth() + 1);
-        } else if (overpayment.repeatPeriod === "year") {
-          temp.setFullYear(temp.getFullYear() + 1);
-        }
-      }
-    }
-    console.log("result", result);
-    return result;
-  }, [overpayments]);
+  /* const overpaymentDates = useMemo(() => {
+                  const result = []
+                  for (const overpayment of overpayments) {
+                    const temp = overpayment.date
+                    while (
+                      overpayment.repeatPeriod &&
+                      temp.getTime() < dates.current[dates.current.length - 1].getTime()
+                    ) {
+                      result.push({ date: temp, value: overpayment.value })
+                      if (overpayment.repeatPeriod === 'month') {
+                        temp.setMonth(temp.getMonth() + 1)
+                      } else if (overpayment.repeatPeriod === 'year') {
+                        temp.setFullYear(temp.getFullYear() + 1)
+                      }
+                    }
+                  }
+                  console.log('result', result)
+                  return result
+                }, [overpayments]) */
 
   const dataForChart = useMemo(() => {
-    let temp = {
+    const temp = {
       labels: dates.current
         .map((date) => `${date.getMonth() + 1}.${date.getFullYear()}`)
         .slice(0, installment.filter((installment) => installment > 0).length),
       datasets: [
         {
-          label: "Installment rate",
+          label: 'Installment rate',
           data: installment.filter((installment) => installment > 0),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
       ],
     };
-    let labelForOverPayment = "Kwota płacona";
+    const labelForOverPayment = 'Kwota płacona';
 
     if (options.constRateOverpayment) {
       temp.datasets.push({
@@ -111,8 +111,8 @@ const Credit = () => {
             0,
             installment.filter((installment) => installment > 0).length
           ),
-        borderColor: "rgb(0, 0, 25)",
-        backgroundColor: "rgb(0, 0, 25)",
+        borderColor: 'rgb(0, 0, 25)',
+        backgroundColor: 'rgb(0, 0, 25)',
       });
     }
     return temp;
@@ -120,11 +120,11 @@ const Credit = () => {
 
   useEffect(() => {
     let amountLeft = userInput.enteredAmount;
-    let totalCostLocal = 0;
+    // const totalCostLocal = 0
     setInstallment(
-      installment.map((current, index) => {
+      installment.map((_current, index) => {
         if (amountLeft > 0) {
-          let rata = countIntallment({
+          const rata = countIntallment({
             ...userInput,
             enteredAmount: amountLeft,
             enteredPeriod: userInput.enteredPeriod - index,
@@ -156,60 +156,60 @@ const Credit = () => {
 
   return (
     <div>
-      <form>
-        <Amount
-          value={userInput.enteredAmount}
-          onAmountChange={(value: number) =>
-            setUserInput({
-              ...userInput,
-              enteredAmount: value,
-            })
-          }
-        />
-        <Gross
-          value={userInput.enteredBankGross}
-          onGrossChange={(value: number) =>
-            setUserInput({
-              ...userInput,
-              enteredBankGross: value,
-            })
-          }
-        />
-        <Wibor
-          value={userInput.enteredWibor}
-          onWiborChange={(value: number) =>
-            setUserInput({
-              ...userInput,
-              enteredWibor: value,
-            })
-          }
-        />
-        <Period
-          value={userInput.enteredPeriod}
-          onPeriodChange={(value: number) =>
-            setUserInput({
-              ...userInput,
-              enteredPeriod: value,
-            })
-          }
-        />
-      </form>
-      <Container>
-        <Row>
-          <Col>Sumaryczne oprocentowanie</Col>
-          <Col>
-            {rounder(userInput.enteredWibor + userInput.enteredBankGross)} %
-          </Col>
-        </Row>
-        <Row>
-          <Col>Total cost</Col>
-          <Col>{rounder(totalCost)} PLN</Col>
-        </Row>
-      </Container>
-
-      <div>
-        {<Line data={dataForChart} />}
+      <div className="flex-container">
+        <form className="card-sm">
+          <Amount
+            value={userInput.enteredAmount}
+            onAmountChange={(value: number) =>
+              setUserInput({
+                ...userInput,
+                enteredAmount: value,
+              })
+            }
+          />
+          <Gross
+            value={userInput.enteredBankGross}
+            onGrossChange={(value: number) =>
+              setUserInput({
+                ...userInput,
+                enteredBankGross: value,
+              })
+            }
+          />
+          <Wibor
+            value={userInput.enteredWibor}
+            onWiborChange={(value: number) =>
+              setUserInput({
+                ...userInput,
+                enteredWibor: value,
+              })
+            }
+          />
+          <Period
+            value={userInput.enteredPeriod}
+            onPeriodChange={(value: number) =>
+              setUserInput({
+                ...userInput,
+                enteredPeriod: value,
+              })
+            }
+          />
+        </form>
+        <div className="card-sm h-fit">
+          <Row>
+            <Col>Sumaryczne oprocentowanie</Col>
+            <Col>
+              {rounder(userInput.enteredWibor + userInput.enteredBankGross)} %
+            </Col>
+          </Row>
+          <Row>
+            <Col>Total cost</Col>
+            <Col>{rounder(totalCost)} PLN</Col>
+          </Row>
+        </div>
       </div>
+
+      <div>{<Line data={dataForChart} />}</div>
       <Options options={options} setOptionsHandler={setOptions} />
       <Overpayments
         overpayments={overpayments}

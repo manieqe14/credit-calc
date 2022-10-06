@@ -1,14 +1,13 @@
-import { useState } from "react";
-import "./App.css";
-import Credit from "./components/Credit/Credit";
-import Card from "./components/UI/Card";
-import "bootstrap/dist/css/bootstrap.min.css";
-import React from 'react';
+import React, { ReactElement, useState } from 'react';
+import './App.less';
+import Credit from './components/Credit/Credit';
+import Card from './components/UI/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+function App(): ReactElement {
   const [showCredit, setShowCredit] = useState(false);
 
-  const showModule = () => {
+  const showModule = (): void => {
     showCredit ? setShowCredit(false) : setShowCredit(true);
   };
 
@@ -25,4 +24,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

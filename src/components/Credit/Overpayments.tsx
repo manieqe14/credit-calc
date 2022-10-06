@@ -1,29 +1,26 @@
-import {ChangeEvent, useState} from "react";
-import {
-  Container,
-  ListGroup,
-  Button,
-  Form,
-  Col,
-  Row,
-  Badge,
-} from "react-bootstrap";
-import { zeroPad } from "../../Utils/Helpers";
-import React from 'react';
-import {OverpaymentObj} from "./Credit";
+import React, { ChangeEvent, ReactElement, useState } from 'react';
+import { ListGroup, Button, Form, Col, Row, Badge } from 'react-bootstrap';
+import { zeroPad } from '../../Utils/Helpers';
+import { OverpaymentObj } from './Credit';
 
-export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpayments: OverpaymentObj[], overpaymentsHandler: (value: OverpaymentObj[]) => void}) => {
+export const Overpayments = ({
+  overpayments,
+  overpaymentsHandler,
+}: {
+  overpayments: OverpaymentObj[];
+  overpaymentsHandler: (value: OverpaymentObj[]) => void;
+}): ReactElement => {
   const [value, setValue] = useState(0);
   const [date, setDate] = useState(new Date());
   const [repeat, setRepeat] = useState(false);
-  const [repeatPeriod, setRepeatPeriod] = useState("month");
+  const [repeatPeriod, setRepeatPeriod] = useState('month');
 
-  const setDateHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    let newDate = new Date();
-    let results = event.target?.value.match(
+  const setDateHandler = (event: ChangeEvent<HTMLInputElement>): void => {
+    const newDate = new Date();
+    const results = event.target?.value.match(
       /(?<year>\d{4})-(?<month>\d+)-(?<date>\d+)/
     );
-    if(results !== null && results.groups !== undefined){
+    if (results?.groups !== undefined) {
       newDate.setDate(parseInt(results.groups.date));
       newDate.setMonth(parseInt(results.groups.month));
       newDate.setFullYear(parseInt(results.groups.year));
@@ -31,7 +28,7 @@ export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpaymen
     }
   };
 
-  const addItem = () => {
+  const addItem = (): void => {
     let newValue: OverpaymentObj = { date, value };
     if (repeat) {
       newValue = { ...newValue, repeatPeriod };
@@ -40,14 +37,14 @@ export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpaymen
     setValue(0);
   };
 
-  const repeatPeriodHandler = () => {
+  const repeatPeriodHandler = (): void => {
     setRepeat(!repeat);
   };
 
   return (
-    <Container>
+    <div className="card-sm">
       <Row>
-        <h4>Overpayments</h4>
+        <h3>Overpayments</h3>
       </Row>
       <Row>
         <Col>
@@ -83,9 +80,7 @@ export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpaymen
                 <option value="year">year</option>
               </Form.Select>
             </Form.Group>
-            <Button onClick={addItem}>
-              Add
-            </Button>
+            <Button onClick={addItem}>Add</Button>
           </Form>
         </Col>
         <Col>
@@ -102,6 +97,6 @@ export const Overpayments = ({ overpayments, overpaymentsHandler } : {overpaymen
           </ListGroup>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 };
