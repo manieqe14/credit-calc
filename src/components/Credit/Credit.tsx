@@ -36,6 +36,7 @@ export interface UserInput {
   name: string;
   value: number;
   unit: string;
+  step: number;
 }
 
 export interface UserInputs {
@@ -50,21 +51,25 @@ const userInputs: UserInputs = {
     name: 'Wartość kredytu',
     value: 300000,
     unit: 'zł',
+    step: 1000,
   },
   wibor: {
     name: 'WIBOR',
     value: 6.5,
     unit: '%',
+    step: 0.1,
   },
   bankgross: {
     name: 'Marża banku',
     value: 2.13,
     unit: '%',
+    step: 0.1,
   },
   period: {
     name: 'Okres kreytowania',
     value: 25 * 12,
     unit: 'miesięcy',
+    step: 1,
   },
 };
 
@@ -143,15 +148,12 @@ const Credit = (): ReactElement => {
     return temp;
   }, [installment, dates, options]);
 
-  const handleUserClick = (key: string, value: UserInput): void => {
-    setUserInput((prev) => {
-      const user: UserInput = prev[key];
-      user.value = value.value;
-      console.info('Input', user);
-
-      return { ...prev, [key]: user };
-    });
-    // setUserInput({ ...userInput, [key]: value });
+  const handleUserClick = (key: string, value: number): void => {
+    type keyType = keyof typeof userInput;
+    const userKey = key as keyType;
+    const newInput = userInput[userKey];
+    newInput.value = value;
+    setUserInput({ ...userInput, [userKey]: newInput });
   };
 
   useEffect(() => {
@@ -198,10 +200,7 @@ const Credit = (): ReactElement => {
               <Option
                 key={input[0]}
                 userInput={input[1]}
-                step={0.1}
-                onChange={(value: UserInput) =>
-                  handleUserClick(input[0], value)
-                }
+                onChange={(value: number) => handleUserClick(input[0], value)}
               />
             );
           })}

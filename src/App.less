@@ -45,10 +45,15 @@ input[type="number"] {
 .flex-container {
   display: flex;
 
-  &.w-equal-3 > * {
-    flex: 1;
-    width: 33%;
+  &.w-equal-3 > *:first-child {
+    width: 25%;
   }
+
+  &.w-equal-3 > *:nth-child(2) {
+    flex: 1;
+    min-width: 150px;
+  }
+
 
   &.w-equal-2 > * {
     flex: 1;
@@ -58,4 +63,8 @@ input[type="number"] {
 
 .h-fit {
   height: fit-content;
+}
+
+.clickable {
+  cursor: pointer;
 }
