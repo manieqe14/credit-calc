@@ -1,19 +1,36 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { ListGroup, Button, Form, Col, Row, Badge } from 'react-bootstrap';
 import { zeroPad } from '../../Utils/Helpers';
-import { OverpaymentObj } from './Credit';
+
+export interface OverpaymentDate {
+  date: Date;
+  value: number;
+}
+
+export interface Overpayment extends OverpaymentDate {
+  repeatPeriod?: Period | undefined;
+}
+
+enum Period {
+  MONTH = 'month',
+  QUARTER = 'quarter',
+  YEAR = 'year',
+}
 
 export const Overpayments = ({
-  overpayments,
-  overpaymentsHandler,
+  enddate,
+  overpaymentDatesHandler,
 }: {
-  overpayments: OverpaymentObj[];
-  overpaymentsHandler: (value: OverpaymentObj[]) => void;
+  enddate: Date;
+  overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
-  const [value, setValue] = useState(0);
-  const [date, setDate] = useState(new Date());
+  const [overpayment, setOverpayment] = useState<Overpayment>({
+    value: 0,
+    date: new Date(),
+    repeatPeriod: Period.MONTH,
+  });
   const [repeat, setRepeat] = useState(false);
-  const [repeatPeriod, setRepeatPeriod] = useState('month');
+  const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
 
   const setDateHandler = (event: ChangeEvent<HTMLInputElement>): void => {
     const newDate = new Date();
@@ -22,24 +39,61 @@ export const Overpayments = ({
     );
     if (results?.groups !== undefined) {
       newDate.setDate(parseInt(results.groups.date));
-      newDate.setMonth(parseInt(results.groups.month));
+      newDate.setMonth(parseInt(results.groups.month) - 1);
       newDate.setFullYear(parseInt(results.groups.year));
-      setDate(newDate);
+      setOverpayment((prev) => {
+        return { ...prev, date: newDate };
+      });
     }
   };
 
   const addItem = (): void => {
-    let newValue: OverpaymentObj = { date, value };
-    if (repeat) {
-      newValue = { ...newValue, repeatPeriod };
+    if (overpayment.date.getTime() > enddate.getTime()) {
+      alert('Date cannot be after last installment date!');
+      return;
     }
-    overpaymentsHandler([...overpayments, newValue]);
-    setValue(0);
+
+    const newOverpayment = repeat
+      ? overpayment
+      : { ...overpayment, repeatPeriod: undefined };
+
+    setOverpayments([...overpayments, newOverpayment]);
   };
 
-  const repeatPeriodHandler = (): void => {
-    setRepeat(!repeat);
-  };
+  useEffect(() => {
+    const result: OverpaymentDate[] = [];
+    for (const overpaymentObj of overpayments) {
+      if (overpaymentObj.repeatPeriod) {
+        let loopDate = new Date(overpaymentObj.date);
+        while (loopDate.getTime() < enddate.getTime()) {
+          result.push({
+            date: new Date(loopDate),
+            value: overpaymentObj.value,
+          });
+          switch (overpaymentObj.repeatPeriod) {
+            case Period.MONTH:
+              loopDate.setMonth(loopDate.getMonth() + 1);
+              break;
+            case Period.QUARTER:
+              loopDate.setMonth(loopDate.getMonth() + 3);
+              break;
+            case Period.YEAR:
+              loopDate.setFullYear(loopDate.getFullYear() + 1);
+              break;
+            default:
+              loopDate.setFullYear(loopDate.getFullYear() + 1);
+              break;
+          }
+        }
+      } else {
+        result.push({ date: overpaymentObj.date, value: overpaymentObj.value });
+      }
+    }
+
+    overpaymentDatesHandler(
+      result.sort((date1, date2) => date1.date.getTime() - date2.date.getTime())
+    );
+  }, [overpayments]);
 
   return (
     <div className="card-sm">
@@ -54,9 +108,9 @@ export const Overpayments = ({
               <Form.Control
                 id="overpayment-date"
                 type="date"
-                value={`${date.getFullYear()}-${zeroPad(
-                  date.getMonth() + 1
-                )}-${zeroPad(date.getDate())}`}
+                value={`${overpayment.date.getFullYear()}-${zeroPad(
+                  overpayment.date.getMonth() + 1
+                )}-${zeroPad(overpayment.date.getDate())}`}
                 onChange={setDateHandler}
               />
             </Form.Group>
@@ -64,29 +118,52 @@ export const Overpayments = ({
               <Form.Label>Value</Form.Label>
               <Form.Control
                 type="number"
-                value={value}
-                onChange={(event) => setValue(parseFloat(event.target.value))}
+                value={overpayment.value}
+                onChange={(event) =>
+                  setOverpayment({
+                    ...overpayment,
+                    value: parseFloat(event.target.value),
+                  })
+                }
               />
             </Form.Group>
             <Form.Group>
-              <Form.Check checked={repeat} onChange={repeatPeriodHandler} />
+              <Form.Check
+                checked={repeat}
+                onChange={() => setRepeat(!repeat)}
+              />
               <Form.Select
                 aria-label="Repeating period"
-                onChange={(event) => setRepeatPeriod(event.target.value)}
+                onChange={(event) =>
+                  setOverpayment({
+                    ...overpayment,
+                    repeatPeriod: event.target.value as Period,
+                  })
+                }
                 disabled={!repeat}
               >
-                <option value="month">month</option>
-                <option value="quarter">quarter</option>
-                <option value="year">year</option>
+                {Object.entries(Period).map((element) => (
+                  <option value={element[0]}>{element[0]}</option>
+                ))}
               </Form.Select>
             </Form.Group>
-            <Button onClick={addItem}>Add</Button>
+            <Button
+              disabled={!overpayment.value || overpayment.value === 0}
+              onClick={addItem}
+            >
+              Add
+            </Button>
           </Form>
         </Col>
         <Col>
           <ListGroup>
             {overpayments.map((item, index) => (
-              <ListGroup.Item key={index}>
+              <ListGroup.Item
+                key={index}
+                onClick={() => {
+                  setOverpayments(overpayments.splice(index, 1));
+                }}
+              >
                 <Badge bg="secondary">{`${item.date.getDate()}-${
                   item.date.getMonth() + 1
                 }-${item.date.getFullYear()}`}</Badge>

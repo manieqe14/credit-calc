@@ -1,15 +1,14 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
 import './Credit.less';
-import { countIntallment, odsetki, rounder } from '../../Utils/Helpers';
+import {
+  countGross,
+  countIntallment,
+  odsetki,
+  rounder,
+} from '../../Utils/Helpers';
 import { Options } from './Options';
 import { Option } from './Option';
-import { Overpayments } from './Overpayments';
+import { Overpayment, OverpaymentDate, Overpayments } from './Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,12 +25,6 @@ export interface OptionsObj {
   constRateOverpaymentValue: number;
 }
 
-export interface OverpaymentObj {
-  date: Date;
-  repeatPeriod?: string;
-  value: number;
-}
-
 export interface UserInput {
   name: string;
   value: number;
@@ -45,6 +38,11 @@ export interface UserInputs {
   bankgross: UserInput;
   period: UserInput;
 }
+
+type Installment = {
+  date: Date;
+  value: number;
+};
 
 const userInputs: UserInputs = {
   amount: {
@@ -75,56 +73,58 @@ const userInputs: UserInputs = {
 
 const Credit = (): ReactElement => {
   const today = new Date();
+
   const [userInput, setUserInput] = useState<UserInputs>(userInputs);
+
+  const dates = useMemo<Date[]>(() => {
+    return Array.from(Array(userInput.period.value).keys()).map(
+      () => new Date(today.setMonth(today.getMonth() + 1))
+    );
+  }, [userInput.period]);
 
   const [totalCost, setTotalCost] = useState(0);
 
-  const [installment, setInstallment] = useState<number[]>(
-    Array(userInput.period.value).fill(0)
-  );
-
-  const dates = useRef(
-    Array.from(Array(userInput.period.value).keys()).map(
-      () => new Date(today.setMonth(today.getMonth() + 1))
-    )
+  const [installment, setInstallment] = useState<Installment[]>(
+    Array(userInput.period.value)
+      .fill(
+        countIntallment(
+          userInput.amount.value,
+          countGross(userInput),
+          userInput.period.value
+        )
+      )
+      .map(
+        (obj, index) =>
+          ({
+            date: dates[index],
+            value: obj,
+          } as Installment)
+      )
   );
 
   const [options, setOptions] = useState<OptionsObj>({
     constRateOverpayment: false,
-    constRateOverpaymentValue: installment[0],
+    constRateOverpaymentValue: installment[0].value,
   });
 
-  const [overpayments, setOverpayments] = useState<OverpaymentObj[]>([]);
-
-  /* const overpaymentDates = useMemo(() => {
-                  const result = []
-                  for (const overpayment of overpayments) {
-                    const temp = overpayment.date
-                    while (
-                      overpayment.repeatPeriod &&
-                      temp.getTime() < dates.current[dates.current.length - 1].getTime()
-                    ) {
-                      result.push({ date: temp, value: overpayment.value })
-                      if (overpayment.repeatPeriod === 'month') {
-                        temp.setMonth(temp.getMonth() + 1)
-                      } else if (overpayment.repeatPeriod === 'year') {
-                        temp.setFullYear(temp.getFullYear() + 1)
-                      }
-                    }
-                  }
-                  console.log('result', result)
-                  return result
-                }, [overpayments]) */
+  const [overpaymentDates, setOverpaymentDates] = useState<OverpaymentDate[]>(
+    []
+  );
 
   const dataForChart = useMemo(() => {
     const temp = {
-      labels: dates.current
-        .map((date) => `${date.getMonth() + 1}.${date.getFullYear()}`)
-        .slice(0, installment.filter((installment) => installment > 0).length),
+      labels: installment
+        .slice(
+          0,
+          installment.filter((installment) => installment.value > 0).length
+        )
+        .map((obj) => `${obj.date.getMonth() + 1}.${obj.date.getFullYear()}`),
       datasets: [
         {
           label: 'Installment rate',
-          data: installment.filter((installment) => installment > 0),
+          data: installment
+            .filter((installment) => installment.value > 0)
+            .map((obj) => obj.value),
           borderColor: 'rgb(255, 99, 132)',
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
@@ -139,7 +139,7 @@ const Credit = (): ReactElement => {
           .fill(options.constRateOverpaymentValue)
           .slice(
             0,
-            installment.filter((installment) => installment > 0).length
+            installment.filter((installment) => installment.value > 0).length
           ),
         borderColor: 'rgb(0, 0, 25)',
         backgroundColor: 'rgb(0, 0, 25)',
@@ -158,14 +158,16 @@ const Credit = (): ReactElement => {
 
   useEffect(() => {
     let amountLeft: number = userInput.amount.value;
+    let overpaymentsLeft = overpaymentDates;
     setInstallment(
-      installment.map((_current, _index) => {
+      installment.map((current, _index) => {
         if (amountLeft > 0) {
           const rata = countIntallment(
-            userInputs.amount.value,
+            amountLeft,
             userInputs.wibor.value + userInputs.bankgross.value,
             userInputs.period.value
           );
+
           amountLeft =
             amountLeft -
             rata +
@@ -173,23 +175,35 @@ const Credit = (): ReactElement => {
               amountLeft,
               userInput.bankgross.value + userInput.wibor.value
             );
+
+          while (
+            overpaymentsLeft.length &&
+            overpaymentsLeft[0].date < current.date
+          ) {
+            amountLeft = amountLeft - overpaymentsLeft[0].value;
+            overpaymentsLeft = overpaymentsLeft.slice(
+              1,
+              overpaymentsLeft.length
+            );
+          }
+
           if (options.constRateOverpayment) {
             amountLeft = amountLeft - options.constRateOverpaymentValue + rata;
           }
 
-          return rata;
-        } else return 0;
+          return { date: current.date, value: rata };
+        } else return { date: current.date, value: 0 };
       })
     );
     if (options.constRateOverpayment) {
       setTotalCost(
-        installment.filter((inst) => inst > 0).length *
+        installment.filter((inst) => inst.value > 0).length *
           options.constRateOverpaymentValue
       );
     } else {
-      setTotalCost(installment.reduce((partial, element) => partial + element));
+      setTotalCost(installment.length * installment[0].value);
     }
-  }, [userInput, options]);
+  }, [userInput, options, overpaymentDates]);
 
   return (
     <div>
@@ -222,8 +236,8 @@ const Credit = (): ReactElement => {
       <div>{<Line data={dataForChart} />}</div>
       <Options options={options} setOptionsHandler={setOptions} />
       <Overpayments
-        overpayments={overpayments}
-        overpaymentsHandler={setOverpayments}
+        enddate={dates.at(-1) ?? new Date()}
+        overpaymentDatesHandler={setOverpaymentDates}
       />
     </div>
   );
