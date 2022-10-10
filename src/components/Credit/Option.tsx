@@ -1,0 +1,37 @@
+import { BiPlus, BiMinus } from 'react-icons/bi';
+import { rounder } from '../../Utils/Helpers';
+import React, { ReactElement } from 'react';
+import { UserInput } from './Credit';
+
+export interface OptionConfig {
+  userInput: UserInput;
+  onChange: (value: number) => void;
+}
+
+export const Option = ({ userInput, onChange }: OptionConfig): ReactElement => {
+  return (
+    <div className="flex-container w-equal-3">
+      <label>{userInput.name}</label>
+      <div>
+        <span className="clickable">
+          <BiMinus
+            onClick={() => onChange(rounder(userInput.value - userInput.step))}
+          />
+        </span>
+        <input
+          type="number"
+          min="0"
+          step={userInput.step}
+          value={userInput.value}
+          onChange={(event) => onChange(parseFloat(event.target.value))}
+        />
+        <span className="clickable">
+          <BiPlus
+            onClick={() => onChange(rounder(userInput.value + userInput.step))}
+          />
+        </span>
+      </div>
+      <span>{userInput.unit}</span>
+    </div>
+  );
+};
