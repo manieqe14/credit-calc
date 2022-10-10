@@ -1,0 +1,16 @@
+version: 1.0
+
+services:
+
+  credit-calc:
+    container_name: credit-calc-react
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 80:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=tru

@@ -8,17 +8,24 @@ import {
 } from '../../Utils/Helpers';
 import { Options } from './Options';
 import { Option } from './Option';
-import { Overpayment, OverpaymentDate, Overpayments } from './Overpayments';
+import { OverpaymentDate, Overpayments } from './Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  Tooltip,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip
+);
 
 export interface OptionsObj {
   constRateOverpayment: boolean;
@@ -39,10 +46,10 @@ export interface UserInputs {
   period: UserInput;
 }
 
-type Installment = {
+interface Installment {
   date: Date;
   value: number;
-};
+}
 
 const userInputs: UserInputs = {
   amount: {
@@ -94,11 +101,10 @@ const Credit = (): ReactElement => {
         )
       )
       .map(
-        (obj, index) =>
-          ({
-            date: dates[index],
-            value: obj,
-          } as Installment)
+        (obj, index): Installment => ({
+          date: dates[index],
+          value: obj,
+        })
       )
   );
 
@@ -177,7 +183,7 @@ const Credit = (): ReactElement => {
             );
 
           while (
-            overpaymentsLeft.length &&
+            overpaymentsLeft.length > 0 &&
             overpaymentsLeft[0].date < current.date
           ) {
             amountLeft = amountLeft - overpaymentsLeft[0].value;
