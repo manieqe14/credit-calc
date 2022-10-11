@@ -8,17 +8,24 @@ import {
 } from '../../Utils/Helpers';
 import { Options } from './Options';
 import { Option } from './Option';
-import { Overpayment, OverpaymentDate, Overpayments } from './Overpayments';
+import { OverpaymentDate, Overpayments } from './Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
+  Tooltip,
   LineElement,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip
+);
 
 export interface OptionsObj {
   constRateOverpayment: boolean;
@@ -111,8 +118,8 @@ const Credit = (): ReactElement => {
     []
   );
 
-  const dataForChart = useMemo(() => {
-    const temp = {
+  const chartData = useMemo(() => {
+    const data = {
       labels: installment
         .slice(
           0,
@@ -133,7 +140,7 @@ const Credit = (): ReactElement => {
     const labelForOverPayment = 'Kwota płacona';
 
     if (options.constRateOverpayment) {
-      temp.datasets.push({
+      data.datasets.push({
         label: labelForOverPayment,
         data: Array(userInput.period.value)
           .fill(options.constRateOverpaymentValue)
@@ -145,7 +152,7 @@ const Credit = (): ReactElement => {
         backgroundColor: 'rgb(0, 0, 25)',
       });
     }
-    return temp;
+    return data;
   }, [installment, dates, options]);
 
   const handleUserClick = (key: string, value: number): void => {
@@ -206,40 +213,42 @@ const Credit = (): ReactElement => {
   }, [userInput, options, overpaymentDates]);
 
   return (
-    <div>
-      <div className="flex-container">
-        <form className="card-sm">
-          {Object.entries(userInputs).map((input) => {
-            return (
-              <Option
-                key={input[0]}
-                userInput={input[1]}
-                onChange={(value: number) => handleUserClick(input[0], value)}
-              />
-            );
-          })}
-        </form>
-        <div className="card-sm h-fit">
-          <div className="flex-container w-equal-2">
-            <span>Sumaryczne oprocentowanie</span>
-            <span>
-              {rounder(userInput.wibor.value + userInput.bankgross.value)} %
-            </span>
+    <>
+      <section className="flex-container" style={{ flexWrap: 'wrap' }}>
+        <div style={{ flexDirection: 'column' }}>
+          <div className="calc-table flex-container card-sm">
+            {Object.entries(userInputs).map((input) => {
+              return (
+                <Option
+                  key={input[0]}
+                  userInput={input[1]}
+                  onChange={(value: number) => handleUserClick(input[0], value)}
+                />
+              );
+            })}
           </div>
-          <div className="flex-container w-equal-2">
-            <span>Total cost</span>
-            <span>{rounder(totalCost)} PLN</span>
+          <div className="card-sm h-fit">
+            <div className="flex-container w-equal-2">
+              <span>Sumaryczne oprocentowanie</span>
+              <span>
+                {rounder(userInput.wibor.value + userInput.bankgross.value)} %
+              </span>
+            </div>
+            <div className="flex-container w-equal-2">
+              <span>Total cost</span>
+              <span>{rounder(totalCost)} PLN</span>
+            </div>
           </div>
+          <Options options={options} setOptionsHandler={setOptions} />
         </div>
-      </div>
+        <Overpayments
+          enddate={dates.at(-1) ?? new Date()}
+          overpaymentDatesHandler={setOverpaymentDates}
+        />
+      </section>
 
-      <div>{<Line data={dataForChart} />}</div>
-      <Options options={options} setOptionsHandler={setOptions} />
-      <Overpayments
-        enddate={dates.at(-1) ?? new Date()}
-        overpaymentDatesHandler={setOverpaymentDates}
-      />
-    </div>
+      <div>{<Line data={chartData} />}</div>
+    </>
   );
 };
 

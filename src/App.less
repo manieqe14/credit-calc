@@ -1,7 +1,9 @@
-.App {
-  text-align: center;
+main {
   font-size: 1rem;
   font-family: 'Source Sans Pro', sans-serif;
+  margin: 1rem 2rem;
+  max-width: 90vw;
+  text-align: center;
 
   h1 {
     font-size: 2rem;
@@ -14,7 +16,6 @@
 
   h3 {
     font-size: 1rem;
-
   }
 }
 
@@ -26,34 +27,33 @@ h2 {
   cursor: default;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
 .card-sm {
   box-shadow: 0 0 10px #dddddd;
-  border-radius: .25rem;
-  margin: 1rem;
-  padding: 1rem;
+  background-color: #a6ebc9ff;
+  border-radius: 0.25rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
+.primary-button {
+  background-color: #393424ff !important;
 }
 
 .flex-container {
   display: flex;
 
-  &.w-equal-3 > *:first-child {
-    width: 25%;
+  &.w-equal-3 > * {
+    width: 33%;
   }
-
-  &.w-equal-3 > *:nth-child(2) {
-    flex: 1;
-    min-width: 150px;
-  }
-
 
   &.w-equal-2 > * {
     flex: 1;
@@ -67,4 +67,19 @@ input[type="number"] {
 
 .clickable {
   cursor: pointer;
+}
+
+form {
+  .form-section {
+    display: flex;
+    margin: 1em;
+
+    label {
+      width: 4rem;
+    }
+
+    input:not(:first-child) {
+      width: 8rem;
+    }
+  }
 }

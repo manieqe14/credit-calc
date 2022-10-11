@@ -25,7 +25,7 @@ export const Options = ({
   };
 
   return (
-    <div className="card-sm">
+    <div className="card-sm h-fit">
       <h3 className="subtitle">Monthly amount</h3>
       <Form className="overpayments-form">
         <Form.Check
@@ -43,6 +43,7 @@ export const Options = ({
           }
         />
         <Button
+          className="primary-button"
           disabled={!constRateOverpayment && constRateOverpaymentValue < 1}
           onClick={setOptions}
         >

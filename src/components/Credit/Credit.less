@@ -1,15 +1,15 @@
-form, .calc-table {
+.calc-table {
   display: flex;
   flex-direction: column;
 
   label {
     text-align: center;
     width: 40%;
-    margin: .25rem;
+    margin: 0.25rem;
   }
 
   div {
-    margin: .25rem;
+    margin: 0.25rem;
     display: flex;
     align-items: center;
   }
@@ -38,7 +38,7 @@ span {
   display: flex;
 }
 
-input[type="number"] {
+input[type='number'] {
   height: 30px;
 }
 
@@ -49,7 +49,23 @@ input[type="number"] {
   flex-direction: row;
   justify-content: left;
 
-  & > div, & > input, & > button {
+  & > div,
+  & > input,
+  & > button {
     margin: 1rem;
   }
+}
+
+.badge-primary {
+  background-color: #62ab37;
+  color: white;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+li {
+  list-style-type: none;
+  padding: 0.25rem;
+  flex-wrap: wrap;
+  margin: 0.25rem;
 }
