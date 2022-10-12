@@ -1,10 +1,8 @@
-import { UserInputs } from "../components/Credit/Credit";
-
 export const rounder = (value: number): number => {
   return Math.round(value * 100) / 100;
 };
 
-export function countIntallment(
+export function countInstallment(
   amount: number,
   gross: number,
   period: number
@@ -26,8 +24,4 @@ export function zeroPad(number: number): string {
   } else {
     return number.toString();
   }
-}
-
-export const countGross = (inputs: UserInputs): number => {
-  return inputs.bankgross.value + inputs.wibor.value;
 }
