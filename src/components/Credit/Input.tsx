@@ -8,12 +8,12 @@ export interface OptionConfig {
   onChange: (value: number) => void;
 }
 
-export const Option = ({ userInput, onChange }: OptionConfig): ReactElement => {
+export const Input = ({ userInput, onChange }: OptionConfig): ReactElement => {
   return (
     <div className="form-section w-equal-3">
       <label>{userInput.name}</label>
       <div>
-        <span className="clickable">
+        <span className="clickable-sign">
           <BiMinus
             onClick={() => onChange(rounder(userInput.value - userInput.step))}
           />
@@ -25,7 +25,7 @@ export const Option = ({ userInput, onChange }: OptionConfig): ReactElement => {
           value={userInput.value}
           onChange={(event) => onChange(parseFloat(event.target.value))}
         />
-        <span className="clickable">
+        <span className="clickable-sign">
           <BiPlus
             onClick={() => onChange(rounder(userInput.value + userInput.step))}
           />

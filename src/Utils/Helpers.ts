@@ -28,4 +28,8 @@ export function zeroPad(number: number): string {
 
 export const getDateForInput = (date: Date): string => {
   return `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(date.getDate())}`;
-}
+};
+
+export const isNanOrZero = (value: any): boolean => {
+  return isNaN(value) || value === 0;
+};

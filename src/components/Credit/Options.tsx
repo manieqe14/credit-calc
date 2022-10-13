@@ -36,6 +36,7 @@ export const Options = ({
 
   return (
     <div className="card-sm h-fit">
+      <h2>Options</h2>
       <form>
         <div className="form-section">
           <label htmlFor="constRateOverpaymentValue">Monthly payment</label>

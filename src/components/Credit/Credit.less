@@ -1,3 +1,5 @@
+@import "../../Utils/variables";
+
 span {
   margin: 10px;
 }
@@ -21,17 +23,26 @@ span {
 }
 
 .badge-primary {
-  background-color: #62ab37;
-  color: white;
+  background-color: @secondary-color;
   border-radius: 0.25rem;
-  margin: 1rem auto;
-  width: fit-content;
-  text-align: center;
+  color: white;
+  cursor: pointer;
+  margin: 0.25rem;
 }
 
 li {
-  list-style-type: none;
-  padding: 0.25rem;
   flex-wrap: wrap;
+  list-style-type: none;
   margin: 0.25rem;
+  padding: 0.25rem;
+}
+
+
+.clickable-sign {
+  cursor: pointer;
+  padding: 0.5rem;
+
+  &:hover {
+    background: white;
+  }
 }

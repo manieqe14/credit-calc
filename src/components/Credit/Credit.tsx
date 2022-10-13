@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useMemo, useState } from "react";
 import "./Credit.less";
 import { Options } from "./Options";
-import { Option } from "./Option";
+import { Input } from "./Input";
 import { OverpaymentDate, Overpayments } from "./Overpayments";
 import {
   Chart as ChartJS,
@@ -9,7 +9,9 @@ import {
   LinearScale,
   PointElement,
   Tooltip,
-  LineElement
+  Title,
+  LineElement,
+  Legend
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import useDataForChart from "../../Utils/Hooks/useDataForChart";
@@ -23,7 +25,9 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
-  Tooltip
+  Tooltip,
+  Title,
+  Legend
 );
 
 const today = new Date();
@@ -86,7 +90,7 @@ const Credit = (): ReactElement => {
           <form className="card-sm">
             {Object.entries(userInputs).map((input) => {
               return (
-                <Option
+                <Input
                   key={input[0]}
                   userInput={input[1]}
                   onChange={(value: number) => handleUserClick(input[0], value)}
@@ -103,7 +107,7 @@ const Credit = (): ReactElement => {
         <Summary gross={userInputs.wibor.value + userInputs.bankgross.value} totalCost={totalCost} />
       </section>
 
-      <div style={{ padding: "2rem" }}>{<Line data={chartData} />}</div>
+      <div style={{ padding: "2rem" }}>{<Line {...chartData} />}</div>
     </>
   );
 };

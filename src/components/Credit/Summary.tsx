@@ -5,7 +5,7 @@ const Summary: React.FC<{ gross: number, totalCost: number }> = ({ gross, totalC
   return (
     <div className="card-sm h-fit">
       <div className="flex-container w-equal-2">
-        <span>Sumaryczne oprocentowanie</span>
+        <span>Total gross</span>
         <span>
                 {rounder(gross)} %
               </span>

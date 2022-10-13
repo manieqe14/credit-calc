@@ -1,5 +1,6 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { getDateForInput } from "../../Utils/Helpers";
+import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
+import { v4 as uuidv4 } from "uuid";
 
 export interface OverpaymentDate {
   date: Date;
@@ -8,6 +9,7 @@ export interface OverpaymentDate {
 
 export interface Overpayment extends OverpaymentDate {
   repeatPeriod?: Period | undefined;
+  uuid: string;
 }
 
 enum Period {
@@ -24,6 +26,7 @@ export const Overpayments = ({
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const [overpayment, setOverpayment] = useState<Overpayment>({
+    uuid: uuidv4(),
     value: 0,
     date: new Date(),
     repeatPeriod: Period.MONTH
@@ -46,6 +49,7 @@ export const Overpayments = ({
       ? overpayment
       : { ...overpayment, repeatPeriod: undefined };
 
+    setOverpayment({ ...overpayment, uuid: uuidv4() });
     setOverpayments([...overpayments, newOverpayment]);
   };
 
@@ -84,14 +88,12 @@ export const Overpayments = ({
     );
   }, [overpayments]);
 
-  const handleAddOverpayment = (key: number): void => {
-    const newOverpayments = overpayments;
-    newOverpayments.splice(key, 1);
-    setOverpayments(newOverpayments);
+  const handleDeleteOverpayment = (id: string): void => {
+    setOverpayments(overpayments.filter(item => item.uuid !== id));
   };
 
   return (
-    <div className="card-sm">
+    <div className="card-sm" style={{ width: "400px" }}>
       <h2>Overpayments</h2>
       <form>
         <div className="form-section">
@@ -143,18 +145,19 @@ export const Overpayments = ({
           </select>
         </div>
         <button
-          disabled={overpayment.value === 0 || overpayment.value === 0}
+          disabled={overpayment.value === 0}
+          className={`${isNanOrZero(overpayment.value) ? "disabled " : ""}primary`}
           onClick={addItem}
         >
           Add
         </button>
       </form>
-      <ul style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <ul style={{ display: "flex", flexWrap: "wrap" }}>
         {overpayments.map((item, index) => (
           <li
             key={index}
             className="badge-primary"
-            onClick={() => handleAddOverpayment(index)}
+            onClick={() => handleDeleteOverpayment(item.uuid)}
           >
             <span>{`${item.date.getDate()}-${
               item.date.getMonth() + 1

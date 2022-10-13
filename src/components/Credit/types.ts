@@ -1,7 +1,7 @@
 export interface OptionsObj {
   constRateOverpayment: boolean;
   constRateOverpaymentValue: number;
-  startDate: Date
+  startDate: Date;
 }
 
 export interface UserInput {
@@ -21,14 +21,4 @@ export interface UserInputs {
 export interface Installment {
   date: Date;
   value: number;
-};
-
-export interface DataForChart {
-  labels: string[],
-  datasets: Array<{
-    label: string,
-    data: number[],
-    borderColor: string,
-    backgroundColor: string
-  }>
 }
