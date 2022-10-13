@@ -13,7 +13,8 @@ main {
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin: 0.5rem auto;
     text-align: center;
   }
 
@@ -42,7 +43,7 @@ input[type='number'] {
 .card-sm {
   box-shadow: 0 0 10px #dddddd;
   background-color: @primary-color;
-  border-radius: 0.25rem;
+  border-radius: @border-radius;
   margin: 0.5rem;
   padding: 0.5rem;
   text-align: left;
@@ -71,13 +72,35 @@ form {
       margin-right: @checkboxWidth;
     }
 
+    input:focus, select:focus, input:focus-visible, select:focus-visible {
+      box-shadow: 0 0 20px #007a7e;
+    }
+
     input {
-      width: 70px;
       text-align: center;
+      width: 70px;
+
+      &.no-validated {
+        border: 2px solid red;
+        box-shadow: 0 0 20px red;
+      }
     }
 
     input[type='date'] {
       min-width: 120px;
+    }
+
+    select {
+      background: white;
+      border: 1px solid @grey-color;
+      font-size: 0.9rem;
+      margin-right: 0.5em;
+      padding: 0.25rem;
+
+      option {
+        font-size: 0.8em;
+        padding: 0.1rem;
+      }
     }
 
     input[type='checkbox'] {
@@ -87,16 +110,12 @@ form {
       -webkit-appearance: none;
       appearance: none;
       height: @checkboxWidth;
-      border-radius: 0.1em;
-      border: 0.05em solid grey;
+      border-radius: @border-radius;
+      border: 0.05em solid @grey-color;
       outline: none;
       cursor: pointer;
-
       background-color: white;
 
-      &:focus {
-        box-shadow: 0 0 20px #007a7e;
-      }
 
       &:checked::before {
         content: "\2714";
@@ -113,7 +132,7 @@ form {
 button.primary {
   background-color: white;
   color: @secondary-color;
-  border-radius: 0.25rem;
+  border-radius: @border-radius;
   border: 1px solid @primary-color;
   font-size: 1.25rem;
   font-weight: 600;

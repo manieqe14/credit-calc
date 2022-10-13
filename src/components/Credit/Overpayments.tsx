@@ -9,6 +9,7 @@ export interface OverpaymentDate {
 
 export interface Overpayment extends OverpaymentDate {
   repeatPeriod?: Period | undefined;
+  occurrences?: number | undefined;
   uuid: string;
 }
 
@@ -56,13 +57,15 @@ export const Overpayments = ({
   useEffect(() => {
     const result: OverpaymentDate[] = [];
     for (const overpaymentObj of overpayments) {
-      if (overpaymentObj.repeatPeriod !== undefined) {
+      if (overpaymentObj.repeatPeriod !== undefined && overpaymentObj.occurrences !== undefined) {
         const loopDate = new Date(overpaymentObj.date);
-        while (loopDate.getTime() < enddate.getTime()) {
+        let occurrencesCounter = 0;
+        while (loopDate.getTime() < enddate.getTime() && occurrencesCounter < overpaymentObj.occurrences) {
           result.push({
             date: new Date(loopDate),
             value: overpaymentObj.value
           });
+          occurrencesCounter++;
           switch (overpaymentObj.repeatPeriod) {
             case Period.MONTH:
               loopDate.setMonth(loopDate.getMonth() + 1);
@@ -141,6 +144,23 @@ export const Overpayments = ({
               {Object.entries(Period).map((element, index) => (
                 <option key={index} value={element[0]}>
                   {element[0]}
+                </option>
+              ))}
+            </select>
+            <select
+              aria-label="Overpayment occurrences"
+              id="occurrences-number"
+              onChange={(event) =>
+                setOverpayment({
+                  ...overpayment,
+                  occurrences: parseFloat(event.target.value)
+                })
+              }
+              disabled={!repeat}
+            >
+              {Array(15).fill(0).map((_element, index) => (
+                <option key={index} value={index}>
+                  {index}
                 </option>
               ))}
             </select>

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { getDateForInput } from "../../Utils/Helpers";
+import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
 import { OptionsObj } from "./types";
 
 export const Options = ({
@@ -48,7 +48,8 @@ export const Options = ({
           />
           <input
             disabled={!constRateOverpayment}
-            id="constRateOverpaymentValue"
+            className={constRateOverpayment && isNanOrZero(constRateOverpaymentValue) ? "no-validated" : ""}
+            id="const-rate-overpayment-value"
             type="number"
             value={constRateOverpaymentValue}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

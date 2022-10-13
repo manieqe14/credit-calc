@@ -72,13 +72,16 @@ const Credit = (): ReactElement => {
 
   useEffect(() => {
     if (installments.length > 0) {
+      const overpaymentsTotal = overpaymentDates.length ?? overpaymentDates?.reduce((prev, current) => {
+        return { value: current.value + prev.value, date: new Date() };
+      }).value;
       if (options.constRateOverpayment) {
         setTotalCost(
           installments.filter((inst) => inst.value > 0).length *
-          options.constRateOverpaymentValue
+          options.constRateOverpaymentValue + overpaymentsTotal
         );
       } else {
-        setTotalCost(installments.length * installments[0].value);
+        setTotalCost(installments.length * installments[0].value + overpaymentsTotal);
       }
     }
   }, [options]);
@@ -88,6 +91,7 @@ const Credit = (): ReactElement => {
       <section className="flex-container" style={{ flexWrap: "wrap" }}>
         <div style={{ flexDirection: "column" }}>
           <form className="card-sm">
+            <h2>Inputs</h2>
             {Object.entries(userInputs).map((input) => {
               return (
                 <Input
@@ -104,9 +108,9 @@ const Credit = (): ReactElement => {
           enddate={dates.at(-1) ?? new Date()}
           overpaymentDatesHandler={setOverpaymentDates}
         />
-        <Summary gross={userInputs.wibor.value + userInputs.bankgross.value} totalCost={totalCost} />
+        <Summary gross={userInputs.wibor.value + userInputs.bankgross.value} totalCost={totalCost}
+                 rates={installments.length} lastInstallmentDate={installments.at(-1)?.date} />
       </section>
-
       <div style={{ padding: "2rem" }}>{<Line {...chartData} />}</div>
     </>
   );

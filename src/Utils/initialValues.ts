@@ -2,9 +2,9 @@ import { UserInputs } from "../components/Credit/types";
 
 export const initialUserInputs: UserInputs = {
   amount: {
-    name: "Wartość kredytu",
+    name: "Loan amount",
     value: 300000,
-    unit: "zł",
+    unit: "PLN",
     step: 1000
   },
   wibor: {
@@ -14,15 +14,15 @@ export const initialUserInputs: UserInputs = {
     step: 0.1
   },
   bankgross: {
-    name: "Marża banku",
+    name: "Bank gross",
     value: 2.13,
     unit: "%",
     step: 0.1
   },
   period: {
-    name: "Okres kreytowania",
+    name: "Period",
     value: 25 * 12,
-    unit: "miesięcy",
+    unit: "month(s)",
     step: 1
   }
 };

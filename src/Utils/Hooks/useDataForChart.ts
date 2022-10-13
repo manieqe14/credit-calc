@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Installment, OptionsObj } from "../../components/Credit/types";
+import { initialUserInputs } from "../initialValues";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useDataForChart = ({
@@ -32,7 +33,10 @@ const useDataForChart = ({
         },
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            ticks: {
+              callback: (value: string) => `${value} ${initialUserInputs.amount.unit}`
+            }
           }
         }
       }
