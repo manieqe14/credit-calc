@@ -1,5 +1,5 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { zeroPad } from "../../Utils/Helpers";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import { getDateForInput, zeroPad } from '../../Utils/Helpers';
 
 export interface OverpaymentDate {
   date: Date;
@@ -11,22 +11,22 @@ export interface Overpayment extends OverpaymentDate {
 }
 
 enum Period {
-  MONTH = "month",
-  QUARTER = "quarter",
-  YEAR = "year",
+  MONTH = 'month',
+  QUARTER = 'quarter',
+  YEAR = 'year',
 }
 
 export const Overpayments = ({
-                               enddate,
-                               overpaymentDatesHandler
-                             }: {
+  enddate,
+  overpaymentDatesHandler,
+}: {
   enddate: Date;
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const [overpayment, setOverpayment] = useState<Overpayment>({
     value: 0,
     date: new Date(),
-    repeatPeriod: Period.MONTH
+    repeatPeriod: Period.MONTH,
   });
   const [repeat, setRepeat] = useState(false);
   const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
@@ -49,7 +49,7 @@ export const Overpayments = ({
   const addItem = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     if (overpayment.date.getTime() > enddate.getTime()) {
-      alert("Date cannot be after last installment date!");
+      alert('Date cannot be after last installment date!');
       return;
     }
 
@@ -68,7 +68,7 @@ export const Overpayments = ({
         while (loopDate.getTime() < enddate.getTime()) {
           result.push({
             date: new Date(loopDate),
-            value: overpaymentObj.value
+            value: overpaymentObj.value,
           });
           switch (overpaymentObj.repeatPeriod) {
             case Period.MONTH:
@@ -110,9 +110,7 @@ export const Overpayments = ({
           <input
             id="overpayment-date"
             type="date"
-            value={`${overpayment.date.getFullYear()}-${zeroPad(
-              overpayment.date.getMonth() + 1
-            )}-${zeroPad(overpayment.date.getDate())}`}
+            value={getDateForInput(overpayment.date)}
             onChange={setDateHandler}
           />
         </div>
@@ -125,7 +123,7 @@ export const Overpayments = ({
             onChange={(event) =>
               setOverpayment({
                 ...overpayment,
-                value: parseFloat(event.target.value)
+                value: parseFloat(event.target.value),
               })
             }
           />
@@ -141,24 +139,26 @@ export const Overpayments = ({
             onChange={(event) =>
               setOverpayment({
                 ...overpayment,
-                repeatPeriod: event.target.value as Period
+                repeatPeriod: event.target.value as Period,
               })
             }
             disabled={!repeat}
           >
             {Object.entries(Period).map((element, index) => (
-              <option key={index} value={element[0]}>{element[0]}</option>
+              <option key={index} value={element[0]}>
+                {element[0]}
+              </option>
             ))}
           </select>
         </div>
         <button
-          disabled={(overpayment.value === 0) || overpayment.value === 0}
+          disabled={overpayment.value === 0 || overpayment.value === 0}
           onClick={addItem}
         >
           Add
         </button>
       </form>
-      <ul className="flex-container" style={{ flexDirection: "column" }}>
+      <ul className="flex-container" style={{ flexDirection: 'column' }}>
         {overpayments.map((item, index) => (
           <li
             key={index}

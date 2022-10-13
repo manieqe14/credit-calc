@@ -75,11 +75,26 @@ form {
     margin: 1em;
 
     label {
-      width: 4rem;
+      min-width: 80px;
+      margin-right: 10px;
+    }
+
+    input[type='date'] {
+      min-width: 100px;
     }
 
     input:not(:first-child) {
       width: 8rem;
     }
   }
+}
+
+button {
+  background-color: white;
+  color: #62ab37;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  margin: 10px;
+  padding: 0.25rem 0.5rem;
 }

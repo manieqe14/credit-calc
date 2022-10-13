@@ -1,24 +1,22 @@
-import React, { ReactElement, useEffect, useMemo, useState } from "react";
-import "./Credit.less";
-import {
-  rounder
-} from "../../Utils/Helpers";
-import { Options } from "./Options";
-import { Option } from "./Option";
-import { OverpaymentDate, Overpayments } from "./Overpayments";
+import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import './Credit.less';
+import { rounder } from '../../Utils/Helpers';
+import { Options } from './Options';
+import { Option } from './Option';
+import { OverpaymentDate, Overpayments } from './Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   Tooltip,
-  LineElement
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import useDataForChart from "../../Utils/Hooks/useDataForChart";
-import { OptionsObj, UserInputs } from "./types";
-import useInstallmentsCount from "../../Utils/Hooks/useInstallmentsCount";
-import { initialUserInputs } from "../../Utils/initialValues";
+  LineElement,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import useDataForChart from '../../Utils/Hooks/useDataForChart';
+import { OptionsObj, UserInputs } from './types';
+import useInstallmentsCount from '../../Utils/Hooks/useInstallmentsCount';
+import { initialUserInputs } from '../../Utils/initialValues';
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +29,6 @@ ChartJS.register(
 const today = new Date();
 
 const Credit = (): ReactElement => {
-
   const [userInputs, setUserInputs] = useState<UserInputs>(initialUserInputs);
 
   const dates = useMemo<Date[]>(() => {
@@ -48,14 +45,20 @@ const Credit = (): ReactElement => {
 
   const [options, setOptions] = useState<OptionsObj>({
     constRateOverpayment: false,
-    constRateOverpaymentValue: 0
+    constRateOverpaymentValue: 0,
+    startDate: today,
   });
 
   const [overpaymentDates, setOverpaymentDates] = useState<OverpaymentDate[]>(
     []
   );
 
-  const installments = useInstallmentsCount({ dates, userInputs, options, overpaymentDates });
+  const installments = useInstallmentsCount({
+    dates,
+    userInputs,
+    options,
+    overpaymentDates,
+  });
   const chartData = useDataForChart({ installments, options });
 
   const handleUserClick = (key: string, value: number): void => {
@@ -71,19 +74,18 @@ const Credit = (): ReactElement => {
       if (options.constRateOverpayment) {
         setTotalCost(
           installments.filter((inst) => inst.value > 0).length *
-          options.constRateOverpaymentValue
+            options.constRateOverpaymentValue
         );
       } else {
         setTotalCost(installments.length * installments[0].value);
       }
     }
-
   }, [options]);
 
   return (
     <>
-      <section className="flex-container" style={{ flexWrap: "wrap" }}>
-        <div style={{ flexDirection: "column" }}>
+      <section className="flex-container" style={{ flexWrap: 'wrap' }}>
+        <div style={{ flexDirection: 'column' }}>
           <div className="calc-table flex-container card-sm">
             {Object.entries(userInputs).map((input) => {
               return (

@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import { OptionsObj } from './Credit';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
+import { getDateForInput } from '../../Utils/Helpers';
+import { OptionsObj } from './types';
 
 export const Options = ({
   options,
@@ -16,6 +16,10 @@ export const Options = ({
     options.constRateOverpaymentValue
   );
 
+  const [startDate, setStartDate] = useState(options.startDate);
+
+  console.info(options.startDate);
+
   const setOptions = (): void => {
     setOptionsHandler({
       ...options,
@@ -24,32 +28,47 @@ export const Options = ({
     });
   };
 
+  const changeDateEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    setStartDate(event.target.valueAsDate);
+  };
+
   return (
     <div className="card-sm h-fit">
-      <h3 className="subtitle">Monthly amount</h3>
-      <Form className="overpayments-form">
-        <Form.Check
-          checked={constRateOverpayment}
-          type="checkbox"
-          id="const-rate-montly-overpayment"
-          onChange={() => setConstRateOverpayment(!constRateOverpayment)}
-        />
-        <Form.Control
-          disabled={!constRateOverpayment}
-          type="number"
-          value={constRateOverpaymentValue}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setConstRateOverpaymentValue(() => parseFloat(event.target.value))
-          }
-        />
-        <Button
-          className="primary-button"
-          disabled={!constRateOverpayment && constRateOverpaymentValue < 1}
-          onClick={setOptions}
-        >
-          OK
-        </Button>
-      </Form>
+      <form>
+        <div className="form-section">
+          <h3 className="subtitle">Monthly amount</h3>
+          <input
+            checked={constRateOverpayment}
+            type="checkbox"
+            id="const-rate-monthly-overpayment"
+            onChange={() => setConstRateOverpayment(!constRateOverpayment)}
+          />
+          <input
+            disabled={!constRateOverpayment}
+            type="number"
+            value={constRateOverpaymentValue}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setConstRateOverpaymentValue(() => parseFloat(event.target.value))
+            }
+          />
+          <button
+            className="primary-button"
+            disabled={!constRateOverpayment && constRateOverpaymentValue < 1}
+            onClick={setOptions}
+          >
+            OK
+          </button>
+        </div>
+        <div className="form-section">
+          <label>Set custom start date</label>
+          <input
+            type="date"
+            value={getDateForInput(startDate)}
+            onChange={changeDateEventHandler}
+          />
+        </div>
+      </form>
     </div>
   );
 };

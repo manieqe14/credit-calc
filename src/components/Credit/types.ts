@@ -1,6 +1,7 @@
 export interface OptionsObj {
   constRateOverpayment: boolean;
   constRateOverpaymentValue: number;
+  startDate: Date
 }
 
 export interface UserInput {
