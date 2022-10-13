@@ -1,7 +1,7 @@
-import { BiPlus, BiMinus } from 'react-icons/bi';
-import { rounder } from '../../Utils/Helpers';
-import React, { ReactElement } from 'react';
-import { UserInput } from './Credit';
+import { BiPlus, BiMinus } from "react-icons/bi";
+import { rounder } from "../../Utils/Helpers";
+import React, { ReactElement } from "react";
+import { UserInput } from "./types";
 
 export interface OptionConfig {
   userInput: UserInput;
@@ -10,7 +10,7 @@ export interface OptionConfig {
 
 export const Option = ({ userInput, onChange }: OptionConfig): ReactElement => {
   return (
-    <div className="flex-container w-equal-3">
+    <div className="form-section w-equal-3">
       <label>{userInput.name}</label>
       <div>
         <span className="clickable">

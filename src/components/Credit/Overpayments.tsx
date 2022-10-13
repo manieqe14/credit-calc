@@ -1,5 +1,5 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
-import { getDateForInput, zeroPad } from '../../Utils/Helpers';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import { getDateForInput } from "../../Utils/Helpers";
 
 export interface OverpaymentDate {
   date: Date;
@@ -11,45 +11,34 @@ export interface Overpayment extends OverpaymentDate {
 }
 
 enum Period {
-  MONTH = 'month',
-  QUARTER = 'quarter',
-  YEAR = 'year',
+  MONTH = "month",
+  QUARTER = "quarter",
+  YEAR = "year",
 }
 
 export const Overpayments = ({
-  enddate,
-  overpaymentDatesHandler,
-}: {
+                               enddate,
+                               overpaymentDatesHandler
+                             }: {
   enddate: Date;
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const [overpayment, setOverpayment] = useState<Overpayment>({
     value: 0,
     date: new Date(),
-    repeatPeriod: Period.MONTH,
+    repeatPeriod: Period.MONTH
   });
   const [repeat, setRepeat] = useState(false);
   const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
 
   const setDateHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    const resultDate = new Date();
-    const results = event.target?.value.match(
-      /(?<year>\d{4})-(?<month>\d+)-(?<date>\d+)/
-    );
-    if (results?.groups !== undefined) {
-      resultDate.setDate(parseInt(results.groups.date));
-      resultDate.setMonth(parseInt(results.groups.month) - 1);
-      resultDate.setFullYear(parseInt(results.groups.year));
-      setOverpayment((prev) => {
-        return { ...prev, date: resultDate };
-      });
-    }
+    setOverpayment(prev => ({ ...prev, date: event.target.valueAsDate ?? prev.date }));
   };
 
   const addItem = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     if (overpayment.date.getTime() > enddate.getTime()) {
-      alert('Date cannot be after last installment date!');
+      alert("Date cannot be after last installment date!");
       return;
     }
 
@@ -63,12 +52,12 @@ export const Overpayments = ({
   useEffect(() => {
     const result: OverpaymentDate[] = [];
     for (const overpaymentObj of overpayments) {
-      if (overpaymentObj.repeatPeriod) {
+      if (overpaymentObj.repeatPeriod !== undefined) {
         const loopDate = new Date(overpaymentObj.date);
         while (loopDate.getTime() < enddate.getTime()) {
           result.push({
             date: new Date(loopDate),
-            value: overpaymentObj.value,
+            value: overpaymentObj.value
           });
           switch (overpaymentObj.repeatPeriod) {
             case Period.MONTH:
@@ -103,7 +92,7 @@ export const Overpayments = ({
 
   return (
     <div className="card-sm">
-      <h3>Overpayments</h3>
+      <h2>Overpayments</h2>
       <form>
         <div className="form-section">
           <label htmlFor="overpayment-date">Date</label>
@@ -123,12 +112,13 @@ export const Overpayments = ({
             onChange={(event) =>
               setOverpayment({
                 ...overpayment,
-                value: parseFloat(event.target.value),
+                value: parseFloat(event.target.value)
               })
             }
           />
         </div>
         <div className="form-section">
+          <label htmlFor="repeat-overpayment-selector">Reapat</label>
           <input
             type="checkbox"
             checked={repeat}
@@ -136,10 +126,11 @@ export const Overpayments = ({
           />
           <select
             aria-label="Repeating period"
+            id="repeat-overpayment-selector"
             onChange={(event) =>
               setOverpayment({
                 ...overpayment,
-                repeatPeriod: event.target.value as Period,
+                repeatPeriod: event.target.value as Period
               })
             }
             disabled={!repeat}
@@ -158,7 +149,7 @@ export const Overpayments = ({
           Add
         </button>
       </form>
-      <ul className="flex-container" style={{ flexDirection: 'column' }}>
+      <ul style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
         {overpayments.map((item, index) => (
           <li
             key={index}
@@ -169,7 +160,7 @@ export const Overpayments = ({
               item.date.getMonth() + 1
             }-${item.date.getFullYear()}`}</span>
             <span>{item.value} PLN</span>
-            {item.repeatPeriod && <span>{item.repeatPeriod}</span>}
+            {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
           </li>
         ))}
       </ul>
