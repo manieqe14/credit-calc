@@ -1,12 +1,12 @@
-import React, { ReactElement } from 'react';
-import './App.less';
-import Credit from './components/Credit/Credit';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { ReactElement } from "react";
+import "./App.less";
+import Credit from "./components/Credit/Credit";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App(): ReactElement {
   return (
     <main className="App">
-      <h1>Kalkulator rat kredytu</h1>
+      <h1>Credit calculator</h1>
       <Credit />
     </main>
   );

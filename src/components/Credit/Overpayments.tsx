@@ -95,58 +95,61 @@ export const Overpayments = ({
   return (
     <div className="card-sm" style={{ width: "400px" }}>
       <h2>Overpayments</h2>
-      <form>
-        <div className="form-section">
-          <label htmlFor="overpayment-date">Date</label>
-          <input
-            id="overpayment-date"
-            type="date"
-            value={getDateForInput(overpayment.date)}
-            onChange={setDateHandler}
-          />
-        </div>
-        <div className="form-section">
-          <label htmlFor="overpayment-value">Value</label>
-          <input
-            id="overpayment-value"
-            type="number"
-            value={overpayment.value}
-            onChange={(event) =>
-              setOverpayment({
-                ...overpayment,
-                value: parseFloat(event.target.value)
-              })
-            }
-          />
-        </div>
-        <div className="form-section">
-          <label htmlFor="repeat-overpayment-selector">Reapat</label>
-          <input
-            type="checkbox"
-            checked={repeat}
-            onChange={() => setRepeat(!repeat)}
-          />
-          <select
-            aria-label="Repeating period"
-            id="repeat-overpayment-selector"
-            onChange={(event) =>
-              setOverpayment({
-                ...overpayment,
-                repeatPeriod: event.target.value as Period
-              })
-            }
-            disabled={!repeat}
-          >
-            {Object.entries(Period).map((element, index) => (
-              <option key={index} value={element[0]}>
-                {element[0]}
-              </option>
-            ))}
-          </select>
+      <form style={{ display: "flex", alignItems: "center" }}>
+        <div>
+          <div className="form-section">
+            <label htmlFor="overpayment-date">Date</label>
+            <input
+              id="overpayment-date"
+              type="date"
+              value={getDateForInput(overpayment.date)}
+              onChange={setDateHandler}
+            />
+          </div>
+          <div className="form-section">
+            <label htmlFor="overpayment-value">Value</label>
+            <input
+              id="overpayment-value"
+              type="number"
+              value={overpayment.value}
+              onChange={(event) =>
+                setOverpayment({
+                  ...overpayment,
+                  value: parseFloat(event.target.value)
+                })
+              }
+            />
+          </div>
+          <div className="form-section">
+            <label htmlFor="repeat-overpayment-selector">Reapat</label>
+            <input
+              type="checkbox"
+              checked={repeat}
+              onChange={() => setRepeat(!repeat)}
+            />
+            <select
+              aria-label="Repeating period"
+              id="repeat-overpayment-selector"
+              onChange={(event) =>
+                setOverpayment({
+                  ...overpayment,
+                  repeatPeriod: event.target.value as Period
+                })
+              }
+              disabled={!repeat}
+            >
+              {Object.entries(Period).map((element, index) => (
+                <option key={index} value={element[0]}>
+                  {element[0]}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <button
+          aria-label="Add overpayment button"
           disabled={overpayment.value === 0}
-          className={`${isNanOrZero(overpayment.value) ? "disabled " : ""}primary`}
+          className={`${isNanOrZero(overpayment.value) ? "disabled " : ""}primary h-fit`}
           onClick={addItem}
         >
           Add

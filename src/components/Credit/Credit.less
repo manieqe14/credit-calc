@@ -28,6 +28,18 @@ span {
   color: white;
   cursor: pointer;
   margin: 0.25rem;
+  position: relative;
+  transition: width .1s;
+
+  &:hover::before {
+    content: "\2212";
+    color: red;
+    background: white;
+    border-radius: 50%;
+    font-weight: 600;
+    position: relative;
+    padding: 0 5px;
+  }
 }
 
 li {
