@@ -1,8 +1,9 @@
 @import "./Utils/variables";
 
 main {
-  font-size: 1rem;
+  font-size: 14px;
   font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
   margin: 1rem 2rem;
   max-width: 90vw;
 
@@ -15,7 +16,7 @@ main {
   h2 {
     font-size: 1.4rem;
     margin: 0.5rem auto;
-    text-align: center;
+    font-weight: 600;
   }
 
   h3 {
@@ -44,8 +45,7 @@ input[type='number'] {
   box-shadow: 0 0 10px #dddddd;
   background-color: @primary-color;
   border-radius: @border-radius;
-  margin: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: left;
 }
 
@@ -156,4 +156,8 @@ table {
   td {
     padding: 0.5rem;
   }
+}
+
+section > div {
+  margin: 1rem auto;
 }

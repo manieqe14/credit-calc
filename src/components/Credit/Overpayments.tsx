@@ -1,6 +1,7 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
 import { v4 as uuidv4 } from "uuid";
+import { initialUserInputs } from "../../Utils/initialValues";
 
 export interface OverpaymentDate {
   date: Date;
@@ -122,6 +123,7 @@ export const Overpayments = ({
                 })
               }
             />
+            <span>{initialUserInputs.amount.unit}</span>
           </div>
           <div className="form-section">
             <label htmlFor="repeat-overpayment-selector">Reapat</label>

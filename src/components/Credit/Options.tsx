@@ -1,6 +1,7 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
 import { OptionsObj } from "./types";
+import { initialUserInputs } from "../../Utils/initialValues";
 
 export const Options = ({
                           options,
@@ -56,6 +57,7 @@ export const Options = ({
               setConstRateOverpaymentValue(() => parseFloat(event.target.value))
             }
           />
+          <span>{initialUserInputs.amount.unit}</span>
         </div>
         <div className="form-section">
           <label htmlFor="overpayment-date">Set custom start date</label>
