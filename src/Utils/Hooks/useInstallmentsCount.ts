@@ -3,14 +3,30 @@ import { countInstallment, odsetki } from "../Helpers";
 import { Installment, OptionsObj, UserInputs } from "../../components/Credit/types";
 import { OverpaymentDate } from "../../components/Credit/Overpayments";
 
+interface InstallmentsCountProps {
+  dates: Date[],
+  userInputs: UserInputs,
+  options: OptionsObj,
+  overpaymentDates: OverpaymentDate[]
+}
+
 const useInstallmentsCount = ({
                                 dates,
                                 userInputs,
                                 options,
                                 overpaymentDates
-                              }: { dates: Date[], userInputs: UserInputs, options: OptionsObj, overpaymentDates: OverpaymentDate[] }): Installment[] => {
+                              }: InstallmentsCountProps): { installments: Installment[], overpaymentsTotal: number } => {
 
   const [installments, setInstallments] = useState<Installment[]>([]);
+  const [overpaymentsTotal, setOverpaymentsTotal] = useState(0);
+
+  useEffect(() => {
+    if (overpaymentDates.length === 0) return;
+    setOverpaymentsTotal(overpaymentDates.reduce((prev, current) => {
+      return { value: current.value + prev.value, date: new Date() };
+    }).value);
+  }, [overpaymentDates]);
+
 
   useEffect(() => {
     let amountLeft: number = userInputs.amount.value;
@@ -43,7 +59,7 @@ const useInstallmentsCount = ({
     setInstallments(result);
   }, [userInputs, options, overpaymentDates]);
 
-  return installments;
+  return { installments, overpaymentsTotal };
 };
 
 export default useInstallmentsCount;

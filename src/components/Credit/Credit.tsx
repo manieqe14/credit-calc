@@ -54,7 +54,7 @@ const Credit = (): ReactElement => {
     );
   }, [userInputs.period, options.startDate]);
 
-  const installments = useInstallmentsCount({
+  const { installments, overpaymentsTotal } = useInstallmentsCount({
     dates,
     userInputs,
     options,
@@ -71,20 +71,18 @@ const Credit = (): ReactElement => {
   };
 
   useEffect(() => {
-    if (installments.length > 0) {
-      const overpaymentsTotal = overpaymentDates.length ?? overpaymentDates?.reduce((prev, current) => {
-        return { value: current.value + prev.value, date: new Date() };
-      }).value;
-      if (options.constRateOverpayment) {
-        setTotalCost(
-          installments.filter((inst) => inst.value > 0).length *
-          options.constRateOverpaymentValue + overpaymentsTotal
-        );
-      } else {
-        setTotalCost(installments.length * installments[0].value + overpaymentsTotal);
-      }
+    if (installments.length === 0) {
+      return;
     }
-  }, [options]);
+    if (options.constRateOverpayment) {
+      setTotalCost(
+        installments.filter((inst) => inst.value > 0).length *
+        options.constRateOverpaymentValue + overpaymentsTotal
+      );
+    } else {
+      setTotalCost(installments.length * installments[0].value + overpaymentsTotal);
+    }
+  }, [options, chartData]);
 
   return (
     <>
@@ -111,7 +109,7 @@ const Credit = (): ReactElement => {
         <Summary gross={userInputs.wibor.value + userInputs.bankgross.value} totalCost={totalCost}
                  rates={installments.length} lastInstallmentDate={installments.at(-1)?.date} />
       </section>
-      <div style={{ padding: "2rem" }}>{<Line {...chartData} />}</div>
+      <div style={{ padding: "2rem" }}><Line {...chartData} /></div>
     </>
   );
 };
