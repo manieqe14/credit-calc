@@ -10,24 +10,29 @@ const Summary: React.FC<{ gross: number, totalCost: number, rates: number, lastI
                                                                                                                        }) => {
   return (
     <div className="card-sm h-fit">
-      <div className="flex-container">
-        <span>Total gross</span>
-        <span>
-                {rounder(gross)} %
-              </span>
-      </div>
-      <div className="flex-container">
-        <span>Total cost</span>
-        <span>{rounder(totalCost)} {initialUserInputs.amount.unit}</span>
-      </div>
-      <div className="flex-container">
-        <span>Rates</span>
-        <span>{rates}</span>
-      </div>
-      <div className="flex-container">
-        <span>Last day</span>
-        <span>{lastInstallmentDate?.toDateString()}</span>
-      </div>
+      <h2>Summary</h2>
+      <table className="summary-table">
+        <tbody>
+        <tr>
+          <td>Total gross</td>
+          <td>
+            {rounder(gross)} %
+          </td>
+        </tr>
+        <tr>
+          <td>Total cost</td>
+          <td>{rounder(totalCost)} {initialUserInputs.amount.unit}</td>
+        </tr>
+        <tr>
+          <td>Rates</td>
+          <td>{rates}</td>
+        </tr>
+        <tr>
+          <td>Last day</td>
+          <td>{lastInstallmentDate?.toLocaleDateString()}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>);
 };
 
