@@ -1,0 +1,10 @@
+version: "3"
+services:
+  credit-calc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: credit-calc-docker:latest
+    container_name: credit-calc
+    ports:
+      - "3000:80"

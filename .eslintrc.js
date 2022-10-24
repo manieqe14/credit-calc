@@ -1,24 +1,26 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true
+    es2021: true,
   },
   extends: [
     'plugin:react/recommended',
     'standard-with-typescript',
     'plugin:react/recommended',
-    'prettier'
+    'prettier',
+    'plugin:react/jsx-runtime',
   ],
-  overrides: [
-  ],
+  overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json'],
   },
-  plugins: [
-    'react'
-  ],
-  rules: {
-  }
-}
+  plugins: ['react'],
+  rules: {},
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+};
