@@ -1,24 +1,28 @@
-# get the base node image
-FROM node:alpine as builder
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-# copy the json file first
-COPY package.json .
-COPY package-lock.json .
+COPY package.json ./
 
-# install npm dependencies
-RUN npm install --production
+COPY package-lock.json ./
 
-ADD . .
+RUN npm i
 
-ENTRYPOINT ["/entrypoint.sh"]
+COPY . .
 
+#EXPOSE 3000
 
-EXPOSE 5173
+# CMD ["npm", "run", "serve"]
+RUN npm run build
 
-# build the folder
-CMD [ "npm", "run", "build" ]
-CMD [ "npm", "run", "start" ]
+FROM nginx:1.16.0-alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY etc/nginx.conf /etc/nginx/conf.d
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

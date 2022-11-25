@@ -19,8 +19,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
-    "build": "eslint src & tsc && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "vite build",
     "test": "vite test",
     "lint": "eslint --ext .js,.ts,.jsx,.tsx src",
     "format": "npm run lint --fix & npm prettier --write 'src/**/*.{js,jsx,ts,tsx}'"

@@ -1,9 +1,0 @@
-version: "3"
-services:
-  credit-calc:
-    container_name: credit-calc
-    image:
-    build:
-      context: .
-    ports:
-      - "3000:3000"
