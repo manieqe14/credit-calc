@@ -1,14 +1,17 @@
-import React, { ReactElement } from "react";
-import "./App.less";
-import Credit from "./components/Credit/Credit";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { ReactElement } from 'react';
+import './App.less';
+import Root from './components/Root/Root';
+import { theme } from './themes/theme';
+import { ThemeProvider } from '@mui/material';
 
 function App(): ReactElement {
   return (
-    <main className="App">
-      <h1>Credit calculator</h1>
-      <Credit />
-    </main>
+    <ThemeProvider theme={theme}>
+      <main className="App">
+        <h1>Credit calculator</h1>
+        <Root />
+      </main>
+    </ThemeProvider>
   );
 }
 

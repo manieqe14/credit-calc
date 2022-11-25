@@ -22,3 +22,8 @@ export interface Installment {
   date: Date;
   value: number;
 }
+
+export interface CreditContext {
+  installments: Installment[];
+  totalCost: number;
+}

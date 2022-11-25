@@ -1,28 +1,40 @@
-import { UserInputs } from "../components/Credit/types";
+import { UserInputs } from '../components/types';
 
-export const initialUserInputs: UserInputs = {
+const today = new Date();
+
+const InitialFormValues: UserInputs = {
   amount: {
-    name: "Loan amount",
+    name: 'Loan amount',
     value: 300000,
-    unit: "PLN",
-    step: 1000
+    unit: 'PLN',
+    step: 1000,
   },
   wibor: {
-    name: "WIBOR",
+    name: 'WIBOR',
     value: 6.5,
-    unit: "%",
-    step: 0.1
+    unit: '%',
+    step: 0.1,
   },
   bankgross: {
-    name: "Bank gross",
+    name: 'Bank gross',
     value: 2.13,
-    unit: "%",
-    step: 0.1
+    unit: '%',
+    step: 0.1,
   },
   period: {
-    name: "Period",
+    name: 'Period',
     value: 25 * 12,
-    unit: "month(s)",
-    step: 1
-  }
+    unit: 'month(s)',
+    step: 1,
+  },
+};
+const InitialOptions = {
+  constRateOverpayment: false,
+  constRateOverpaymentValue: 0,
+  startDate: today,
+};
+
+export const InitialValues = {
+  formValues: InitialFormValues,
+  options: InitialOptions,
 };

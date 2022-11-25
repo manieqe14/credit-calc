@@ -1,15 +1,16 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
-import { OptionsObj } from "./types";
-import { initialUserInputs } from "../../Utils/initialValues";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
+import { OptionsObj } from '../types';
+import { useInputDataContext } from '../../context/InputDataContext';
+import { Subtitle } from '../../view/titles/titles';
+import { TextInput } from '../../view/inputs/textInput';
 
 export const Options = ({
-                          options,
-                          setOptionsHandler
-                        }: {
-  options: OptionsObj;
+  setOptionsHandler,
+}: {
   setOptionsHandler: (options: OptionsObj) => void;
 }): ReactElement => {
+  const { formValues, options } = useInputDataContext();
   const [constRateOverpayment, setConstRateOverpayment] = useState(
     options.constRateOverpayment
   );
@@ -24,11 +25,13 @@ export const Options = ({
       ...options,
       startDate,
       constRateOverpayment,
-      constRateOverpaymentValue
+      constRateOverpaymentValue,
     });
   }, [constRateOverpayment, constRateOverpaymentValue, startDate]);
 
-  const changeDateEventHandler = (event: ChangeEvent<HTMLInputElement>): void => {
+  const changeDateEventHandler = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
     event.preventDefault();
     if (event.target.valueAsDate != null) {
       setStartDate(event.target.valueAsDate);
@@ -36,20 +39,24 @@ export const Options = ({
   };
 
   return (
-    <div className="card-sm h-fit">
-      <h2>Options</h2>
+    <div>
+      <Subtitle>Options</Subtitle>
       <form>
-        <div className="form-section">
-          <label htmlFor="constRateOverpaymentValue">Monthly payment</label>
+        <div>
           <input
             checked={constRateOverpayment}
             type="checkbox"
             id="const-rate-monthly-overpayment"
             onChange={() => setConstRateOverpayment(!constRateOverpayment)}
           />
-          <input
+          <TextInput
             disabled={!constRateOverpayment}
-            className={constRateOverpayment && isNanOrZero(constRateOverpaymentValue) ? "no-validated" : ""}
+            className={
+              constRateOverpayment && isNanOrZero(constRateOverpaymentValue)
+                ? 'no-validated'
+                : ''
+            }
+            label="Monthly payment"
             id="const-rate-overpayment-value"
             type="number"
             value={constRateOverpaymentValue}
@@ -57,12 +64,12 @@ export const Options = ({
               setConstRateOverpaymentValue(() => parseFloat(event.target.value))
             }
           />
-          <span>{initialUserInputs.amount.unit}</span>
+          {formValues.amount.unit}
         </div>
-        <div className="form-section">
-          <label htmlFor="overpayment-date">Set custom start date</label>
-          <input
+        <div>
+          <TextInput
             id="overpayment-date"
+            label="Set custom start date"
             type="date"
             value={getDateForInput(startDate)}
             onChange={changeDateEventHandler}

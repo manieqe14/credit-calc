@@ -1,7 +1,10 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
-import { getDateForInput, isNanOrZero } from "../../Utils/Helpers";
-import { v4 as uuidv4 } from "uuid";
-import { initialUserInputs } from "../../Utils/initialValues";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
+import { v4 as uuidv4 } from 'uuid';
+import { useInputDataContext } from '../../context/InputDataContext';
+import { Subtitle } from '../../view/titles/titles';
+import { TextInput } from '../../view/inputs/textInput';
+import { Wrapper } from '../../view/wrapper/wrapper';
 
 export interface OverpaymentDate {
   date: Date;
@@ -15,35 +18,39 @@ export interface Overpayment extends OverpaymentDate {
 }
 
 enum Period {
-  MONTH = "month",
-  QUARTER = "quarter",
-  YEAR = "year",
+  MONTH = 'month',
+  QUARTER = 'quarter',
+  YEAR = 'year',
 }
 
 export const Overpayments = ({
-                               enddate,
-                               overpaymentDatesHandler
-                             }: {
+  enddate,
+  overpaymentDatesHandler,
+}: {
   enddate: Date;
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
+  const { formValues } = useInputDataContext();
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
     date: new Date(),
-    repeatPeriod: Period.MONTH
+    repeatPeriod: Period.MONTH,
   });
   const [repeat, setRepeat] = useState(false);
   const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
 
   const setDateHandler = (event: ChangeEvent<HTMLInputElement>): void => {
-    setOverpayment(prev => ({ ...prev, date: event.target.valueAsDate ?? prev.date }));
+    setOverpayment((prev) => ({
+      ...prev,
+      date: event.target.valueAsDate ?? prev.date,
+    }));
   };
 
   const addItem = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
     if (overpayment.date.getTime() > enddate.getTime()) {
-      alert("Date cannot be after last installment date!");
+      alert('Date cannot be after last installment date!');
       return;
     }
 
@@ -58,13 +65,19 @@ export const Overpayments = ({
   useEffect(() => {
     const result: OverpaymentDate[] = [];
     for (const overpaymentObj of overpayments) {
-      if (overpaymentObj.repeatPeriod !== undefined && overpaymentObj.occurrences !== undefined) {
+      if (
+        overpaymentObj.repeatPeriod !== undefined &&
+        overpaymentObj.occurrences !== undefined
+      ) {
         const loopDate = new Date(overpaymentObj.date);
         let occurrencesCounter = 0;
-        while (loopDate.getTime() < enddate.getTime() && occurrencesCounter < overpaymentObj.occurrences) {
+        while (
+          loopDate.getTime() < enddate.getTime() &&
+          occurrencesCounter < overpaymentObj.occurrences
+        ) {
           result.push({
             date: new Date(loopDate),
-            value: overpaymentObj.value
+            value: overpaymentObj.value,
           });
           occurrencesCounter++;
           switch (overpaymentObj.repeatPeriod) {
@@ -93,39 +106,39 @@ export const Overpayments = ({
   }, [overpayments]);
 
   const handleDeleteOverpayment = (id: string): void => {
-    setOverpayments(overpayments.filter(item => item.uuid !== id));
+    setOverpayments(overpayments.filter((item) => item.uuid !== id));
   };
 
   return (
-    <div className="card-sm" style={{ width: "400px" }}>
-      <h2>Overpayments</h2>
-      <form style={{ display: "flex", alignItems: "center" }}>
+    <Wrapper>
+      <Subtitle>Overpayments</Subtitle>
+      <form>
         <div>
-          <div className="form-section">
-            <label htmlFor="overpayment-date">Date</label>
-            <input
+          <div>
+            <TextInput
               id="overpayment-date"
+              label="Date"
               type="date"
               value={getDateForInput(overpayment.date)}
               onChange={setDateHandler}
             />
           </div>
-          <div className="form-section">
-            <label htmlFor="overpayment-value">Value</label>
-            <input
+          <div>
+            <TextInput
               id="overpayment-value"
+              label="Value"
               type="number"
               value={overpayment.value}
+              suffix={formValues.amount.unit}
               onChange={(event) =>
                 setOverpayment({
                   ...overpayment,
-                  value: parseFloat(event.target.value)
+                  value: parseFloat(event.target.value),
                 })
               }
             />
-            <span>{initialUserInputs.amount.unit}</span>
           </div>
-          <div className="form-section">
+          <div>
             <label htmlFor="repeat-overpayment-selector">Reapat</label>
             <input
               type="checkbox"
@@ -138,7 +151,7 @@ export const Overpayments = ({
               onChange={(event) =>
                 setOverpayment({
                   ...overpayment,
-                  repeatPeriod: event.target.value as Period
+                  repeatPeriod: event.target.value as Period,
                 })
               }
               disabled={!repeat}
@@ -155,29 +168,33 @@ export const Overpayments = ({
               onChange={(event) =>
                 setOverpayment({
                   ...overpayment,
-                  occurrences: parseFloat(event.target.value)
+                  occurrences: parseFloat(event.target.value),
                 })
               }
               disabled={!repeat}
             >
-              {Array(15).fill(0).map((_element, index) => (
-                <option key={index} value={index}>
-                  {index}
-                </option>
-              ))}
+              {Array(15)
+                .fill(0)
+                .map((_element, index) => (
+                  <option key={index} value={index}>
+                    {index}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
         <button
           aria-label="Add overpayment button"
           disabled={overpayment.value === 0}
-          className={`${isNanOrZero(overpayment.value) ? "disabled " : ""}primary h-fit`}
+          className={`${
+            isNanOrZero(overpayment.value) ? 'disabled ' : ''
+          }primary h-fit`}
           onClick={addItem}
         >
           Add
         </button>
       </form>
-      <ul style={{ display: "flex", flexWrap: "wrap" }}>
+      <ul>
         {overpayments.map((item, index) => (
           <li
             key={index}
@@ -192,6 +209,6 @@ export const Overpayments = ({
           </li>
         ))}
       </ul>
-    </div>
+    </Wrapper>
   );
 };

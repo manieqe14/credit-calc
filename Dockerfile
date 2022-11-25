@@ -1,16 +1,24 @@
 # get the base node image
 FROM node:alpine as builder
 
-RUN mkdir credit-calc
-RUN cd credit-calc
+WORKDIR /app
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 # copy the json file first
-COPY ./package.json /
+COPY package.json .
+COPY package-lock.json .
 
 # install npm dependencies
-RUN npm install
+RUN npm install --production
 
-# copy other project files
-COPY . .
+ADD . .
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+EXPOSE 5173
 
 # build the folder
+CMD [ "npm", "run", "build" ]
 CMD [ "npm", "run", "start" ]
