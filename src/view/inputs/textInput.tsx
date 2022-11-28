@@ -1,16 +1,19 @@
 import { InputAdornment, TextField } from '@mui/material';
 import React from 'react';
-import { TextInputProps } from './textInput.types';
+import { inputWrapper } from '../wrapper/inputWrapper';
+import { TextInputProps } from './inputs.types';
 
-export const TextInput: React.FC<TextInputProps> = (props) => {
-
-  const suffix = (props.suffix != null) ? {
-    InputProps: {
-      endAdornment: (
-        <InputAdornment position="end">{props.suffix}</InputAdornment>
-      )
-    }
-  } : null;
+const TextInput: React.FC<TextInputProps> = (props) => {
+  const suffix =
+    props.suffix != null
+      ? {
+          InputProps: {
+            endAdornment: (
+              <InputAdornment position="end">{props.suffix}</InputAdornment>
+            ),
+          },
+        }
+      : null;
 
   return (
     <TextField
@@ -20,7 +23,7 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
           padding: '7px 12px',
         },
       }}
-      sx={{ margin: '5px' }}
+      sx={{ width: '150px' }}
       {...props}
       variant="outlined"
     >
@@ -28,3 +31,5 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
     </TextField>
   );
 };
+
+export default inputWrapper(TextInput);

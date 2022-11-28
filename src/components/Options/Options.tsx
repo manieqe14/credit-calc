@@ -3,7 +3,7 @@ import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
 import { OptionsObj } from '../types';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
-import { TextInput } from '../../view/inputs/textInput';
+import TextInput from '../../view/inputs/textInput';
 
 export const Options = ({
   setOptionsHandler,

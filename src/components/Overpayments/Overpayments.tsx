@@ -3,8 +3,11 @@ import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
-import { TextInput } from '../../view/inputs/textInput';
+import TextInput from '../../view/inputs/textInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
+import SelectInput from '../../view/inputs/selectInput';
+import { Button, MenuItem } from '@mui/material';
+import CheckboxInput from '../../view/inputs/checkboxInput';
 
 export interface OverpaymentDate {
   date: Date;
@@ -139,14 +142,13 @@ export const Overpayments = ({
             />
           </div>
           <div>
-            <label htmlFor="repeat-overpayment-selector">Reapat</label>
-            <input
-              type="checkbox"
+            <CheckboxInput
               checked={repeat}
+              label="repeat"
               onChange={() => setRepeat(!repeat)}
             />
-            <select
-              aria-label="Repeating period"
+            <SelectInput
+              label="Repeat"
               id="repeat-overpayment-selector"
               onChange={(event) =>
                 setOverpayment({
@@ -155,20 +157,22 @@ export const Overpayments = ({
                 })
               }
               disabled={!repeat}
+              value={overpayment.repeatPeriod}
             >
               {Object.entries(Period).map((element, index) => (
-                <option key={index} value={element[0]}>
+                <MenuItem key={index} value={element[0]}>
                   {element[0]}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-            <select
-              aria-label="Overpayment occurrences"
+            </SelectInput>
+            <SelectInput
+              label="Overpayment Occurrences"
               id="occurrences-number"
+              value={overpayment.occurrences}
               onChange={(event) =>
                 setOverpayment({
                   ...overpayment,
-                  occurrences: parseFloat(event.target.value),
+                  occurrences: parseFloat(event.target.value as string),
                 })
               }
               disabled={!repeat}
@@ -176,23 +180,21 @@ export const Overpayments = ({
               {Array(15)
                 .fill(0)
                 .map((_element, index) => (
-                  <option key={index} value={index}>
+                  <MenuItem key={index} value={index}>
                     {index}
-                  </option>
+                  </MenuItem>
                 ))}
-            </select>
+            </SelectInput>
           </div>
         </div>
-        <button
+        <Button
           aria-label="Add overpayment button"
           disabled={overpayment.value === 0}
-          className={`${
-            isNanOrZero(overpayment.value) ? 'disabled ' : ''
-          }primary h-fit`}
+          variant="outlined"
           onClick={addItem}
         >
           Add
-        </button>
+        </Button>
       </form>
       <ul>
         {overpayments.map((item, index) => (

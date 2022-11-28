@@ -1,5 +1,6 @@
-import { Input, styled } from '@mui/material';
+import { styled } from '@mui/material';
 
-export const InputField = styled(Input)`
-  font-size: 30px;
-`;
+export const InputRow = styled('div')({
+  display: 'flex',
+  alignItems: 'center'
+});
