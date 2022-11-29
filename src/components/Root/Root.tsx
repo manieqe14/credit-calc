@@ -19,7 +19,7 @@ import Summary from '../Summary/Summary';
 import Inputs from '../Inputs/Inputs';
 import { InputDataContext } from '../../context/InputDataContext';
 import { InitialValues } from '../../Utils/initialValues';
-import { Wrapper } from '../../view/wrapper/wrapper';
+import { Grid } from '@mui/material';
 
 ChartJS.register(
   CategoryScale,
@@ -67,21 +67,19 @@ const Root = (): ReactElement => {
 
   return (
     <InputDataContext.Provider value={{ formValues: userInputs, options }}>
-      <Wrapper>
+      <Grid container spacing={2}>
         <Inputs setUserInputs={setUserInputs} />
         <Options setOptionsHandler={setOptions} />
-      </Wrapper>
-      <Overpayments
-        enddate={dates.at(-1) ?? new Date()}
-        overpaymentDatesHandler={setOverpaymentDates}
-      />
-      <Summary
-        installments={installments}
-        overpaymentsTotal={overpaymentsTotal}
-      />
-      <div style={{ padding: '10px' }}>
+        <Overpayments
+          enddate={dates.at(-1) ?? new Date()}
+          overpaymentDatesHandler={setOverpaymentDates}
+        />
+        <Summary
+          installments={installments}
+          overpaymentsTotal={overpaymentsTotal}
+        />
         <Line {...chartData} />
-      </div>
+      </Grid>
     </InputDataContext.Provider>
   );
 };

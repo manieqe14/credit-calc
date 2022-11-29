@@ -3,6 +3,7 @@ import React from 'react';
 import { InputsFormInterface } from './Inputs.types';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
+import { Wrapper } from '../../view/wrapper/wrapper';
 
 const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
   const { formValues } = useInputDataContext();
@@ -16,7 +17,7 @@ const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
   };
 
   return (
-    <form>
+    <Wrapper>
       <Subtitle>Inputs</Subtitle>
       {Object.entries(formValues).map((input) => {
         return (
@@ -27,7 +28,7 @@ const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
           />
         );
       })}
-    </form>
+    </Wrapper>
   );
 };
 

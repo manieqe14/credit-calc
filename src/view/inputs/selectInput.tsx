@@ -1,16 +1,13 @@
-import { InputLabel, Select } from '@mui/material';
+import { FormControl, InputLabel, Select } from '@mui/material';
 import React from 'react';
-import { inputWrapper } from '../wrapper/inputWrapper';
 import { SelectInputProps } from './inputs.types';
+import { inputWrapper } from '../wrapper/inputWrapper';
 
-const SelectInput: React.FC<SelectInputProps> = (props) => {
-  console.info('Value: ', props.value);
-  return (
-    <>
-      <InputLabel id={props.label}>{props.label}</InputLabel>
-      <Select {...props}>{props.children}</Select>
-    </>
-  );
-};
+const SelectInput: React.FC<SelectInputProps> = (props) => (
+  <FormControl>
+    <InputLabel id={props.label}>{props.label}</InputLabel>
+    <Select {...props}>{props.children}</Select>
+  </FormControl>
+);
 
 export default inputWrapper(SelectInput);

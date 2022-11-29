@@ -23,7 +23,6 @@ const TextInput: React.FC<TextInputProps> = (props) => {
           padding: '7px 12px',
         },
       }}
-      sx={{ width: '150px' }}
       {...props}
       variant="outlined"
     >

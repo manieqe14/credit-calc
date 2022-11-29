@@ -4,11 +4,14 @@ import { SummaryPropsInterface } from './Summary.types';
 import { InitialValues } from '../../Utils/initialValues';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Wrapper } from '../../view/wrapper/wrapper';
+import { Subtitle } from '../../view/titles/titles';
+import { Grid } from '@mui/material';
 
 const Summary: React.FC<SummaryPropsInterface> = ({
   installments,
   overpaymentsTotal,
 }) => {
+  const rowWidth = 6;
   const { formValues, options } = useInputDataContext();
   const [totalCost, setTotalCost] = useState(0);
 
@@ -35,29 +38,33 @@ const Summary: React.FC<SummaryPropsInterface> = ({
 
   return (
     <Wrapper>
-      <h2>Summary</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Total gross</td>
-            <td>{rounder(gross)} %</td>
-          </tr>
-          <tr>
-            <td>Total cost</td>
-            <td>
-              {rounder(totalCost)} {InitialValues.formValues.amount.unit}
-            </td>
-          </tr>
-          <tr>
-            <td>Rates</td>
-            <td>{rates}</td>
-          </tr>
-          <tr>
-            <td>Last day</td>
-            <td>{lastInstallmentDate?.toLocaleDateString()}</td>
-          </tr>
-        </tbody>
-      </table>
+      <Subtitle>Summary</Subtitle>
+      <Grid container>
+        <Grid item xs={rowWidth}>
+          Total gross
+        </Grid>
+        <Grid item xs={rowWidth}>
+          {rounder(gross)} {InitialValues.formValues.bankgross.unit}
+        </Grid>
+        <Grid item xs={rowWidth}>
+          Total cost
+        </Grid>
+        <Grid item xs={rowWidth}>
+          {rounder(totalCost)} {InitialValues.formValues.amount.unit}
+        </Grid>
+        <Grid item xs={rowWidth}>
+          Rates
+        </Grid>
+        <Grid item xs={rowWidth}>
+          {rates}
+        </Grid>
+        <Grid item xs={rowWidth}>
+          Last day
+        </Grid>
+        <Grid item xs={rowWidth}>
+          {lastInstallmentDate?.toLocaleDateString()}
+        </Grid>
+      </Grid>
     </Wrapper>
   );
 };

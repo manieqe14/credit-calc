@@ -1,13 +1,14 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
-import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
+import { getDateForInput, getFormattedDate } from '../../Utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
-import SelectInput from '../../view/inputs/selectInput';
 import { Button, MenuItem } from '@mui/material';
 import CheckboxInput from '../../view/inputs/checkboxInput';
+import { RepeatingSectionWrapper } from './Overpayments.styles';
+import SelectInput from '../../view/inputs/selectInput';
 
 export interface OverpaymentDate {
   date: Date;
@@ -16,7 +17,7 @@ export interface OverpaymentDate {
 
 export interface Overpayment extends OverpaymentDate {
   repeatPeriod?: Period | undefined;
-  occurrences?: number | undefined;
+  occurrences: number;
   uuid: string;
 }
 
@@ -39,6 +40,7 @@ export const Overpayments = ({
     value: 0,
     date: new Date(),
     repeatPeriod: Period.MONTH,
+    occurrences: 1,
   });
   const [repeat, setRepeat] = useState(false);
   const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
@@ -112,6 +114,18 @@ export const Overpayments = ({
     setOverpayments(overpayments.filter((item) => item.uuid !== id));
   };
 
+  const overpaymentslist = (): JSX.Element => (
+    <ul>
+      {overpayments.map((item, index) => (
+        <li key={index} onClick={() => handleDeleteOverpayment(item.uuid)}>
+          <span>{getFormattedDate(item.date)}</span>
+          <span>{item.value} PLN</span>
+          {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <Wrapper>
       <Subtitle>Overpayments</Subtitle>
@@ -129,6 +143,7 @@ export const Overpayments = ({
           <div>
             <TextInput
               id="overpayment-value"
+              error={overpayment.value === 0}
               label="Value"
               type="number"
               value={overpayment.value}
@@ -141,7 +156,7 @@ export const Overpayments = ({
               }
             />
           </div>
-          <div>
+          <RepeatingSectionWrapper>
             <CheckboxInput
               checked={repeat}
               label="repeat"
@@ -159,14 +174,14 @@ export const Overpayments = ({
               disabled={!repeat}
               value={overpayment.repeatPeriod}
             >
-              {Object.entries(Period).map((element, index) => (
-                <MenuItem key={index} value={element[0]}>
-                  {element[0]}
+              {Object.entries(Period).map((element, _index) => (
+                <MenuItem key={element[1]} value={element[1]}>
+                  {element[1]}
                 </MenuItem>
               ))}
             </SelectInput>
             <SelectInput
-              label="Overpayment Occurrences"
+              label="Occurences"
               id="occurrences-number"
               value={overpayment.occurrences}
               onChange={(event) =>
@@ -185,32 +200,17 @@ export const Overpayments = ({
                   </MenuItem>
                 ))}
             </SelectInput>
-          </div>
+          </RepeatingSectionWrapper>
         </div>
         <Button
           aria-label="Add overpayment button"
           disabled={overpayment.value === 0}
-          variant="outlined"
           onClick={addItem}
         >
           Add
         </Button>
       </form>
-      <ul>
-        {overpayments.map((item, index) => (
-          <li
-            key={index}
-            className="badge-primary"
-            onClick={() => handleDeleteOverpayment(item.uuid)}
-          >
-            <span>{`${item.date.getDate()}-${
-              item.date.getMonth() + 1
-            }-${item.date.getFullYear()}`}</span>
-            <span>{item.value} PLN</span>
-            {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
-          </li>
-        ))}
-      </ul>
+      {overpaymentslist()}
     </Wrapper>
   );
 };

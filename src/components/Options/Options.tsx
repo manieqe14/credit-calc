@@ -1,9 +1,12 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
-import { getDateForInput, isNanOrZero } from '../../Utils/Helpers';
+import { getDateForInput } from '../../Utils/Helpers';
 import { OptionsObj } from '../types';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
+import CheckboxInput from '../../view/inputs/checkboxInput';
+import { Wrapper } from '../../view/wrapper/wrapper';
+import { Grid } from '@mui/material';
 
 export const Options = ({
   setOptionsHandler,
@@ -39,34 +42,28 @@ export const Options = ({
   };
 
   return (
-    <div>
+    <Wrapper>
       <Subtitle>Options</Subtitle>
-      <form>
-        <div>
-          <input
+      <Grid>
+        <Grid item sx={{ position: 'relative' }}>
+          <CheckboxInput
             checked={constRateOverpayment}
-            type="checkbox"
             id="const-rate-monthly-overpayment"
             onChange={() => setConstRateOverpayment(!constRateOverpayment)}
           />
           <TextInput
             disabled={!constRateOverpayment}
-            className={
-              constRateOverpayment && isNanOrZero(constRateOverpaymentValue)
-                ? 'no-validated'
-                : ''
-            }
             label="Monthly payment"
             id="const-rate-overpayment-value"
+            suffix={formValues.amount.unit}
             type="number"
             value={constRateOverpaymentValue}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setConstRateOverpaymentValue(() => parseFloat(event.target.value))
             }
           />
-          {formValues.amount.unit}
-        </div>
-        <div>
+        </Grid>
+        <Grid item>
           <TextInput
             id="overpayment-date"
             label="Set custom start date"
@@ -74,8 +71,8 @@ export const Options = ({
             value={getDateForInput(startDate)}
             onChange={changeDateEventHandler}
           />
-        </div>
-      </form>
-    </div>
+        </Grid>
+      </Grid>
+    </Wrapper>
   );
 };

@@ -1,8 +1,14 @@
-import { styled } from '@mui/material';
+import React, { PropsWithChildren } from 'react';
+import { Paper } from '@mui/material';
 
-export const Wrapper = styled('div')(({ theme }) => ({
-  margin: '10px',
-  padding: '1rem',
-  border: `1px solid ${theme.palette.grey[100]}`,
-  borderRadius: '0.5rem',
-}));
+export const Wrapper: React.FC<PropsWithChildren<{}>> = ({ children }) => (
+  <Paper
+    elevation={1}
+    sx={{
+      margin: '10px',
+      padding: '1rem',
+    }}
+  >
+    {children}
+  </Paper>
+);
