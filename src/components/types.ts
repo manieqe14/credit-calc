@@ -27,3 +27,9 @@ export interface CreditContext {
   installments: Installment[];
   totalCost: number;
 }
+
+export enum Period {
+  MONTH = 'month',
+  QUARTER = 'quarter',
+  YEAR = 'year',
+}

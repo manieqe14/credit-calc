@@ -9,6 +9,10 @@ import { Button, MenuItem } from '@mui/material';
 import CheckboxInput from '../../view/inputs/checkboxInput';
 import { RepeatingSectionWrapper } from './Overpayments.styles';
 import SelectInput from '../../view/inputs/selectInput';
+import ListView from '../../view/list/ListView';
+import ListViewElement from '../../view/list/ListView.Element';
+import { Period } from '../types';
+import useOverpaymentsDates from '../../Utils/Hooks/useOverpaymentsDates';
 
 export interface OverpaymentDate {
   date: Date;
@@ -21,12 +25,6 @@ export interface Overpayment extends OverpaymentDate {
   uuid: string;
 }
 
-enum Period {
-  MONTH = 'month',
-  QUARTER = 'quarter',
-  YEAR = 'year',
-}
-
 export const Overpayments = ({
   enddate,
   overpaymentDatesHandler,
@@ -35,6 +33,7 @@ export const Overpayments = ({
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const { formValues } = useInputDataContext();
+  const [overpaymentsDates] = useOverpaymentsDates([], enddate);
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
@@ -68,62 +67,23 @@ export const Overpayments = ({
   };
 
   useEffect(() => {
-    const result: OverpaymentDate[] = [];
-    for (const overpaymentObj of overpayments) {
-      if (
-        overpaymentObj.repeatPeriod !== undefined &&
-        overpaymentObj.occurrences !== undefined
-      ) {
-        const loopDate = new Date(overpaymentObj.date);
-        let occurrencesCounter = 0;
-        while (
-          loopDate.getTime() < enddate.getTime() &&
-          occurrencesCounter < overpaymentObj.occurrences
-        ) {
-          result.push({
-            date: new Date(loopDate),
-            value: overpaymentObj.value,
-          });
-          occurrencesCounter++;
-          switch (overpaymentObj.repeatPeriod) {
-            case Period.MONTH:
-              loopDate.setMonth(loopDate.getMonth() + 1);
-              break;
-            case Period.QUARTER:
-              loopDate.setMonth(loopDate.getMonth() + 3);
-              break;
-            case Period.YEAR:
-              loopDate.setFullYear(loopDate.getFullYear() + 1);
-              break;
-            default:
-              loopDate.setFullYear(loopDate.getFullYear() + 1);
-              break;
-          }
-        }
-      } else {
-        result.push({ date: overpaymentObj.date, value: overpaymentObj.value });
-      }
-    }
-
-    overpaymentDatesHandler(
-      result.sort((date1, date2) => date1.date.getTime() - date2.date.getTime())
-    );
-  }, [overpayments]);
+    overpaymentDatesHandler(overpaymentsDates);
+  }, [overpaymentsDates]);
 
   const handleDeleteOverpayment = (id: string): void => {
     setOverpayments(overpayments.filter((item) => item.uuid !== id));
   };
 
   const overpaymentslist = (): JSX.Element => (
-    <ul>
-      {overpayments.map((item, index) => (
-        <li key={index} onClick={() => handleDeleteOverpayment(item.uuid)}>
+    <ListView>
+      {overpayments.map((item) => (
+        <ListViewElement onClick={() => handleDeleteOverpayment(item.uuid)}>
           <span>{getFormattedDate(item.date)}</span>
           <span>{item.value} PLN</span>
           {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
-        </li>
+        </ListViewElement>
       ))}
-    </ul>
+    </ListView>
   );
 
   return (
