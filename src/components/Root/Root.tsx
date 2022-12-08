@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo, useState } from 'react';
 import { Options } from '../Options/Options';
-import { OverpaymentDate, Overpayments } from '../Overpayments/Overpayments';
+import { Overpayments } from '../Overpayments/Overpayments';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import useDataForChart from '../../Utils/Hooks/useDataForChart';
-import { OptionsObj, UserInputs } from '../types';
+import { OptionsObj, OverpaymentDate, UserInputs } from '../types';
 import useInstallmentsCount from '../../Utils/Hooks/useInstallmentsCount';
 import Summary from '../Summary/Summary';
 import Inputs from '../Inputs/Inputs';

@@ -10,20 +10,9 @@ import CheckboxInput from '../../view/inputs/checkboxInput';
 import { RepeatingSectionWrapper } from './Overpayments.styles';
 import SelectInput from '../../view/inputs/selectInput';
 import ListView from '../../view/list/ListView';
-import ListViewElement from '../../view/list/ListView.Element';
-import { Period } from '../types';
+import { Overpayment, OverpaymentDate, Period } from '../types';
 import useOverpaymentsDates from '../../Utils/Hooks/useOverpaymentsDates';
-
-export interface OverpaymentDate {
-  date: Date;
-  value: number;
-}
-
-export interface Overpayment extends OverpaymentDate {
-  repeatPeriod?: Period | undefined;
-  occurrences: number;
-  uuid: string;
-}
+import ListViewItem from '../../view/list/ListViewItem';
 
 export const Overpayments = ({
   enddate,
@@ -75,13 +64,13 @@ export const Overpayments = ({
   };
 
   const overpaymentslist = (): JSX.Element => (
-    <ListView>
+    <ListView onClick={handleDeleteOverpayment}>
       {overpayments.map((item) => (
-        <ListViewElement onClick={() => handleDeleteOverpayment(item.uuid)}>
-          <span>{getFormattedDate(item.date)}</span>
+        <ListViewItem>
+          <ListViewItem.Title>{getFormattedDate(item.date)}</ListViewItem.Title>
           <span>{item.value} PLN</span>
           {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
-        </ListViewElement>
+        </ListViewItem>
       ))}
     </ListView>
   );

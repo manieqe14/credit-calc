@@ -33,3 +33,14 @@ export enum Period {
   QUARTER = 'quarter',
   YEAR = 'year',
 }
+
+export interface OverpaymentDate {
+  date: Date;
+  value: number;
+}
+
+export interface Overpayment extends OverpaymentDate {
+  repeatPeriod?: Period | undefined;
+  occurrences: number;
+  uuid: string;
+}
