@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { countInstallment, odsetki } from '../Helpers';
-import { Installment, OptionsObj, UserInputs } from '../../components/types';
-import { OverpaymentDate } from '../../components/Overpayments/Overpayments';
+import { Installment, OptionsObj, OverpaymentDate, UserInputs } from '../../components/types';
 
 interface InstallmentsCountProps {
   dates: Date[];

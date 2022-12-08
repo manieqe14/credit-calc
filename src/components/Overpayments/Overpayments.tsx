@@ -22,7 +22,7 @@ export const Overpayments = ({
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const { formValues } = useInputDataContext();
-  const [overpaymentsDates] = useOverpaymentsDates([], enddate);
+  const overpaymentsDates = useOverpaymentsDates([], enddate);
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
