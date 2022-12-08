@@ -1,8 +1,10 @@
-import { ComponentProps, FC, PropsWithChildren } from 'react';
-import { TypographyProps } from '@mui/material';
+import { ComponentPropsWithoutRef, FC } from 'react';
+import { ListItemProps, TypographyProps } from '@mui/material';
 
-export interface ListViewProps extends ComponentProps<'ul'> {}
+export interface ListViewProps extends Omit<ComponentPropsWithoutRef<'ul'>, "onClick"> {
+  onClick: (id: string) => void;
+}
 
-export interface ListItemComposition extends FC<PropsWithChildren<{}>> {
+export interface ListItemComposition extends ListItemProps {
   Title?: FC<TypographyProps>;
 }
