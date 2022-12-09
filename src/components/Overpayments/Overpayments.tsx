@@ -184,6 +184,7 @@ export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
         </RepeatingSectionWrapper>
         <Button
           aria-label="Add overpayment button"
+          variant="contained"
           disabled={overpayment.value === 0}
           onClick={addItem}
         >

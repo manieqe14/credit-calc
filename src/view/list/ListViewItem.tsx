@@ -1,10 +1,16 @@
-import { ListItem, Typography, TypographyProps } from '@mui/material';
-import { FC } from 'react';
+import {
+  IconButton,
+  ListItem,
+  Typography,
+  TypographyProps,
+} from '@mui/material';
+import React, { FC } from 'react';
 import { ListItemComposition, ListViewItemDateProps } from './ListView.types';
 import { MutedText } from '../titles/text';
 import { useListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
 import { getFormattedDate } from '../../Utils/Helpers';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function ListViewItem({ children, ...props }: ListItemComposition) {
   const { Title, id, ...parentProps } = props;
@@ -12,7 +18,6 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
 
   return (
     <ListItem
-      onClick={() => !isNil(onClick) && onClick(id)}
       alignItems="flex-start"
       sx={{
         display: 'flex',
@@ -22,6 +27,11 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
         marginBottom: '5px',
       }}
       {...parentProps}
+      secondaryAction={
+        <IconButton edge="end" onClick={() => !isNil(onClick) && onClick(id)}>
+          <DeleteIcon />
+        </IconButton>
+      }
     >
       {children}
     </ListItem>
