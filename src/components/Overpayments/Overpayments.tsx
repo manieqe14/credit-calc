@@ -11,8 +11,8 @@ import { RepeatingSectionWrapper } from './Overpayments.styles';
 import SelectInput from '../../view/inputs/selectInput';
 import ListView from '../../view/list/ListView';
 import { Overpayment, OverpaymentDate, Period } from '../types';
-import useOverpaymentsDates from '../../Utils/Hooks/useOverpaymentsDates';
 import ListViewItem from '../../view/list/ListViewItem';
+import { isNil } from 'ramda';
 
 export const Overpayments = ({
   enddate,
@@ -22,7 +22,6 @@ export const Overpayments = ({
   overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
 }): ReactElement => {
   const { formValues } = useInputDataContext();
-  const overpaymentsDates = useOverpaymentsDates([], enddate);
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
@@ -56,8 +55,47 @@ export const Overpayments = ({
   };
 
   useEffect(() => {
-    overpaymentDatesHandler(overpaymentsDates);
-  }, [overpaymentsDates]);
+    const result: OverpaymentDate[] = [];
+    for (const overpaymentObj of overpayments) {
+      if (
+        overpaymentObj.repeatPeriod !== undefined &&
+        overpaymentObj.occurrences !== undefined
+      ) {
+        const loopDate = new Date(overpaymentObj.date);
+        let occurrencesCounter = 0;
+        while (
+          loopDate.getTime() < enddate.getTime() &&
+          occurrencesCounter < overpaymentObj.occurrences
+        ) {
+          result.push({
+            date: new Date(loopDate),
+            value: overpaymentObj.value,
+          });
+          occurrencesCounter++;
+          switch (overpaymentObj.repeatPeriod) {
+            case Period.MONTH:
+              loopDate.setMonth(loopDate.getMonth() + 1);
+              break;
+            case Period.QUARTER:
+              loopDate.setMonth(loopDate.getMonth() + 3);
+              break;
+            case Period.YEAR:
+              loopDate.setFullYear(loopDate.getFullYear() + 1);
+              break;
+            default:
+              loopDate.setFullYear(loopDate.getFullYear() + 1);
+              break;
+          }
+        }
+      } else {
+        result.push({ date: overpaymentObj.date, value: overpaymentObj.value });
+      }
+    }
+
+    overpaymentDatesHandler(
+      result.sort((date1, date2) => date1.date.getTime() - date2.date.getTime())
+    );
+  }, [overpayments, enddate]);
 
   const handleDeleteOverpayment = (id: string): void => {
     setOverpayments(overpayments.filter((item) => item.uuid !== id));
@@ -67,9 +105,13 @@ export const Overpayments = ({
     <ListView onClick={handleDeleteOverpayment}>
       {overpayments.map((item) => (
         <ListViewItem>
-          <ListViewItem.Title>{getFormattedDate(item.date)}</ListViewItem.Title>
-          <span>{item.value} PLN</span>
-          {item.repeatPeriod != null && <span>{item.repeatPeriod}</span>}
+          <ListViewItem.Title>
+            <span>{item.value} PLN</span>
+          </ListViewItem.Title>
+          <ListViewItem.Date>{getFormattedDate(item.date)}</ListViewItem.Date>
+          {!isNil(item.repeatPeriod) && (
+            <ListViewItem.Info>{item.repeatPeriod}</ListViewItem.Info>
+          )}
         </ListViewItem>
       ))}
     </ListView>
