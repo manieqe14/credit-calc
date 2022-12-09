@@ -1,12 +1,18 @@
 import { ListItem, Typography, TypographyProps } from '@mui/material';
-import React from 'react';
-import { ListItemComposition } from './ListView.types';
+import { FC } from 'react';
+import { ListItemComposition, ListViewItemDateProps } from './ListView.types';
 import { MutedText } from '../titles/text';
+import { useListViewContext } from '../../context/ListViewContext';
+import { isNil } from 'ramda';
+import { getFormattedDate } from '../../Utils/Helpers';
 
 function ListViewItem({ children, ...props }: ListItemComposition) {
-  const { Title, ...parentProps } = props;
+  const { Title, id, ...parentProps } = props;
+  const { onClick } = useListViewContext();
+
   return (
     <ListItem
+      onClick={() => !isNil(onClick) && onClick(id)}
       alignItems="flex-start"
       sx={{
         display: 'flex',
@@ -22,15 +28,27 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
   );
 }
 
-const ListViewItemTitle = ({ children }: TypographyProps) => {
-  return <Typography>{children}</Typography>;
+const ListViewItemTitle: FC<TypographyProps> = ({
+  children,
+  ...props
+}: TypographyProps) => {
+  return <Typography {...props}>{children}</Typography>;
 };
 
-const ListViewItemDate = ({ children }: TypographyProps) => {
-  return <MutedText sx={{ fontSize: '0.75rem' }}>{children}</MutedText>;
+const ListViewItemDate: FC<ListViewItemDateProps> = ({
+  date,
+  ...props
+}: ListViewItemDateProps) => {
+  return (
+    <MutedText sx={{ fontSize: '0.75rem' }} {...props}>
+      {getFormattedDate(date)}
+    </MutedText>
+  );
 };
 
-const ListViewItemInfo = ({ children }: TypographyProps) => {
+const ListViewItemInfo: FC<TypographyProps> = ({
+  children,
+}: TypographyProps) => {
   return (
     <Typography
       sx={{ fontSize: '0.75rem', position: 'absolute', right: '10px' }}

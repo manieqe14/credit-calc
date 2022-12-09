@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { Options } from '../Options/Options';
 import { Overpayments } from '../Overpayments/Overpayments';
 import {
@@ -20,6 +20,7 @@ import Inputs from '../Inputs/Inputs';
 import { InputDataContext } from '../../context/InputDataContext';
 import { InitialValues } from '../../Utils/initialValues';
 import { Grid } from '@mui/material';
+import { generateDatesArray } from '../../Utils/generateDatesArray';
 
 ChartJS.register(
   CategoryScale,
@@ -40,22 +41,21 @@ const Root = (): ReactElement => {
     []
   );
 
+  const overpaymentDatesHandler = (dates: OverpaymentDate[]): void =>
+    setOverpaymentDates(dates);
+
   // TODO fetch current WIBOR
   // TODO overpayment number of occurrences switch
   // TODO translation
   // TODO custom start date -> hint -> today
   // TODO wakacje kredytowe
   // TODO options provider
+  // TODO save data in storage
 
-  const dates = useMemo<Date[]>(() => {
-    return Array.from(Array(userInputs.period.value).keys()).map(
-      (_value, index) => {
-        const newDate = new Date(options.startDate);
-        newDate.setMonth(newDate.getMonth() + index);
-        return newDate;
-      }
-    );
-  }, [userInputs.period, options.startDate]);
+  const dates = useMemo<Date[]>(
+    () => generateDatesArray(options.startDate, userInputs.period.value),
+    [userInputs.period.value, options.startDate]
+  );
 
   const { installments, overpaymentsTotal } = useInstallmentsCount({
     dates,
@@ -66,14 +66,17 @@ const Root = (): ReactElement => {
   const chartData = useDataForChart({ installments, options });
 
   return (
-    <InputDataContext.Provider value={{ formValues: userInputs, options }}>
+    <InputDataContext.Provider
+      value={{
+        formValues: userInputs,
+        options,
+        overpaymentDatesHandler,
+      }}
+    >
       <Grid container spacing={2}>
         <Inputs setUserInputs={setUserInputs} />
         <Options setOptionsHandler={setOptions} />
-        <Overpayments
-          enddate={dates.at(-1) ?? new Date()}
-          overpaymentDatesHandler={setOverpaymentDates}
-        />
+        <Overpayments endDate={dates.at(-1) ?? new Date()} />
         <Summary
           installments={installments}
           overpaymentsTotal={overpaymentsTotal}

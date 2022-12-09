@@ -2,25 +2,21 @@ import { InputAdornment, TextField } from '@mui/material';
 import React from 'react';
 import { inputWrapper } from '../wrapper/inputWrapper';
 import { TextInputProps } from './inputs.types';
+import { isNil } from 'ramda';
 
 const TextInput: React.FC<TextInputProps> = (props) => {
-  const suffix =
-    props.suffix != null
-      ? {
-          InputProps: {
-            endAdornment: (
-              <InputAdornment position="end">{props.suffix}</InputAdornment>
-            ),
-          },
-        }
-      : null;
-
   return (
     <TextField
-      {...suffix}
+      style={{ margin: '0.75rem 0' }}
+      fullWidth
       inputProps={{
         style: {
           padding: '7px 12px',
+          ...(!isNil(props.suffix) && {
+            endAdornment: (
+              <InputAdornment position="end">{props.suffix}</InputAdornment>
+            ),
+          }),
         },
       }}
       {...props}

@@ -6,7 +6,7 @@ export const Wrapper: React.FC<PropsWithChildren<{}>> = ({ children }) => (
     elevation={1}
     sx={{
       margin: '10px',
-      padding: '1rem',
+      padding: '1.75rem',
     }}
   >
     {children}

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
-import { getDateForInput, getFormattedDate } from '../../Utils/Helpers';
+import { getDateForInput } from '../../Utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useInputDataContext } from '../../context/InputDataContext';
 import { Subtitle } from '../../view/titles/titles';
@@ -14,14 +14,8 @@ import { Overpayment, OverpaymentDate, Period } from '../types';
 import ListViewItem from '../../view/list/ListViewItem';
 import { isNil } from 'ramda';
 
-export const Overpayments = ({
-  enddate,
-  overpaymentDatesHandler,
-}: {
-  enddate: Date;
-  overpaymentDatesHandler: (value: OverpaymentDate[]) => void;
-}): ReactElement => {
-  const { formValues } = useInputDataContext();
+export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
+  const { formValues, overpaymentDatesHandler } = useInputDataContext();
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
@@ -41,7 +35,7 @@ export const Overpayments = ({
 
   const addItem = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    if (overpayment.date.getTime() > enddate.getTime()) {
+    if (overpayment.date.getTime() > endDate.getTime()) {
       alert('Date cannot be after last installment date!');
       return;
     }
@@ -55,6 +49,9 @@ export const Overpayments = ({
   };
 
   useEffect(() => {
+    if (isNil(overpaymentDatesHandler)) {
+      return;
+    }
     const result: OverpaymentDate[] = [];
     for (const overpaymentObj of overpayments) {
       if (
@@ -64,7 +61,7 @@ export const Overpayments = ({
         const loopDate = new Date(overpaymentObj.date);
         let occurrencesCounter = 0;
         while (
-          loopDate.getTime() < enddate.getTime() &&
+          loopDate.getTime() < endDate.getTime() &&
           occurrencesCounter < overpaymentObj.occurrences
         ) {
           result.push({
@@ -95,20 +92,20 @@ export const Overpayments = ({
     overpaymentDatesHandler(
       result.sort((date1, date2) => date1.date.getTime() - date2.date.getTime())
     );
-  }, [overpayments, enddate]);
+  }, [overpayments, endDate]);
 
   const handleDeleteOverpayment = (id: string): void => {
     setOverpayments(overpayments.filter((item) => item.uuid !== id));
   };
 
-  const overpaymentslist = (): JSX.Element => (
+  const overpaymentsList = (): JSX.Element => (
     <ListView onClick={handleDeleteOverpayment}>
       {overpayments.map((item) => (
-        <ListViewItem>
+        <ListViewItem id={item.uuid}>
           <ListViewItem.Title>
-            <span>{item.value} PLN</span>
+            {`${item.value} ${formValues.amount.unit}`}
           </ListViewItem.Title>
-          <ListViewItem.Date>{getFormattedDate(item.date)}</ListViewItem.Date>
+          <ListViewItem.Date date={item.date} />
           {!isNil(item.repeatPeriod) && (
             <ListViewItem.Info>{item.repeatPeriod}</ListViewItem.Info>
           )}
@@ -121,78 +118,70 @@ export const Overpayments = ({
     <Wrapper>
       <Subtitle>Overpayments</Subtitle>
       <form>
-        <div>
-          <div>
-            <TextInput
-              id="overpayment-date"
-              label="Date"
-              type="date"
-              value={getDateForInput(overpayment.date)}
-              onChange={setDateHandler}
-            />
-          </div>
-          <div>
-            <TextInput
-              id="overpayment-value"
-              error={overpayment.value === 0}
-              label="Value"
-              type="number"
-              value={overpayment.value}
-              suffix={formValues.amount.unit}
-              onChange={(event) =>
-                setOverpayment({
-                  ...overpayment,
-                  value: parseFloat(event.target.value),
-                })
-              }
-            />
-          </div>
-          <RepeatingSectionWrapper>
-            <CheckboxInput
-              checked={repeat}
-              label="repeat"
-              onChange={() => setRepeat(!repeat)}
-            />
-            <SelectInput
-              label="Repeat"
-              id="repeat-overpayment-selector"
-              onChange={(event) =>
-                setOverpayment({
-                  ...overpayment,
-                  repeatPeriod: event.target.value as Period,
-                })
-              }
-              disabled={!repeat}
-              value={overpayment.repeatPeriod}
-            >
-              {Object.entries(Period).map((element, _index) => (
-                <MenuItem key={element[1]} value={element[1]}>
-                  {element[1]}
+        <TextInput
+          id="overpayment-date"
+          label="Date"
+          type="date"
+          value={getDateForInput(overpayment.date)}
+          onChange={setDateHandler}
+        />
+        <TextInput
+          id="overpayment-value"
+          error={overpayment.value === 0}
+          label="Value"
+          type="number"
+          value={overpayment.value}
+          suffix={formValues.amount.unit}
+          onChange={(event) =>
+            setOverpayment({
+              ...overpayment,
+              value: parseFloat(event.target.value),
+            })
+          }
+        />
+        <RepeatingSectionWrapper>
+          <CheckboxInput
+            checked={repeat}
+            label="repeat"
+            onChange={() => setRepeat(!repeat)}
+          />
+          <SelectInput
+            label="repeat-input"
+            onChange={(event) =>
+              setOverpayment({
+                ...overpayment,
+                repeatPeriod: event.target.value as Period,
+              })
+            }
+            disabled={!repeat}
+            value={overpayment.repeatPeriod}
+          >
+            {Object.entries(Period).map((element, _index) => (
+              <MenuItem key={element[1]} value={element[1]}>
+                {element[1]}
+              </MenuItem>
+            ))}
+          </SelectInput>
+          <SelectInput
+            label="Occurences"
+            value={overpayment.occurrences}
+            onChange={(event) =>
+              setOverpayment({
+                ...overpayment,
+                occurrences: parseFloat(event.target.value as string),
+              })
+            }
+            disabled={!repeat}
+          >
+            {Array(15)
+              .fill(0)
+              .map((_element, index) => (
+                <MenuItem key={index} value={index}>
+                  {index}
                 </MenuItem>
               ))}
-            </SelectInput>
-            <SelectInput
-              label="Occurences"
-              id="occurrences-number"
-              value={overpayment.occurrences}
-              onChange={(event) =>
-                setOverpayment({
-                  ...overpayment,
-                  occurrences: parseFloat(event.target.value as string),
-                })
-              }
-              disabled={!repeat}
-            >
-              {Array(15)
-                .fill(0)
-                .map((_element, index) => (
-                  <MenuItem key={index} value={index}>
-                    {index}
-                  </MenuItem>
-                ))}
-            </SelectInput>
-          </RepeatingSectionWrapper>
-        </div>
+          </SelectInput>
+        </RepeatingSectionWrapper>
         <Button
           aria-label="Add overpayment button"
           disabled={overpayment.value === 0}
@@ -201,7 +190,7 @@ export const Overpayments = ({
           Add
         </Button>
       </form>
-      {overpaymentslist()}
+      {overpaymentsList()}
     </Wrapper>
   );
 };

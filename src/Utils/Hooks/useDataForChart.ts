@@ -36,7 +36,7 @@ const useDataForChart = ({
           y: {
             beginAtZero: true,
             ticks: {
-              callback: (value: string) =>
+              callback: (value: string | number) =>
                 `${value} ${InitialValues.formValues.amount.unit}`,
             },
           },

@@ -4,9 +4,17 @@ import { SelectInputProps } from './inputs.types';
 import { inputWrapper } from '../wrapper/inputWrapper';
 
 const SelectInput: React.FC<SelectInputProps> = (props) => (
-  <FormControl>
+  <FormControl sx={{ minWidth: 100, position: 'relative' }}>
     <InputLabel id={props.label}>{props.label}</InputLabel>
-    <Select {...props}>{props.children}</Select>
+    <Select
+      inputProps={{
+        style: {
+          padding: '15px',
+        },
+      }}
+    >
+      {props.children}
+    </Select>
   </FormControl>
 );
 

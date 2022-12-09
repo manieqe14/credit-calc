@@ -19,15 +19,13 @@ const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
   return (
     <Wrapper>
       <Subtitle>Inputs</Subtitle>
-      {Object.entries(formValues).map((input) => {
-        return (
-          <Input
-            key={input[0]}
-            userInput={input[1]}
-            onChange={(value: number) => handleUserClick(input[0], value)}
-          />
-        );
-      })}
+      {Object.entries(formValues).map((input) => (
+        <Input
+          key={input[0]}
+          userInput={input[1]}
+          onChange={(value: number) => handleUserClick(input[0], value)}
+        />
+      ))}
     </Wrapper>
   );
 };

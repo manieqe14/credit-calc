@@ -8,7 +8,12 @@ export interface ListViewProps
 }
 
 export interface ListItemComposition extends ListItemProps {
+  id: string;
   Title?: FC<TypographyProps>;
   Date?: FC<TypographyProps>;
   Info?: FC<TypographyProps>;
+}
+
+export interface ListViewItemDateProps extends TypographyProps {
+  date: Date;
 }
