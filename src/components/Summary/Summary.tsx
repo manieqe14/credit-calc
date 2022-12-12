@@ -34,7 +34,7 @@ const Summary: React.FC<SummaryPropsInterface> = ({
         installments.length * installments[0].value + overpaymentsTotal
       );
     }
-  }, [options]);
+  }, [options, formValues]);
 
   return (
     <Wrapper>
