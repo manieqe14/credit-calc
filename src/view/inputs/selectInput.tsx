@@ -7,6 +7,8 @@ const SelectInput: React.FC<SelectInputProps> = (props) => (
   <FormControl sx={{ minWidth: 100, position: 'relative' }}>
     <InputLabel id={props.label}>{props.label}</InputLabel>
     <Select
+      style={{ margin: "0 10px 0 0" }}
+      {...props}
       inputProps={{
         style: {
           padding: '15px',
@@ -15,7 +17,6 @@ const SelectInput: React.FC<SelectInputProps> = (props) => (
     >
       {props.children}
     </Select>
-  </FormControl>
-);
+  </FormControl>);
 
 export default inputWrapper(SelectInput);

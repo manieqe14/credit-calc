@@ -6,19 +6,21 @@ import { Wrapper } from '../../view/wrapper/wrapper';
 import { Subtitle } from '../../view/titles/titles';
 import { Grid } from '@mui/material';
 import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
 const Summary: React.FC<{}> = () => {
   const rowWidth = 6;
   const store = useStore();
-  const { userInputs, totalCost } = store;
+  const { t } = useTranslation();
+  const { userInputs, totalCost, installments } = store;
 
   const gross = userInputs.wibor.value + userInputs.bankgross.value;
-  const rates = store.installments.length;
-  const lastInstallmentDate = store.installments.at(-1)?.date;
+  const rates = installments.length;
+  const lastInstallmentDate = installments.at(-1)?.date;
 
   return (
     <Wrapper>
-      <Subtitle>Summary</Subtitle>
+      <Subtitle>{t("Summary")}</Subtitle>
       <Grid container>
         <Grid item xs={rowWidth}>
           Total gross

@@ -6,10 +6,13 @@ import TextInput from '../../view/inputs/textInput';
 import CheckboxInput from '../../view/inputs/checkboxInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
 import { Grid } from '@mui/material';
+import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
-export const Options = (): ReactElement => {
+const Options = (): ReactElement => {
   const store = useStore();
-  const { userInputs, options } = store;
+  const { userInputs, options, startDate } = store;
+  const { t } = useTranslation();
   const [constRateOverpayment, setConstRateOverpayment] = useState(
     options.constRateOverpayment
   );
@@ -17,30 +20,27 @@ export const Options = (): ReactElement => {
     options.constRateOverpaymentValue
   );
 
-  const [startDate, setStartDate] = useState(options.startDate);
-
   useEffect(() => {
     store.setOptions({
       ...options,
-      startDate,
       constRateOverpayment,
       constRateOverpaymentValue,
     });
-  }, [constRateOverpayment, constRateOverpaymentValue, startDate]);
+  }, [constRateOverpayment, constRateOverpaymentValue]);
 
   const changeDateEventHandler = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
     event.preventDefault();
     if (event.target.valueAsDate != null) {
-      setStartDate(event.target.valueAsDate);
+      store.startDate = event.target.valueAsDate;
     }
   };
 
   return (
     <Wrapper>
-      <Subtitle>Options</Subtitle>
-      <Grid>
+      <Subtitle>{t('Options')}</Subtitle>
+      <Grid style={{ marginLeft: '20px' }}>
         <Grid item sx={{ position: 'relative' }}>
           <CheckboxInput
             checked={constRateOverpayment}
@@ -49,7 +49,7 @@ export const Options = (): ReactElement => {
           />
           <TextInput
             disabled={!constRateOverpayment}
-            label="Monthly payment"
+            label={t('Monthly payment')}
             id="const-rate-overpayment-value"
             suffix={userInputs.amount.unit}
             type="number"
@@ -62,7 +62,7 @@ export const Options = (): ReactElement => {
         <Grid item>
           <TextInput
             id="overpayment-date"
-            label="Set custom start date"
+            label={t("Custom start date")}
             type="date"
             value={getDateForInput(startDate)}
             onChange={changeDateEventHandler}
@@ -72,3 +72,5 @@ export const Options = (): ReactElement => {
     </Wrapper>
   );
 };
+
+export default observer(Options);

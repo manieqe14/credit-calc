@@ -13,10 +13,13 @@ import ListView from '../../view/list/ListView';
 import { Overpayment, Period } from '../types';
 import ListViewItem from '../../view/list/ListViewItem';
 import { isNil } from 'ramda';
+import { observer } from "mobx-react-lite";
+import { useTranslation } from "react-i18next";
 
-export const Overpayments = (): ReactElement => {
+const Overpayments = (): ReactElement => {
   const store = useStore();
   const { userInputs, overpayments } = store;
+  const { t } = useTranslation();
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
@@ -40,12 +43,8 @@ export const Overpayments = (): ReactElement => {
       return;
     }
 
-    const newOverpayment = repeat
-      ? overpayment
-      : { ...overpayment, repeatPeriod: undefined };
-
     setOverpayment({ ...overpayment, uuid: uuidv4() });
-    store.addOverpayment(newOverpayment);
+    store.addOverpayment(repeat ? overpayment : { ...overpayment, repeatPeriod: undefined });
   };
 
   const overpaymentsList = (): JSX.Element => (
@@ -66,11 +65,11 @@ export const Overpayments = (): ReactElement => {
 
   return (
     <Wrapper>
-      <Subtitle>Overpayments</Subtitle>
-      <form>
+      <Subtitle>{t("Overpayments")}</Subtitle>
+      <form style={{marginLeft: '20px'}}>
         <TextInput
           id="overpayment-date"
-          label="Date"
+          label={t("Date")}
           type="date"
           value={getDateForInput(overpayment.date)}
           onChange={setDateHandler}
@@ -78,7 +77,7 @@ export const Overpayments = (): ReactElement => {
         <TextInput
           id="overpayment-value"
           error={overpayment.value === 0}
-          label="Value"
+          label={t("Value")}
           type="number"
           value={overpayment.value}
           suffix={userInputs.amount.unit}
@@ -133,6 +132,7 @@ export const Overpayments = (): ReactElement => {
           </SelectInput>
         </RepeatingSectionWrapper>
         <Button
+          style={{ float: "right"}}
           aria-label="Add overpayment button"
           variant="contained"
           disabled={overpayment.value === 0}
@@ -145,3 +145,5 @@ export const Overpayments = (): ReactElement => {
     </Wrapper>
   );
 };
+
+export default observer(Overpayments);

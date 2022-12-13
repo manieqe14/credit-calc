@@ -4,27 +4,24 @@ import React from 'react';
 import { useStore } from "../../context/store.context";
 import { Subtitle } from '../../view/titles/titles';
 import { Wrapper } from '../../view/wrapper/wrapper';
+import { action } from "mobx";
+import { InputNames } from "../types";
 
 const Inputs: React.FC<{}> = () => {
   const store = useStore();
-  const { userInputs } = store;
 
   const handleUserClick = (key: string, value: number): void => {
-    type keyType = keyof typeof userInputs;
-    const userKey = key as keyType;
-    const newInput = userInputs[userKey];
-    newInput.value = value;
-    store.userInputs = { ...userInputs, [userKey]: newInput };
+    store.setUserInput(key as InputNames, value);
   };
 
   return (
     <Wrapper>
       <Subtitle>Inputs</Subtitle>
-      {Object.entries(userInputs).map((input) => (
+      {Object.entries(store.userInputs).map((input) => (
         <Input
           key={input[0]}
           userInput={input[1]}
-          onChange={(value: number) => handleUserClick(input[0], value)}
+          onChange={action((value: number) => handleUserClick(input[0], value))}
         />
       ))}
     </Wrapper>

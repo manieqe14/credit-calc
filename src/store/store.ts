@@ -1,12 +1,12 @@
 import { makeAutoObservable } from "mobx";
-import { Installment, OptionsObj, Overpayment, UserInputs } from "../components/types";
+import { InputNames, Installment, OptionsObj, Overpayment, UserInputs } from "../components/types";
 import { generateDatesArray } from "../Utils/generateDatesArray";
 import { InitialValues } from "../Utils/initialValues";
 import { countInstallment, odsetki } from "../Utils/Helpers";
 
 export default class Store {
 
-  public userInputs: UserInputs;
+  userInputs: UserInputs;
 
   options: OptionsObj;
 
@@ -14,7 +14,7 @@ export default class Store {
 
 
   constructor({ formValues, options }: typeof InitialValues) {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { autoBind: true });
 
     this.userInputs = formValues;
     this.options = options;
@@ -36,6 +36,10 @@ export default class Store {
     return this.dates.at(1) ?? new Date();
   }
 
+  public set startDate(startDate: Date) {
+    this.options.startDate = startDate;
+  }
+
   public get totalCost(): number {
     if (this.installments.length === 0) {
       return 0;
@@ -55,9 +59,8 @@ export default class Store {
     this.overpayments.push(item);
   }
 
-  public deleteOverpayment(item: Overpayment): void {
-    const index = this.overpayments.indexOf(item);
-    this.overpayments.splice(index, 1);
+  public deleteOverpayment(id: string): void {
+    this.overpayments = this.overpayments.filter(item => item.uuid !== id);
   }
 
   public get installments(): Installment[] {
@@ -107,4 +110,7 @@ export default class Store {
       );
   }
 
+  public setUserInput(key: InputNames, value: number): void {
+    this.userInputs = { ...this.userInputs, [key]: {...this.userInputs[key], value } };
+  }
 }

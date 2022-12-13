@@ -11,21 +11,13 @@ export interface UserInput {
   step: number;
 }
 
-export interface UserInputs {
-  amount: UserInput;
-  wibor: UserInput;
-  bankgross: UserInput;
-  period: UserInput;
-}
+export type InputNames =  "amount" | "wibor" | "bankgross" | "period";
+
+export type UserInputs = Record<InputNames, UserInput>;
 
 export interface Installment {
   date: Date;
   value: number;
-}
-
-export interface CreditContext {
-  installments: Installment[];
-  totalCost: number;
 }
 
 export enum Period {
