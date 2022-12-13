@@ -1,40 +1,20 @@
 import { rounder } from '../../Utils/Helpers';
-import React, { useEffect, useState } from 'react';
-import { SummaryPropsInterface } from './Summary.types';
+import React from 'react';
 import { InitialValues } from '../../Utils/initialValues';
-import { useInputDataContext } from '../../context/InputDataContext';
+import { useStore } from "../../context/store.context";
 import { Wrapper } from '../../view/wrapper/wrapper';
 import { Subtitle } from '../../view/titles/titles';
 import { Grid } from '@mui/material';
+import { observer } from "mobx-react-lite";
 
-const Summary: React.FC<SummaryPropsInterface> = ({
-  installments,
-  overpaymentsTotal,
-}) => {
+const Summary: React.FC<{}> = () => {
   const rowWidth = 6;
-  const { formValues, options } = useInputDataContext();
-  const [totalCost, setTotalCost] = useState(0);
+  const store = useStore();
+  const { userInputs, totalCost } = store;
 
-  const gross = formValues.wibor.value + formValues.bankgross.value;
-  const rates = installments.length;
-  const lastInstallmentDate = installments.at(-1)?.date;
-
-  useEffect(() => {
-    if (installments.length === 0) {
-      return;
-    }
-    if (options.constRateOverpayment) {
-      setTotalCost(
-        installments.filter((inst) => inst.value > 0).length *
-          options.constRateOverpaymentValue +
-          overpaymentsTotal
-      );
-    } else {
-      setTotalCost(
-        installments.length * installments[0].value + overpaymentsTotal
-      );
-    }
-  }, [options, formValues]);
+  const gross = userInputs.wibor.value + userInputs.bankgross.value;
+  const rates = store.installments.length;
+  const lastInstallmentDate = store.installments.at(-1)?.date;
 
   return (
     <Wrapper>
@@ -69,4 +49,4 @@ const Summary: React.FC<SummaryPropsInterface> = ({
   );
 };
 
-export default Summary;
+export default observer(Summary);

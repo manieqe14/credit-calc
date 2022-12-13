@@ -1,25 +1,26 @@
 import { Input } from '../Input/Input';
+import { observer } from "mobx-react-lite";
 import React from 'react';
-import { InputsFormInterface } from './Inputs.types';
-import { useInputDataContext } from '../../context/InputDataContext';
+import { useStore } from "../../context/store.context";
 import { Subtitle } from '../../view/titles/titles';
 import { Wrapper } from '../../view/wrapper/wrapper';
 
-const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
-  const { formValues } = useInputDataContext();
+const Inputs: React.FC<{}> = () => {
+  const store = useStore();
+  const { userInputs } = store;
 
   const handleUserClick = (key: string, value: number): void => {
-    type keyType = keyof typeof formValues;
+    type keyType = keyof typeof userInputs;
     const userKey = key as keyType;
-    const newInput = formValues[userKey];
+    const newInput = userInputs[userKey];
     newInput.value = value;
-    setUserInputs({ ...formValues, [userKey]: newInput });
+    store.userInputs = { ...userInputs, [userKey]: newInput };
   };
 
   return (
     <Wrapper>
       <Subtitle>Inputs</Subtitle>
-      {Object.entries(formValues).map((input) => (
+      {Object.entries(userInputs).map((input) => (
         <Input
           key={input[0]}
           userInput={input[1]}
@@ -30,4 +31,4 @@ const Inputs: React.FC<InputsFormInterface> = ({ setUserInputs }) => {
   );
 };
 
-export default Inputs;
+export default observer(Inputs);

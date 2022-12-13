@@ -1,19 +1,15 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { getDateForInput } from '../../Utils/Helpers';
-import { OptionsObj } from '../types';
-import { useInputDataContext } from '../../context/InputDataContext';
+import { useStore } from "../../context/store.context";
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
 import CheckboxInput from '../../view/inputs/checkboxInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
 import { Grid } from '@mui/material';
 
-export const Options = ({
-  setOptionsHandler,
-}: {
-  setOptionsHandler: (options: OptionsObj) => void;
-}): ReactElement => {
-  const { formValues, options } = useInputDataContext();
+export const Options = (): ReactElement => {
+  const store = useStore();
+  const { userInputs, options } = store;
   const [constRateOverpayment, setConstRateOverpayment] = useState(
     options.constRateOverpayment
   );
@@ -24,7 +20,7 @@ export const Options = ({
   const [startDate, setStartDate] = useState(options.startDate);
 
   useEffect(() => {
-    setOptionsHandler({
+    store.setOptions({
       ...options,
       startDate,
       constRateOverpayment,
@@ -55,7 +51,7 @@ export const Options = ({
             disabled={!constRateOverpayment}
             label="Monthly payment"
             id="const-rate-overpayment-value"
-            suffix={formValues.amount.unit}
+            suffix={userInputs.amount.unit}
             type="number"
             value={constRateOverpaymentValue}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

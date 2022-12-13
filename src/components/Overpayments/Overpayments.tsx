@@ -1,7 +1,7 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useState } from 'react';
 import { getDateForInput } from '../../Utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
-import { useInputDataContext } from '../../context/InputDataContext';
+import { useStore } from "../../context/store.context";
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
@@ -14,8 +14,9 @@ import { Overpayment, Period } from '../types';
 import ListViewItem from '../../view/list/ListViewItem';
 import { isNil } from 'ramda';
 
-export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
-  const { formValues } = useInputDataContext();
+export const Overpayments = (): ReactElement => {
+  const store = useStore();
+  const { userInputs, overpayments } = store;
   const [overpayment, setOverpayment] = useState<Overpayment>({
     uuid: uuidv4(),
     value: 0,
@@ -24,7 +25,6 @@ export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
     occurrences: 1,
   });
   const [repeat, setRepeat] = useState(false);
-  const [overpayments, setOverpayments] = useState<Overpayment[]>([]);
 
   const setDateHandler = (event: ChangeEvent<HTMLInputElement>): void => {
     setOverpayment((prev) => ({
@@ -35,7 +35,7 @@ export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
 
   const addItem = (event: React.MouseEvent<HTMLButtonElement>): void => {
     event.preventDefault();
-    if (overpayment.date.getTime() > endDate.getTime()) {
+    if (overpayment.date.getTime() > store.endDate.getTime()) {
       alert('Date cannot be after last installment date!');
       return;
     }
@@ -45,19 +45,15 @@ export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
       : { ...overpayment, repeatPeriod: undefined };
 
     setOverpayment({ ...overpayment, uuid: uuidv4() });
-    setOverpayments([...overpayments, newOverpayment]);
-  };
-
-  const handleDeleteOverpayment = (id: string): void => {
-    setOverpayments(overpayments.filter((item) => item.uuid !== id));
+    store.addOverpayment(newOverpayment);
   };
 
   const overpaymentsList = (): JSX.Element => (
-    <ListView onClick={handleDeleteOverpayment}>
+    <ListView onClick={store.deleteOverpayment}>
       {overpayments.map((item) => (
         <ListViewItem id={item.uuid}>
           <ListViewItem.Title>
-            {`${item.value} ${formValues.amount.unit}`}
+            {`${item.value} ${userInputs.amount.unit}`}
           </ListViewItem.Title>
           <ListViewItem.Date date={item.date} />
           {!isNil(item.repeatPeriod) && (
@@ -85,7 +81,7 @@ export const Overpayments = ({ endDate }: { endDate: Date }): ReactElement => {
           label="Value"
           type="number"
           value={overpayment.value}
-          suffix={formValues.amount.unit}
+          suffix={userInputs.amount.unit}
           onChange={(event) =>
             setOverpayment({
               ...overpayment,
