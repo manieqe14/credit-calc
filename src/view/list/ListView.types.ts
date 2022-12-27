@@ -3,7 +3,8 @@ import { ListItemProps, TypographyProps } from '@mui/material';
 
 export interface ListViewProps
   extends Omit<ComponentPropsWithoutRef<'ul'>, 'onClick'> {
-  onClick: (id: string) => void;
+  onClick?: (id: string) => void;
+  onDelete?: (id: string) => void;
   children: ReactElement[];
 }
 

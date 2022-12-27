@@ -3,8 +3,16 @@ import React, { Children, cloneElement, useMemo } from 'react';
 import { ListViewProps } from './ListView.types';
 import Provider, { ListViewContext } from '../../context/ListViewContext';
 
-function ListView({ children, onClick, ...props }: ListViewProps): JSX.Element {
-  const context = useMemo((): ListViewContext => ({ onClick }), [onClick]);
+function ListView({
+  children,
+  onClick,
+  onDelete,
+  ...props
+}: ListViewProps): JSX.Element {
+  const context = useMemo(
+    (): ListViewContext => ({ onClick, onDelete }),
+    [onClick, onDelete]
+  );
 
   return (
     <Provider value={context}>

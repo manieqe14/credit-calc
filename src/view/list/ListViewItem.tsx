@@ -14,11 +14,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 function ListViewItem({ children, ...props }: ListItemComposition) {
   const { Title, id, ...parentProps } = props;
-  const { onClick } = useListViewContext();
+  const { onClick, onDelete } = useListViewContext();
 
   return (
     <ListItem
       alignItems="flex-start"
+      {...(isNil(onClick) ? null : { onClick: () => onClick(id) })}
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -28,9 +29,11 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
       }}
       {...parentProps}
       secondaryAction={
-        <IconButton edge="end" onClick={() => !isNil(onClick) && onClick(id)}>
-          <DeleteIcon />
-        </IconButton>
+        onDelete != null ? (
+          <IconButton edge="end" onClick={() => !isNil(onClick) && onClick(id)}>
+            <DeleteIcon />
+          </IconButton>
+        ) : null
       }
     >
       {children}

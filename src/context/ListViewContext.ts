@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import { isEmpty } from 'ramda';
 
 export interface ListViewContext {
+  onDelete?: (id: string) => void;
   onClick?: (id: string) => void;
 }
 

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
 import { getDateForInput } from '../../Utils/Helpers';
 import { v4 as uuidv4 } from 'uuid';
-import { useStore } from "../../context/store.context";
+import { useStore } from '../../context/store.context';
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
 import { Wrapper } from '../../view/wrapper/wrapper';
@@ -13,8 +13,8 @@ import ListView from '../../view/list/ListView';
 import { Overpayment, Period } from '../types';
 import ListViewItem from '../../view/list/ListViewItem';
 import { isNil } from 'ramda';
-import { observer } from "mobx-react-lite";
-import { useTranslation } from "react-i18next";
+import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 const Overpayments = (): ReactElement => {
   const store = useStore();
@@ -44,11 +44,13 @@ const Overpayments = (): ReactElement => {
     }
 
     setOverpayment({ ...overpayment, uuid: uuidv4() });
-    store.addOverpayment(repeat ? overpayment : { ...overpayment, repeatPeriod: undefined });
+    store.addOverpayment(
+      repeat ? overpayment : { ...overpayment, repeatPeriod: undefined }
+    );
   };
 
   const overpaymentsList = (): JSX.Element => (
-    <ListView onClick={store.deleteOverpayment}>
+    <ListView onDelete={store.deleteOverpayment}>
       {overpayments.map((item) => (
         <ListViewItem id={item.uuid}>
           <ListViewItem.Title>
@@ -65,11 +67,11 @@ const Overpayments = (): ReactElement => {
 
   return (
     <Wrapper>
-      <Subtitle>{t("Overpayments")}</Subtitle>
-      <form style={{marginLeft: '20px'}}>
+      <Subtitle>{t('Overpayments')}</Subtitle>
+      <form style={{ marginLeft: '20px' }}>
         <TextInput
           id="overpayment-date"
-          label={t("Date")}
+          label={t('Date')}
           type="date"
           value={getDateForInput(overpayment.date)}
           onChange={setDateHandler}
@@ -77,7 +79,7 @@ const Overpayments = (): ReactElement => {
         <TextInput
           id="overpayment-value"
           error={overpayment.value === 0}
-          label={t("Value")}
+          label={t('Value')}
           type="number"
           value={overpayment.value}
           suffix={userInputs.amount.unit}
@@ -132,7 +134,7 @@ const Overpayments = (): ReactElement => {
           </SelectInput>
         </RepeatingSectionWrapper>
         <Button
-          style={{ float: "right"}}
+          style={{ float: 'right' }}
           aria-label="Add overpayment button"
           variant="contained"
           disabled={overpayment.value === 0}
