@@ -28,6 +28,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "gh-deploy": "git push origin :gh-pages && git subtree push --prefix dist origin gh-pages",
     "predeploy": "vite build",
     "deploy": "gh-pages -d build",
     "dev": "vite",
