@@ -6,6 +6,7 @@ export interface ListViewProps
   onClick?: (id: string) => void;
   onDelete?: (id: string) => void;
   children: ReactElement[];
+  noBorder?: boolean;
 }
 
 export interface ListItemComposition extends ListItemProps {

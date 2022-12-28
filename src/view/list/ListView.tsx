@@ -7,11 +7,12 @@ function ListView({
   children,
   onClick,
   onDelete,
+  noBorder,
   ...props
 }: ListViewProps): JSX.Element {
   const context = useMemo(
-    (): ListViewContext => ({ onClick, onDelete }),
-    [onClick, onDelete]
+    (): ListViewContext => ({ onClick, onDelete, noBorder }),
+    [onClick, onDelete, noBorder]
   );
 
   return (

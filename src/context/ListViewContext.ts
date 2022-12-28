@@ -4,6 +4,7 @@ import { isEmpty } from 'ramda';
 export interface ListViewContext {
   onDelete?: (id: string) => void;
   onClick?: (id: string) => void;
+  noBorder?: boolean;
 }
 
 const Context: React.Context<ListViewContext> = createContext({});

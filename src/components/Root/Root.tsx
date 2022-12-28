@@ -15,7 +15,6 @@ interface RootProps {
 const Root = ({ store }: RootProps): ReactElement => {
   // TODO fetch current WIBOR
   // TODO overpayment number of occurrences switch
-  // TODO translation
   // TODO custom start date -> hint -> today
   // TODO wakacje kredytowe
   // TODO options provider

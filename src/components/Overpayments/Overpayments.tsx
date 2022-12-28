@@ -97,7 +97,7 @@ const Overpayments = (): ReactElement => {
             onChange={() => setRepeat(!repeat)}
           />
           <SelectInput
-            label="repeat-input"
+            label={t('Repeat period')}
             onChange={(event) =>
               setOverpayment({
                 ...overpayment,
@@ -114,7 +114,7 @@ const Overpayments = (): ReactElement => {
             ))}
           </SelectInput>
           <SelectInput
-            label="Occurences"
+            label={t('Occurrences')}
             value={overpayment.occurrences}
             onChange={(event) =>
               setOverpayment({
@@ -134,7 +134,6 @@ const Overpayments = (): ReactElement => {
           </SelectInput>
         </RepeatingSectionWrapper>
         <Button
-          style={{ float: 'right' }}
           aria-label="Add overpayment button"
           variant="contained"
           disabled={overpayment.value === 0}
