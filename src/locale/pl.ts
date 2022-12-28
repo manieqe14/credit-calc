@@ -8,6 +8,7 @@ export const pl: Translation = {
     Period: 'Okres kredytowania',
     'Monthly payment': 'Miesięczna płatność',
     'Custom start date': 'Data startu',
+    Overpayments: 'Nadpłaty',
     Date: 'Data',
     Options: 'Opcje',
     Value: 'Wartość',

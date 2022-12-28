@@ -28,7 +28,7 @@ const LanguageSelector = (): JSX.Element => {
   }, [language]);
 
   return (
-    <ListView noBorder onClick={setLanguage}>
+    <ListView row noBorder onClick={setLanguage}>
       {Languages.map((lang) => (
         <ListViewItem
           key={lang.code}

@@ -11,6 +11,7 @@ export type Phrases =
   | 'Period'
   | 'Monthly payment'
   | 'Custom start date'
+  | 'Overpayments'
   | 'Date'
   | 'Options'
   | 'Value'

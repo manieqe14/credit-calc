@@ -8,6 +8,7 @@ function ListView({
   onClick,
   onDelete,
   noBorder,
+  row,
   ...props
 }: ListViewProps): JSX.Element {
   const context = useMemo(
@@ -17,7 +18,10 @@ function ListView({
 
   return (
     <Provider value={context}>
-      <List {...props}>
+      <List
+        sx={row === true ? { display: 'flex', flexDirection: 'row' } : null}
+        {...props}
+      >
         {Children.map(children, (el, i) =>
           cloneElement(el, { key: i, index: i })
         )}

@@ -8,6 +8,7 @@ export const en: Translation = {
     Period: 'Period',
     'Monthly payment': 'Monthly payment',
     'Custom start date': 'Custom start date',
+    Overpayments: 'Overpayments',
     Date: 'Date',
     Options: 'Options',
     Value: 'Value',
