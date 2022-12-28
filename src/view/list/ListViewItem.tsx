@@ -11,10 +11,14 @@ import { useListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
 import { getFormattedDate } from '../../Utils/Helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ListViewItemHover, ListViewItemStyle } from './ListView.styles';
+import {
+  ActiveStyle,
+  ListViewItemHover,
+  ListViewItemStyle,
+} from './ListView.styles';
 
 function ListViewItem({ children, ...props }: ListItemComposition) {
-  const { Title, id, ...parentProps } = props;
+  const { Title, id, active = false, ...parentProps } = props;
   const { onClick, onDelete, noBorder = false } = useListViewContext();
 
   return (
@@ -22,6 +26,7 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
       alignItems="flex-start"
       {...(isNil(onClick) ? null : { onClick: () => onClick(id) })}
       sx={{
+        ...(active ? ActiveStyle : null),
         ...ListViewItemStyle(noBorder),
         ...(isNil(onClick) ? null : ListViewItemHover),
       }}

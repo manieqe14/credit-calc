@@ -8,4 +8,7 @@ export default defineConfig({
   },
   plugins: [reactRefresh()],
   base: '/credit-calc/',
+  build: {
+    outDir: './build',
+  },
 });

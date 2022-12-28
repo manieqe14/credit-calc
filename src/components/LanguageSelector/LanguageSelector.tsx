@@ -30,7 +30,11 @@ const LanguageSelector = (): JSX.Element => {
   return (
     <ListView noBorder onClick={setLanguage}>
       {Languages.map((lang) => (
-        <ListViewItem key={lang.code} id={lang.code}>
+        <ListViewItem
+          key={lang.code}
+          id={lang.code}
+          active={lang.code === language}
+        >
           <ReactCountryFlag countryCode={lang.flagCode} svg style={FlagImage} />
         </ListViewItem>
       ))}
