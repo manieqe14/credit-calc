@@ -24,7 +24,6 @@ const Root = ({ store }: RootProps): ReactElement => {
     <StoreContext.Provider value={store}>
       <Grid container spacing={2}>
         <Inputs />
-        <Options />
         <Overpayments />
         <Summary />
         <Chart />

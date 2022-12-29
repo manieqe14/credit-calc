@@ -19,5 +19,6 @@ export const en: Translation = {
     'Payment last day': 'Payment last day',
     'Repeat period': 'Repeat period',
     Occurrences: 'Occurrences',
+    'Installment rate': 'Installment rate',
   },
 };

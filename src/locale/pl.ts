@@ -19,5 +19,6 @@ export const pl: Translation = {
     'Payment last day': 'Dzień ostatniej raty',
     'Repeat period': 'Powtórzenia',
     Occurrences: 'Ilość',
+    'Installment rate': 'Wysokość raty',
   },
 };
