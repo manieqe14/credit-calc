@@ -12,6 +12,8 @@ import Store from './store/store';
 import { InitialValues } from './Utils/initialValues';
 import { isNil } from 'ramda';
 import { loadDataFromStorage } from './Utils/dataFromStorage';
+import StoreContext from './context/store.context';
+import TopBanner from './components/TopBanner/TopBanner';
 
 function App(): ReactElement {
   const valuesFromStorage = loadDataFromStorage();
@@ -21,12 +23,15 @@ function App(): ReactElement {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <Header />
-      <main className="App">
-        <Root store={store} />
-      </main>
-    </ThemeProvider>
+    <StoreContext.Provider value={store}>
+      <ThemeProvider theme={theme}>
+        <Header />
+        <TopBanner />
+        <main className="App">
+          <Root />
+        </main>
+      </ThemeProvider>
+    </StoreContext.Provider>
   );
 }
 

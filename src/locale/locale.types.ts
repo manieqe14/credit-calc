@@ -22,4 +22,5 @@ export type Phrases =
   | 'Payment last day'
   | 'Repeat period'
   | 'Occurrences'
-  | 'Installment rate';
+  | 'Installment rate'
+  | 'Save config';

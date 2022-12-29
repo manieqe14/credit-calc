@@ -20,5 +20,6 @@ export const en: Translation = {
     'Repeat period': 'Repeat period',
     Occurrences: 'Occurrences',
     'Installment rate': 'Installment rate',
+    'Save config': 'Save config',
   },
 };

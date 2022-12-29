@@ -10,6 +10,7 @@ import { generateDatesArray } from '../Utils/generateDatesArray';
 import { InitialValues } from '../Utils/initialValues';
 import { countInstallment, odsetki } from '../Utils/Helpers';
 import { saveDataToStorage } from '../Utils/dataFromStorage';
+import { Message, messages } from "./messages";
 
 export default class Store {
   userInputs: UserInputs;
@@ -17,6 +18,9 @@ export default class Store {
   options: OptionsObj;
 
   public overpayments: Overpayment[];
+  showBanner: boolean;
+  message: Message;
+  error: boolean;
 
   constructor({ formValues, options, overpayments }: typeof InitialValues) {
     makeAutoObservable(this, {}, { autoBind: true });
@@ -24,6 +28,9 @@ export default class Store {
     this.userInputs = formValues;
     this.options = options;
     this.overpayments = overpayments;
+    this.showBanner = false;
+    this.message = messages.saveStorage;
+    this.error = false;
   }
 
   get dates(): Date[] {
@@ -33,13 +40,17 @@ export default class Store {
     );
   }
 
-  saveValuesInStorage(): void {
+  public saveValuesInStorage(): void {
     const values = {
       formValues: this.userInputs,
       options: this.options,
       overpayments: this.overpayments,
     };
+
     saveDataToStorage(values);
+
+    this.message = messages.saveStorage;
+    this.showBanner = true;
   }
 
   public setOptions(options: OptionsObj): void {
@@ -65,7 +76,7 @@ export default class Store {
     if (this.options.constRateOverpayment) {
       return (
         this.installments.filter((inst) => inst.value > 0).length *
-          this.options.constRateOverpaymentValue +
+        this.options.constRateOverpaymentValue +
         this.overpaymentsTotal
       );
     } else {
@@ -109,7 +120,7 @@ export default class Store {
       while (
         overpaymentsLeft.length > 0 &&
         overpaymentsLeft[0].date < this.dates[index]
-      ) {
+        ) {
         amountLeft = amountLeft - overpaymentsLeft[0].value;
         overpaymentsLeft = overpaymentsLeft.slice(1, overpaymentsLeft.length);
       }
@@ -119,7 +130,6 @@ export default class Store {
       }
       result.push({ value: rata, date: this.dates[index] });
     }
-    this.saveValuesInStorage();
     return result;
   }
 

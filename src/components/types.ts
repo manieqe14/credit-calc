@@ -11,7 +11,7 @@ export interface UserInput {
   step: number;
 }
 
-export type InputNames =  "amount" | "wibor" | "bankgross" | "period";
+export type InputNames = 'amount' | 'wibor' | 'bankgross' | 'period';
 
 export type UserInputs = Record<InputNames, UserInput>;
 
@@ -36,3 +36,5 @@ export interface Overpayment extends OverpaymentDate {
   occurrences: number;
   uuid: string;
 }
+
+export type BannerVariant = 'success' | 'fail' | 'info';
