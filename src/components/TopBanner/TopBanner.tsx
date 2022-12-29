@@ -18,7 +18,7 @@ const TopBanner = (): ReactElement => {
   }, [showBanner]);
 
   return (
-    <Box sx={BannerWrapper}>
+    <Box sx={BannerWrapper(showBanner)}>
       {store.showBanner ? (
         <Box sx={BannerStyle}>
           <BannerIcon variant={error ? 'fail' : 'success'} />
