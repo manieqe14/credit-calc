@@ -15,10 +15,10 @@ export const ListViewItemHover = {
 };
 
 export const ActiveStyle = {
-  '-webkit-box-shadow': (theme: Theme) =>
+  webkitBoxShadow: (theme: Theme) =>
     `0px 0px 38px -9px ${theme.palette.primary.light}`,
-  '-moz-box-shadow': (theme: Theme) =>
+  mozBoxShadow: (theme: Theme) =>
     `0px 0px 38px -9px ${theme.palette.primary.light}`,
-  'box-shadow': (theme: Theme) =>
+  boxShadow: (theme: Theme) =>
     `0px 0px 38px -9px ${theme.palette.primary.light}`,
 };

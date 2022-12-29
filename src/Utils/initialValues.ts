@@ -37,4 +37,5 @@ const InitialOptions = {
 export const InitialValues = {
   formValues: InitialFormValues,
   options: InitialOptions,
+  overpayments: [],
 };

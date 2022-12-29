@@ -1,28 +1,18 @@
-FROM node:16-alpine AS builder
+# get the base node image
+FROM node:16-alpine as builder
 
-WORKDIR /app
+RUN mkdir credit-calc
+RUN cd credit-calc
+# copy the json file first
+COPY ./package.json /
 
-COPY package.json ./
+# install npm dependencies
+RUN npm install
 
-COPY package-lock.json ./
-
-RUN npm i
-
+# copy other project files
 COPY . .
 
-#EXPOSE 3000
+EXPOSE 3000
 
-# CMD ["npm", "run", "serve"]
-RUN npm run build
-
-FROM nginx:1.16.0-alpine
-
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-RUN rm /etc/nginx/conf.d/default.conf
-
-COPY etc/nginx.conf /etc/nginx/conf.d
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# build the folder
+CMD [ "npm", "run", "start" ]

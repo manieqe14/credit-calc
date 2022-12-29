@@ -4,7 +4,7 @@ import {
   Typography,
   TypographyProps,
 } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { ListItemComposition, ListViewItemDateProps } from './ListView.types';
 import { MutedText } from '../titles/text';
 import { useListViewContext } from '../../context/ListViewContext';
@@ -17,12 +17,16 @@ import {
   ListViewItemStyle,
 } from './ListView.styles';
 
-function ListViewItem({ children, ...props }: ListItemComposition) {
+function ListViewItem({
+  children,
+  ...props
+}: ListItemComposition): ReactElement {
   const { Title, id, active = false, ...parentProps } = props;
   const { onClick, onDelete, noBorder = false } = useListViewContext();
 
   return (
     <ListItem
+      key={id}
       alignItems="flex-start"
       {...(isNil(onClick) ? null : { onClick: () => onClick(id) })}
       sx={{
@@ -33,7 +37,10 @@ function ListViewItem({ children, ...props }: ListItemComposition) {
       {...parentProps}
       secondaryAction={
         onDelete != null ? (
-          <IconButton edge="end" onClick={() => !isNil(onClick) && onClick(id)}>
+          <IconButton
+            edge="end"
+            onClick={() => !isNil(onDelete) && onDelete(id)}
+          >
             <DeleteIcon />
           </IconButton>
         ) : null

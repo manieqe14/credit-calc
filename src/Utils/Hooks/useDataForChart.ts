@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Installment, OptionsObj } from '../../components/types';
 import { InitialValues } from '../initialValues';
+import { useTranslation } from 'react-i18next';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useDataForChart = ({
@@ -9,8 +10,10 @@ const useDataForChart = ({
 }: {
   installments: Installment[];
   options: OptionsObj;
-}) =>
-  useMemo(() => {
+}) => {
+  const { t } = useTranslation();
+
+  return useMemo(() => {
     const dataForChart = {
       type: 'line',
       data: {
@@ -19,7 +22,7 @@ const useDataForChart = ({
         ),
         datasets: [
           {
-            label: 'Installment rate',
+            label: t('Installment rate'),
             data: installments.map((obj) => obj.value),
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -46,7 +49,7 @@ const useDataForChart = ({
 
     if (options.constRateOverpayment) {
       dataForChart.data.datasets.push({
-        label: 'Monthly payment',
+        label: t('Monthly payment'),
         data: Array(installments.length).fill(
           options.constRateOverpaymentValue
         ),
@@ -56,6 +59,7 @@ const useDataForChart = ({
     }
 
     return dataForChart;
-  }, [installments, options]);
+  }, [installments, options, t]);
+};
 
 export default useDataForChart;
