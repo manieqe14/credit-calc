@@ -21,5 +21,6 @@ export const en: Translation = {
     Occurrences: 'Occurrences',
     'Installment rate': 'Installment rate',
     'Save config': 'Save config',
+    'Clear config': 'Clear config',
   },
 };

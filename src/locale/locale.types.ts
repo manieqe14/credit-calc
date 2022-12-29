@@ -23,4 +23,5 @@ export type Phrases =
   | 'Repeat period'
   | 'Occurrences'
   | 'Installment rate'
-  | 'Save config';
+  | 'Save config'
+  | 'Clear config';

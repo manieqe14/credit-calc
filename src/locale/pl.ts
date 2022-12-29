@@ -21,5 +21,6 @@ export const pl: Translation = {
     Occurrences: 'Ilość',
     'Installment rate': 'Wysokość raty',
     'Save config': 'Zapisz dane',
+    'Clear config': 'Wyczyść dane',
   },
 };

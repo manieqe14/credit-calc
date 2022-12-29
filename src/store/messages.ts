@@ -3,6 +3,10 @@ export const messages: Record<string, Message> = {
     success: 'Values successfully saved in storage!',
     fail: 'Saving failed!',
   },
+  clear: {
+    success: 'Values cleared!',
+    fail: 'Clear failed!',
+  },
 };
 
 export interface Message {

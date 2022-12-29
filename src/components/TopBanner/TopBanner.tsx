@@ -7,19 +7,19 @@ import { observer } from 'mobx-react-lite';
 
 const TopBanner = (): ReactElement => {
   const store = useStore();
-  const { error, message, showBanner } = store;
+  const { error, message, showBanner, hideBanner } = store;
 
   useEffect(() => {
     if (showBanner) {
       setTimeout(() => {
-        store.showBanner = false;
+        hideBanner();
       }, 2000);
     }
   }, [showBanner]);
 
   return (
     <Box sx={BannerWrapper(showBanner)}>
-      {store.showBanner ? (
+      {showBanner ? (
         <Box sx={BannerStyle}>
           <BannerIcon variant={error ? 'fail' : 'success'} />
           {error ? message.fail : message.success}

@@ -17,10 +17,10 @@ export const loadDataFromStorage = (): typeof InitialValues | null => {
     return null;
   }
 
-  const processed = JSON.parse(valuesFromStorage, reviver);
-
-  return processed;
+  return JSON.parse(valuesFromStorage, reviver);
 };
+
+export const clearStorageData = (): void => localStorage.removeItem(KEY);
 
 const reviver = (key: string, value: any): typeof value | Date => {
   if (DATE_KEYS.includes(key)) {
