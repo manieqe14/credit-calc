@@ -8,19 +8,23 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import Store from "./store/store";
-import { InitialValues } from "./Utils/initialValues";
-
+import Store from './store/store';
+import { InitialValues } from './Utils/initialValues';
+import { isNil } from 'ramda';
+import { loadDataFromStorage } from './Utils/dataFromStorage';
 
 function App(): ReactElement {
+  const valuesFromStorage = loadDataFromStorage();
 
-  const store = new Store(InitialValues);
+  const store = new Store(
+    !isNil(valuesFromStorage) ? valuesFromStorage : InitialValues
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <Header />
       <main className="App">
-        <Root store={store}/>
+        <Root store={store} />
       </main>
     </ThemeProvider>
   );
