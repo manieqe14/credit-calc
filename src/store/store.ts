@@ -33,6 +33,11 @@ export default class Store {
     this.error = false;
   }
 
+  public setOptions(options: Partial<OptionsObj>): void {
+    this.options = { ...this.options, ...options };
+  }
+
+
   get dates(): Date[] {
     return generateDatesArray(
       this.options.startDate,
@@ -66,10 +71,6 @@ export default class Store {
     this.error = false;
   }
 
-  public setOptions(options: OptionsObj): void {
-    this.options = options;
-  }
-
   public get endDate(): Date {
     return this.dates.at(-1) ?? new Date();
   }
@@ -89,7 +90,7 @@ export default class Store {
     if (this.options.constRateOverpayment) {
       return (
         this.installments.filter((inst) => inst.value > 0).length *
-          this.options.constRateOverpaymentValue +
+        this.options.constRateOverpaymentValue +
         this.overpaymentsTotal
       );
     } else {
@@ -133,7 +134,7 @@ export default class Store {
       while (
         overpaymentsLeft.length > 0 &&
         overpaymentsLeft[0].date < this.dates[index]
-      ) {
+        ) {
         amountLeft = amountLeft - overpaymentsLeft[0].value;
         overpaymentsLeft = overpaymentsLeft.slice(1, overpaymentsLeft.length);
       }
