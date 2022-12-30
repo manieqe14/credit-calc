@@ -1,11 +1,6 @@
-import { Installment } from '../types';
-
-export interface SummaryPropsInterface {
-  installments: Installment[];
-  overpaymentsTotal: number;
-}
+import { Phrases } from '../../locale/locale.types';
 
 export interface SummaryElement {
-  title: string;
+  title: Phrases;
   value: string;
 }
