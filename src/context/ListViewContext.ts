@@ -1,10 +1,12 @@
 import { createContext, useContext } from 'react';
 import { isEmpty } from 'ramda';
+import { VacationDate } from '../view/list/ListView.types';
 
 export interface ListViewContext {
   onDelete?: (id: string) => void;
-  onClick?: (id: string) => void;
+  onClick?: (id: string | VacationDate) => void;
   noBorder?: boolean;
+  row?: number;
 }
 
 const Context: React.Context<ListViewContext> = createContext({});

@@ -12,7 +12,7 @@ import { InitialValues } from '../Utils/initialValues';
 import { countInstallment, odsetki } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
-import { isEmpty, isNil } from 'ramda';
+import { isNil } from 'ramda';
 import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
 
 export default class Store {
@@ -53,7 +53,7 @@ export default class Store {
   get dates(): Date[] {
     return generateDatesArray(
       this.options.startDate,
-      this.userInputs.period.value
+      this.userInputs.period.value + this.options.vacationMonths.length
     );
   }
 
@@ -107,7 +107,7 @@ export default class Store {
       );
     } else {
       return (
-        this.installments.length * this.installments[0].value +
+        this.installments.reduce<number>((acc, curr) => acc + curr.value, 0) +
         this.overpaymentsTotal
       );
     }
@@ -129,34 +129,42 @@ export default class Store {
       installments: Installment[];
     }>(
       (acc, curr, index) => {
-        const installment = countInstallment(
-          acc.amountLeft,
-          gross,
-          this.userInputs.period.value - index
-        );
-
-        const amountLeft = this.options.constRateOverpayment
-          ? acc.amountLeft - this.options.constRateOverpaymentValue
-          : acc.amountLeft - installment + odsetki(acc.amountLeft, gross);
+        const installment =
+          this.options.vacationMonths.find(
+            (vacationMonth) =>
+              vacationMonth.month === curr.getMonth() &&
+              vacationMonth.year === curr.getFullYear()
+          ) === undefined
+            ? countInstallment(
+                acc.amountLeft,
+                gross,
+                this.userInputs.period.value - index
+              )
+            : 0;
 
         const overpayments = this.overpaymentDates.filter((overpayment) => {
           if (isNil(acc.installments.at(-1)?.date)) {
             return overpayment.date < curr;
           }
+
           return (
             overpayment.date > acc.installments.at(-1).date &&
             overpayment.date < curr
           );
         });
 
+        const amountPaid = this.options.constRateOverpayment
+          ? this.options.constRateOverpaymentValue +
+            overpaymentsReduce(overpayments)
+          : installment + overpaymentsReduce(overpayments);
+
         return {
           installments: [
             ...acc.installments,
-            { date: curr, value: installment },
+            { date: curr, value: installment, amountPaid },
           ],
-          amountLeft: isEmpty(overpayments)
-            ? amountLeft
-            : amountLeft - overpaymentsReduce(overpayments),
+          amountLeft:
+            acc.amountLeft - amountPaid + odsetki(acc.amountLeft, gross),
         };
       },
       { amountLeft: this.userInputs.amount.value, installments: [] }

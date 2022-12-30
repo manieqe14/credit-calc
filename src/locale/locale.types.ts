@@ -28,4 +28,7 @@ export type Phrases =
   | 'Values saved in storage'
   | 'Saving values failed'
   | 'Values cleared'
-  | 'Values clear failed';
+  | 'Values clear failed'
+  | 'Vacation months'
+  | 'Cancel'
+  | 'OK';

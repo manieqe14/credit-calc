@@ -10,7 +10,7 @@ import { MutedText } from '../titles/text';
 import { useListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
 import { getFormattedDate } from '../../Utils/Helpers';
-import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   ActiveStyle,
   ListViewItemHover,
@@ -22,7 +22,7 @@ function ListViewItem({
   ...props
 }: ListItemComposition): ReactElement {
   const { Title, id, active = false, ...parentProps } = props;
-  const { onClick, onDelete, noBorder = false } = useListViewContext();
+  const { onClick, onDelete, noBorder = false, row = 1 } = useListViewContext();
 
   return (
     <ListItem
@@ -31,7 +31,7 @@ function ListViewItem({
       {...(isNil(onClick) ? null : { onClick: () => onClick(id) })}
       sx={{
         ...(active ? ActiveStyle : null),
-        ...ListViewItemStyle(noBorder),
+        ...ListViewItemStyle(noBorder, row),
         ...(isNil(onClick) ? null : ListViewItemHover),
       }}
       {...parentProps}
@@ -41,7 +41,7 @@ function ListViewItem({
             edge="end"
             onClick={() => !isNil(onDelete) && onDelete(id)}
           >
-            <DeleteIcon />
+            <RemoveIcon />
           </IconButton>
         ) : null
       }

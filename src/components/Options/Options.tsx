@@ -8,6 +8,7 @@ import { Wrapper } from '../../view/wrapper/wrapper';
 import { Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
+import Holidays from '../Holidays/Holidays';
 
 const Options = (): ReactElement => {
   const store = useStore();
@@ -53,6 +54,7 @@ const Options = (): ReactElement => {
           />
         </Grid>
       </Grid>
+      <Holidays />
     </Wrapper>
   );
 };

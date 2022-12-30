@@ -2,6 +2,7 @@ import { List } from '@mui/material';
 import React, { Children, cloneElement, useMemo } from 'react';
 import { ListViewProps } from './ListView.types';
 import Provider, { ListViewContext } from '../../context/ListViewContext';
+import { isNil } from 'ramda';
 
 function ListView({
   children,
@@ -12,14 +13,18 @@ function ListView({
   ...props
 }: ListViewProps): JSX.Element {
   const context = useMemo(
-    (): ListViewContext => ({ onClick, onDelete, noBorder }),
-    [onClick, onDelete, noBorder]
+    (): ListViewContext => ({ onClick, onDelete, noBorder, row }),
+    [onClick, onDelete, noBorder, row]
   );
 
   return (
     <Provider value={context}>
       <List
-        sx={row === true ? { display: 'flex', flexDirection: 'row' } : null}
+        sx={
+          !isNil(row)
+            ? { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }
+            : null
+        }
         {...props}
       >
         {Children.map(children, (el, i) =>
