@@ -7,6 +7,9 @@ export function countInstallment(
   gross: number,
   period: number
 ): number {
+  if (amount <= 0) {
+    return 0;
+  }
   let sum = 0;
   for (let i = 1; i < period; i++) {
     sum += Math.pow(1 + gross / 1200, -i);
