@@ -27,6 +27,12 @@ const useDataForChart = ({
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
+          {
+            label: t('Monthly payment'),
+            data: installments.map((obj) => obj.amountPaid),
+            borderColor: 'rgb(0, 0, 25)',
+            backgroundColor: 'rgb(0, 0, 25)',
+          },
         ],
       },
       options: {
@@ -48,14 +54,7 @@ const useDataForChart = ({
     };
 
     if (options.constRateOverpayment) {
-      dataForChart.data.datasets.push({
-        label: t('Monthly payment'),
-        data: Array(installments.length).fill(
-          options.constRateOverpaymentValue
-        ),
-        borderColor: 'rgb(0, 0, 25)',
-        backgroundColor: 'rgb(0, 0, 25)',
-      });
+      dataForChart.data.datasets.push();
     }
 
     return dataForChart;

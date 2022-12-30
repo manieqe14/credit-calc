@@ -4,6 +4,7 @@ import {
   Installment,
   OptionsObj,
   Overpayment,
+  OverpaymentDate,
   UserInputs,
 } from '../components/types';
 import { generateDatesArray } from '../Utils/generateDatesArray';
@@ -11,6 +12,8 @@ import { InitialValues } from '../Utils/initialValues';
 import { countInstallment, odsetki } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
+import { isNil } from 'ramda';
+import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
 
 export default class Store {
   userInputs: UserInputs;
@@ -33,15 +36,24 @@ export default class Store {
     this.error = false;
   }
 
+  get overpaymentDates(): OverpaymentDate[] {
+    return this.overpayments.reduce<OverpaymentDate[]>((acc, curr) => {
+      if (curr.repeatPeriod !== undefined) {
+        return [...acc];
+      } else {
+        return [...acc, { date: curr.date, value: curr.value }];
+      }
+    }, []);
+  }
+
   public setOptions(options: Partial<OptionsObj>): void {
     this.options = { ...this.options, ...options };
   }
 
-
   get dates(): Date[] {
     return generateDatesArray(
       this.options.startDate,
-      this.userInputs.period.value
+      this.userInputs.period.value + this.options.vacationMonths.length
     );
   }
 
@@ -76,7 +88,7 @@ export default class Store {
   }
 
   public get startDate(): Date {
-    return this.dates.at(1) ?? new Date();
+    return this.options.startDate;
   }
 
   public set startDate(startDate: Date) {
@@ -90,12 +102,12 @@ export default class Store {
     if (this.options.constRateOverpayment) {
       return (
         this.installments.filter((inst) => inst.value > 0).length *
-        this.options.constRateOverpaymentValue +
+          this.options.constRateOverpaymentValue +
         this.overpaymentsTotal
       );
     } else {
       return (
-        this.installments.length * this.installments[0].value +
+        this.installments.reduce<number>((acc, curr) => acc + curr.value, 0) +
         this.overpaymentsTotal
       );
     }
@@ -110,51 +122,59 @@ export default class Store {
   }
 
   public get installments(): Installment[] {
-    let amountLeft: number = this.userInputs.amount.value;
-    let overpaymentsLeft = this.overpayments;
-    const result: Installment[] = [];
+    const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
 
-    for (
-      let index = 0;
-      index < this.userInputs.period.value && amountLeft > 0;
-      index++
-    ) {
-      const rata: number = countInstallment(
-        amountLeft,
-        this.userInputs.wibor.value + this.userInputs.bankgross.value,
-        this.userInputs.period.value - index
-      );
-      amountLeft =
-        amountLeft -
-        rata +
-        odsetki(
-          amountLeft,
-          this.userInputs.bankgross.value + this.userInputs.wibor.value
-        );
-      while (
-        overpaymentsLeft.length > 0 &&
-        overpaymentsLeft[0].date < this.dates[index]
-        ) {
-        amountLeft = amountLeft - overpaymentsLeft[0].value;
-        overpaymentsLeft = overpaymentsLeft.slice(1, overpaymentsLeft.length);
-      }
+    const result = this.dates.reduce<{
+      amountLeft: number;
+      installments: Installment[];
+    }>(
+      (acc, curr, index) => {
+        const installment =
+          this.options.vacationMonths.find(
+            (vacationMonth) =>
+              vacationMonth.month === curr.getMonth() &&
+              vacationMonth.year === curr.getFullYear()
+          ) === undefined
+            ? countInstallment(
+                acc.amountLeft,
+                gross,
+                this.userInputs.period.value - index
+              )
+            : 0;
 
-      if (this.options.constRateOverpayment) {
-        amountLeft = amountLeft - this.options.constRateOverpaymentValue + rata;
-      }
-      result.push({ value: rata, date: this.dates[index] });
-    }
-    return result;
+        const overpayments = this.overpaymentDates.filter((overpayment) => {
+          if (isNil(acc.installments.at(-1)?.date)) {
+            return overpayment.date < curr;
+          }
+
+          return (
+            overpayment.date > acc.installments.at(-1).date &&
+            overpayment.date < curr
+          );
+        });
+
+        const amountPaid = this.options.constRateOverpayment
+          ? this.options.constRateOverpaymentValue +
+            overpaymentsReduce(overpayments)
+          : installment + overpaymentsReduce(overpayments);
+
+        return {
+          installments: [
+            ...acc.installments,
+            { date: curr, value: installment, amountPaid },
+          ],
+          amountLeft:
+            acc.amountLeft - amountPaid + odsetki(acc.amountLeft, gross),
+        };
+      },
+      { amountLeft: this.userInputs.amount.value, installments: [] }
+    );
+
+    return result.installments.filter((installment) => installment.value > 0);
   }
 
-  public get overpaymentsTotal(): number {
-    if (this.overpayments.length === 0) return 0;
-    return this.overpayments.reduce<{ value: number; date: Date }>(
-      (prev, current) => {
-        return { value: current.value + prev.value, date: new Date() };
-      },
-      { value: 0, date: new Date() }
-    ).value;
+  get overpaymentsTotal(): number {
+    return overpaymentsReduce(this.overpaymentDates);
   }
 
   public setUserInput(key: InputNames, value: number): void {

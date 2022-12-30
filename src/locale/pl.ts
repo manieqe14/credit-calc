@@ -22,5 +22,9 @@ export const pl: Translation = {
     'Installment rate': 'Wysokość raty',
     'Save config': 'Zapisz dane',
     'Clear config': 'Wyczyść dane',
+    'Values saved in storage': 'Dane zapisane w pamięci',
+    'Saving values failed': 'Zapis danych nieudany!',
+    'Values cleared': 'Dane usunięte',
+    'Values clear failed': 'Usuwanie danych zakończone niepowodzeniem',
   },
 };

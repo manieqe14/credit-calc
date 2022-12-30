@@ -7,9 +7,8 @@ import { Wrapper } from '../../view/wrapper/wrapper';
 import { action } from 'mobx';
 import { InputNames } from '../types';
 import { useTranslation } from 'react-i18next';
-import Options from '../Options/Options';
 
-const Inputs: React.FC<{}> = () => {
+const Inputs: React.FC = () => {
   const store = useStore();
   const { t } = useTranslation();
 
@@ -20,15 +19,13 @@ const Inputs: React.FC<{}> = () => {
   return (
     <Wrapper>
       <Subtitle>{t('Inputs')}</Subtitle>
-      {Object.entries(store.userInputs).map((input) => (
+      {Object.entries(store.userInputs).map(([key, input]) => (
         <Input
-          key={input[0]}
-          userInput={input[1]}
-          onChange={action((value: number) => handleUserClick(input[0], value))}
+          key={key}
+          userInput={input}
+          onChange={action((value: number) => handleUserClick(key, value))}
         />
       ))}
-
-      <Options />
     </Wrapper>
   );
 };

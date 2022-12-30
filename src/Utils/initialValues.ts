@@ -32,6 +32,7 @@ const InitialOptions = {
   constRateOverpayment: false,
   constRateOverpaymentValue: 0,
   startDate: today,
+  vacationMonths: [],
 };
 
 export const InitialValues = {

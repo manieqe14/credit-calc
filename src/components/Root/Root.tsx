@@ -4,6 +4,7 @@ import Summary from '../Summary/Summary';
 import Inputs from '../Inputs/Inputs';
 import { Grid } from '@mui/material';
 import Chart from '../Chart/Chart';
+import Options from '../Options/Options';
 
 const Root = (): ReactElement => {
   // TODO fetch current WIBOR
@@ -11,11 +12,11 @@ const Root = (): ReactElement => {
   // TODO custom start date -> hint -> today
   // TODO wakacje kredytowe
   // TODO options provider
-  // TODO save data in storage
 
   return (
     <Grid container spacing={2}>
       <Inputs />
+      <Options />
       <Overpayments />
       <Summary />
       <Chart />

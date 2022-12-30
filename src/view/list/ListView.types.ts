@@ -8,10 +8,10 @@ export interface ListViewProps
   onDelete?: (id: string) => void;
   children: ReactElement[];
   noBorder?: boolean;
-  row?: boolean;
+  row?: number;
 }
 
-export interface ListItemComposition extends ListItemProps {
+export interface ListItemComposition extends Omit<ListItemProps, 'id'> {
   id: string;
   active?: boolean;
   Title?: FC<TypographyProps>;
@@ -21,4 +21,9 @@ export interface ListItemComposition extends ListItemProps {
 
 export interface ListViewItemDateProps extends TypographyProps {
   date: Date;
+}
+
+export interface VacationDate {
+  month: number;
+  year: number;
 }

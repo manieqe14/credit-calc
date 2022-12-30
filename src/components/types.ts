@@ -1,7 +1,10 @@
+import { VacationDate } from '../view/list/ListView.types';
+
 export interface OptionsObj {
   constRateOverpayment: boolean;
   constRateOverpaymentValue: number;
   startDate: Date;
+  vacationMonths: VacationDate[];
 }
 
 export interface UserInput {
@@ -18,6 +21,7 @@ export type UserInputs = Record<InputNames, UserInput>;
 export interface Installment {
   date: Date;
   value: number;
+  amountPaid: number;
 }
 
 export enum Period {
