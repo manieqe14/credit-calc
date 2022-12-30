@@ -4,6 +4,7 @@ import Summary from '../Summary/Summary';
 import Inputs from '../Inputs/Inputs';
 import { Grid } from '@mui/material';
 import Chart from '../Chart/Chart';
+import Options from '../Options/Options';
 
 const Root = (): ReactElement => {
   // TODO fetch current WIBOR
@@ -16,6 +17,7 @@ const Root = (): ReactElement => {
   return (
     <Grid container spacing={2}>
       <Inputs />
+      <Options />
       <Overpayments />
       <Summary />
       <Chart />

@@ -4,12 +4,13 @@ import { InitialValues } from '../../Utils/initialValues';
 import { useStore } from '../../context/store.context';
 import { Wrapper } from '../../view/wrapper/wrapper';
 import { Subtitle } from '../../view/titles/titles';
-import { Grid } from '@mui/material';
+import { Box, Divider, DividerProps } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
+import { SummaryElement } from './Summary.types';
+import { isNil } from 'ramda';
 
-const Summary: React.FC<{}> = () => {
-  const rowWidth = 6;
+const Summary: React.FC = () => {
   const store = useStore();
   const { t } = useTranslation();
   const { userInputs, totalCost, installments } = store;
@@ -18,37 +19,43 @@ const Summary: React.FC<{}> = () => {
   const rates = installments.length;
   const lastInstallmentDate = installments.at(-1)?.date;
 
+  const summaryElements: SummaryElement[] = [
+    {
+      title: 'Total gross',
+      value: `${rounder(gross)} ${InitialValues.formValues.bankgross.unit}`,
+    },
+    {
+      title: 'Total cost',
+      value: `${rounder(totalCost)} ${InitialValues.formValues.amount.unit}`,
+    },
+    {
+      title: 'Payment last day',
+      value: `${
+        isNil(lastInstallmentDate)
+          ? ''
+          : lastInstallmentDate?.toLocaleDateString()
+      }`,
+    },
+    { title: 'Rates', value: rates.toString() },
+  ];
+
   return (
-    <Wrapper sx={{ maxWidth: '500px' }}>
+    <Wrapper sx={{ textAlign: 'center' }}>
       <Subtitle>{t('Summary')}</Subtitle>
-      <Grid container>
-        <Grid item xs={rowWidth}>
-          {t('Total gross')}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {rounder(gross)} {InitialValues.formValues.bankgross.unit}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {t('Total cost')}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {rounder(totalCost)} {InitialValues.formValues.amount.unit}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {t('Rates')}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {rates}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {t('Payment last day')}
-        </Grid>
-        <Grid item xs={rowWidth}>
-          {lastInstallmentDate?.toLocaleDateString()}
-        </Grid>
-      </Grid>
+      {summaryElements.map(({ title, value }) => (
+        <>
+          <Divider sx={{ fontSize: '0.75em', opacity: 0.6 }} {...dividerProps}>
+            {t(title).toUpperCase()}
+          </Divider>
+          <Box sx={{ marginBottom: '0.5rem' }}>{value}</Box>
+        </>
+      ))}
     </Wrapper>
   );
 };
 
 export default observer(Summary);
+
+const dividerProps: DividerProps = {
+  textAlign: 'center',
+};

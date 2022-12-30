@@ -7,7 +7,6 @@ import { Wrapper } from '../../view/wrapper/wrapper';
 import { action } from 'mobx';
 import { InputNames } from '../types';
 import { useTranslation } from 'react-i18next';
-import Options from '../Options/Options';
 
 const Inputs: React.FC<{}> = () => {
   const store = useStore();
@@ -27,8 +26,6 @@ const Inputs: React.FC<{}> = () => {
           onChange={action((value: number) => handleUserClick(input[0], value))}
         />
       ))}
-
-      <Options />
     </Wrapper>
   );
 };
