@@ -26,5 +26,9 @@ export const pl: Translation = {
     'Saving values failed': 'Zapis danych nieudany!',
     'Values cleared': 'Dane usunięte',
     'Values clear failed': 'Usuwanie danych zakończone niepowodzeniem',
+    'Vacation months': 'Miesiące wakacji',
+    'Cancel': 'Anuluj',
+    'OK': 'Potwierdź',
+    'Constant overpayments': 'Stała płatność'
   },
 };

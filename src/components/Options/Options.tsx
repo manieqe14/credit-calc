@@ -19,6 +19,7 @@ const Options = (): ReactElement => {
   return (
     <Wrapper>
       <Subtitle>{t('Options')}</Subtitle>
+      <Subtitle variant="overline">{t('Constant overpayments')}</Subtitle>
       <Grid style={{ marginLeft: '20px' }}>
         <Grid item sx={{ position: 'relative' }}>
           <CheckboxInput

@@ -10,25 +10,14 @@ export const ListViewItemStyle = (
   borderRadius: '5px',
   marginBottom: '5px',
   width: `calc(100%/${inRow} - ${spacing(inRow)}px)`,
-  [propertyName(inRow)]: {
-    marginLeft: '5px',
-    marginRight: '5px',
-  },
+    [propertyName(inRow)]: {
+      ...(inRow > 1 ? { marginRight: '5px' } : null)
+    }
 });
 
-const spacing = (inRow: number): number => {
-  if (inRow === 1) {
-    return 0;
-  } else if (inRow === 2) {
-    return 10;
-  } else {
-    return 10 * (inRow - 2);
-  }
-};
+const spacing = (inRow: number): number => inRow === 1 ? 0 : 5*(inRow-1)/inRow;
 
-const propertyName = (inRow: number): string => {
-  return `&:nth-child(${inRow}n + 2)`;
-};
+const propertyName = (inRow: number): string => `&:not(:nth-child(${inRow}n))`;
 
 export const ListViewItemHover = {
   '&:hover': {
@@ -36,7 +25,7 @@ export const ListViewItemHover = {
   },
 };
 
-export const ActiveStyle = {
+export const ActiveStyle2 = {
   webkitBoxShadow: (theme: Theme) =>
     `0px 0px 38px -9px ${theme.palette.primary.light}`,
   mozBoxShadow: (theme: Theme) =>
@@ -44,3 +33,7 @@ export const ActiveStyle = {
   boxShadow: (theme: Theme) =>
     `0px 0px 38px -9px ${theme.palette.primary.light}`,
 };
+
+export const ActiveStyle = {
+  boxShadow: "rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px",
+}

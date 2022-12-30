@@ -129,6 +129,9 @@ export default class Store {
       installments: Installment[];
     }>(
       (acc, curr, index) => {
+        if(acc.amountLeft <= 0) {
+          return acc;
+        }
         const installment =
           this.options.vacationMonths.find(
             (vacationMonth) =>
@@ -170,7 +173,7 @@ export default class Store {
       { amountLeft: this.userInputs.amount.value, installments: [] }
     );
 
-    return result.installments.filter((installment) => installment.value > 0);
+    return result.installments;
   }
 
   get overpaymentsTotal(): number {

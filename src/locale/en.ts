@@ -26,5 +26,9 @@ export const en: Translation = {
     'Saving values failed': 'Saving values failed!',
     'Values cleared': 'Values cleared',
     'Values clear failed': 'Clearing values failed',
+    'Vacation months': 'Vacation months',
+    'Cancel': 'Cancel',
+    'OK': 'OK',
+    'Constant overpayments': 'Constant payment'
   },
 };
