@@ -24,4 +24,8 @@ export type Phrases =
   | 'Occurrences'
   | 'Installment rate'
   | 'Save config'
-  | 'Clear config';
+  | 'Clear config'
+  | 'Values saved in storage'
+  | 'Saving values failed'
+  | 'Values cleared'
+  | 'Values clear failed';

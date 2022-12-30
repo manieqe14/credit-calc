@@ -12,7 +12,6 @@ const Root = (): ReactElement => {
   // TODO custom start date -> hint -> today
   // TODO wakacje kredytowe
   // TODO options provider
-  // TODO save data in storage
 
   return (
     <Grid container spacing={2}>

@@ -26,11 +26,10 @@ export function zeroPad(number: number): string {
   }
 }
 
-export const getDateForInput = (date: Date): string => {
-  return `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(
+export const getDateForInput = (date: Date): string =>
+  `${date.getFullYear()}-${zeroPad(date.getMonth() + 1)}-${zeroPad(
     date.getDate()
   )}`;
-};
 
 export const getFormattedDate = (date: Date): string =>
   `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;

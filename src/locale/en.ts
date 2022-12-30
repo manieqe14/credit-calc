@@ -22,5 +22,9 @@ export const en: Translation = {
     'Installment rate': 'Installment rate',
     'Save config': 'Save config',
     'Clear config': 'Clear config',
+    'Values saved in storage': 'Values saved in storage!',
+    'Saving values failed': 'Saving values failed!',
+    'Values cleared': 'Values cleared',
+    'Values clear failed': 'Clearing values failed',
   },
 };
