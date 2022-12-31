@@ -14,6 +14,8 @@ import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
 import { isNil } from 'ramda';
 import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
+import { checkVacationMonth } from '../Utils/checkVacationMonth';
+import { overpaymentsForDate } from '../Utils/overpaymentsForDate';
 
 export default class Store {
   userInputs: UserInputs;
@@ -123,6 +125,7 @@ export default class Store {
 
   public get installments(): Installment[] {
     const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
+    const period = this.userInputs.period.value + this.options.vacationMonths.length;
 
     const result = this.dates.reduce<{
       amountLeft: number;
@@ -132,29 +135,16 @@ export default class Store {
         if(acc.amountLeft <= 0) {
           return acc;
         }
-        const installment =
-          this.options.vacationMonths.find(
-            (vacationMonth) =>
-              vacationMonth.month === curr.getMonth() &&
-              vacationMonth.year === curr.getFullYear()
-          ) === undefined
-            ? countInstallment(
+        const installment = checkVacationMonth(this.options.vacationMonths, curr) ? countInstallment(
                 acc.amountLeft,
                 gross,
-                this.userInputs.period.value - index
+                period - index
               )
             : 0;
 
-        const overpayments = this.overpaymentDates.filter((overpayment) => {
-          if (isNil(acc.installments.at(-1)?.date)) {
-            return overpayment.date < curr;
-          }
+            this.overpaymentDates
 
-          return (
-            overpayment.date > acc.installments.at(-1).date &&
-            overpayment.date < curr
-          );
-        });
+        const overpayments = overpaymentsForDate(this.overpaymentDates, acc.installments.at(-1)?.date, curr);
 
         const amountPaid = this.options.constRateOverpayment
           ? this.options.constRateOverpaymentValue +
@@ -172,7 +162,6 @@ export default class Store {
       },
       { amountLeft: this.userInputs.amount.value, installments: [] }
     );
-
     return result.installments;
   }
 

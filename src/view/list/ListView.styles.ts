@@ -17,7 +17,7 @@ export const ListViewItemStyle = (
 
 const spacing = (inRow: number): number => inRow === 1 ? 0 : 5*(inRow-1)/inRow;
 
-const propertyName = (inRow: number): string => `&:not(:nth-child(${inRow}n))`;
+const propertyName = (inRow: number): string => `&:not(:nth-of-type(${inRow}n))`;
 
 export const ListViewItemHover = {
   '&:hover': {

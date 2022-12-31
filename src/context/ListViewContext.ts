@@ -4,7 +4,7 @@ import { VacationDate } from '../view/list/ListView.types';
 
 export interface ListViewContext {
   onDelete?: (id: string) => void;
-  onClick?: (id: string | VacationDate) => void;
+  onClick?: (id: string) => void;
   noBorder?: boolean;
   row?: number;
 }
