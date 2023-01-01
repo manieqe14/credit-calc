@@ -13,7 +13,7 @@ const Inputs: React.FC = () => {
   const { t } = useTranslation();
 
   const handleUserClick = (key: string, value: number): void => {
-    store.setUserInput(key as InputNames, isNaN(value) ? 0 : value);
+    store.setUserInput(key as InputNames, value);
   };
 
   return (

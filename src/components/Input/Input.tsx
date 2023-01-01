@@ -14,6 +14,7 @@ export interface OptionConfig {
 export const Input = ({ userInput, onChange }: OptionConfig): ReactElement => {
   const { name, value, unit, step } = userInput;
   const { t } = useTranslation();
+
   return (
     <InputRow>
       <Remove

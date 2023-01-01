@@ -18,13 +18,17 @@ import { checkVacationMonth } from '../Utils/checkVacationMonth';
 import { overpaymentsForDate } from '../Utils/overpaymentsForDate';
 
 export default class Store {
+  
   userInputs: UserInputs;
 
   options: OptionsObj;
 
   public overpayments: Overpayment[];
+
   showBanner: boolean;
+
   message: Message;
+
   error: boolean;
 
   constructor({ formValues, options, overpayments }: typeof InitialValues) {
@@ -53,6 +57,9 @@ export default class Store {
   }
 
   get dates(): Date[] {
+    if(isNil(this.userInputs.period.value)){
+      return [];
+    }
     return generateDatesArray(
       this.options.startDate,
       this.userInputs.period.value + this.options.vacationMonths.length
@@ -125,7 +132,7 @@ export default class Store {
 
   public get installments(): Installment[] {
     const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
-    const period = this.userInputs.period.value + this.options.vacationMonths.length;
+    let vacationsBehind = 0;
 
     const result = this.dates.reduce<{
       amountLeft: number;
@@ -135,12 +142,13 @@ export default class Store {
         if(acc.amountLeft <= 0) {
           return acc;
         }
+
         const installment = checkVacationMonth(this.options.vacationMonths, curr) ? countInstallment(
                 acc.amountLeft,
                 gross,
-                period - index
+                this.userInputs.period.value + vacationsBehind - index
               )
-            : 0;
+            : vacationsBehind++ && 0;
 
             this.overpaymentDates
 
@@ -172,7 +180,7 @@ export default class Store {
   public setUserInput(key: InputNames, value: number): void {
     this.userInputs = {
       ...this.userInputs,
-      [key]: { ...this.userInputs[key], value },
+      [key]: { ...this.userInputs[key], value: isNaN(value) ? undefined : value },
     };
   }
 
