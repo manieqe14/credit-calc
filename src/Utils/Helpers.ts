@@ -1,6 +1,4 @@
-export const rounder = (value: number): number => {
-  return Math.round(value * 100) / 100;
-};
+export const rounder = (value: number): number => Math.round(value * 100) / 100;
 
 export function countInstallment(
   amount: number,
@@ -14,7 +12,7 @@ export function countInstallment(
   for (let i = 1; i < period; i++) {
     sum += Math.pow(1 + gross / 1200, -i);
   }
-  return rounder(amount / sum);
+  return rounder(amount / sum) as number;
 }
 
 export function odsetki(value: number, percent: number): number {

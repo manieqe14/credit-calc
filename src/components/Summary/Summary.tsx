@@ -14,8 +14,9 @@ const Summary: React.FC = () => {
   const store = useStore();
   const { t } = useTranslation();
   const { userInputs, totalCost, installments } = store;
+  const { wibor, bankgross } = userInputs;
 
-  const gross = userInputs.wibor.value + userInputs.bankgross.value;
+  const gross = wibor.value + bankgross.value;
   const rates = installments.length;
   const lastInstallmentDate = installments.at(-1)?.date;
 

@@ -49,7 +49,7 @@ const Holidays: React.FC = () => {
         <DialogContent>
           <DialogContentText>
             <ListView
-              row={3}
+              row={5}
               onClick={(id: string) =>
                 setVacationMonths([...vacationMonths, idToDate(id)])
               }

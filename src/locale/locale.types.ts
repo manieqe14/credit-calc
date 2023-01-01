@@ -31,4 +31,6 @@ export type Phrases =
   | 'Values clear failed'
   | 'Vacation months'
   | 'Cancel'
-  | 'OK';
+  | 'OK'
+  | 'Constant overpayments';
+  

@@ -14,15 +14,21 @@ import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
 import { isNil } from 'ramda';
 import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
+import { checkVacationMonth } from '../Utils/checkVacationMonth';
+import { overpaymentsForDate } from '../Utils/overpaymentsForDate';
 
 export default class Store {
+  
   userInputs: UserInputs;
 
   options: OptionsObj;
 
   public overpayments: Overpayment[];
+
   showBanner: boolean;
+
   message: Message;
+
   error: boolean;
 
   constructor({ formValues, options, overpayments }: typeof InitialValues) {
@@ -51,6 +57,9 @@ export default class Store {
   }
 
   get dates(): Date[] {
+    if(isNil(this.userInputs.period.value)){
+      return [];
+    }
     return generateDatesArray(
       this.options.startDate,
       this.userInputs.period.value + this.options.vacationMonths.length
@@ -123,35 +132,27 @@ export default class Store {
 
   public get installments(): Installment[] {
     const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
+    let vacationsBehind = 0;
 
     const result = this.dates.reduce<{
       amountLeft: number;
       installments: Installment[];
     }>(
       (acc, curr, index) => {
-        const installment =
-          this.options.vacationMonths.find(
-            (vacationMonth) =>
-              vacationMonth.month === curr.getMonth() &&
-              vacationMonth.year === curr.getFullYear()
-          ) === undefined
-            ? countInstallment(
+        if(acc.amountLeft <= 0) {
+          return acc;
+        }
+
+        const installment = checkVacationMonth(this.options.vacationMonths, curr) ? countInstallment(
                 acc.amountLeft,
                 gross,
-                this.userInputs.period.value - index
+                this.userInputs.period.value + vacationsBehind - index
               )
-            : 0;
+            : vacationsBehind++ && 0;
 
-        const overpayments = this.overpaymentDates.filter((overpayment) => {
-          if (isNil(acc.installments.at(-1)?.date)) {
-            return overpayment.date < curr;
-          }
+            this.overpaymentDates
 
-          return (
-            overpayment.date > acc.installments.at(-1).date &&
-            overpayment.date < curr
-          );
-        });
+        const overpayments = overpaymentsForDate(this.overpaymentDates, acc.installments.at(-1)?.date, curr);
 
         const amountPaid = this.options.constRateOverpayment
           ? this.options.constRateOverpaymentValue +
@@ -169,8 +170,7 @@ export default class Store {
       },
       { amountLeft: this.userInputs.amount.value, installments: [] }
     );
-
-    return result.installments.filter((installment) => installment.value > 0);
+    return result.installments;
   }
 
   get overpaymentsTotal(): number {
@@ -180,7 +180,7 @@ export default class Store {
   public setUserInput(key: InputNames, value: number): void {
     this.userInputs = {
       ...this.userInputs,
-      [key]: { ...this.userInputs[key], value },
+      [key]: { ...this.userInputs[key], value: isNaN(value) ? undefined : value },
     };
   }
 
