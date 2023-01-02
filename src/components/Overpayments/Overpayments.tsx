@@ -52,7 +52,7 @@ const Overpayments = (): ReactElement => {
   const overpaymentsList = (): JSX.Element => (
     <ListView onDelete={store.deleteOverpayment}>
       {overpayments.map((item) => (
-        <ListViewItem id={item.uuid}>
+        <ListViewItem id={item.uuid} key={item.uuid}>
           <ListViewItem.Title>
             {`${item.value} ${userInputs.amount.unit}`}
           </ListViewItem.Title>

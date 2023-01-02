@@ -1,5 +1,5 @@
 import { List } from '@mui/material';
-import React, { Children, cloneElement, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ListViewProps } from './ListView.types';
 import Provider, { ListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
@@ -27,9 +27,7 @@ function ListView({
         }
         {...props}
       >
-        {Children.map(children, (el, i) =>
-          cloneElement(el, { key: i, index: i })
-        )}
+        {children}
       </List>
     </Provider>
   );

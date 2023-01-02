@@ -2,7 +2,7 @@ import { makeAutoObservable } from 'mobx';
 import {
   InputNames,
   Installment,
-  OptionsObj,
+  OptionsInterface,
   Overpayment,
   OverpaymentDate,
   Period,
@@ -10,20 +10,20 @@ import {
 } from '../components/types';
 import { generateDatesArray } from '../Utils/generateDatesArray';
 import { InitialValues } from '../Utils/initialValues';
-import { countInstallment, odsetki, rounder } from '../Utils/Helpers';
+import { countInstallment, interest, rounder } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
 import { isNil, min, repeat, sum } from 'ramda';
 import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
-import { checkVacationMonth } from '../Utils/checkVacationMonth';
 import { overpaymentsForDate } from '../Utils/overpaymentsForDate';
 import { periodToNumber } from '../Utils/periodToNumber';
 import { generateDate } from '../Utils/generateDate';
+import { checkHolidayMonth } from '../Utils/checkHolidayMonth';
 
 export default class Store {
   userInputs: UserInputs;
 
-  options: OptionsObj;
+  options: OptionsInterface;
 
   public overpayments: Overpayment[];
 
@@ -47,14 +47,15 @@ export default class Store {
   get overpaymentDates(): OverpaymentDate[] {
     return this.overpayments.reduce<OverpaymentDate[]>((acc, curr) => {
       if (!isNil(curr.repeatPeriod)) {
-        const overs = repeat(curr, curr.occurrences)
-          .map<OverpaymentDate>(({ date, value }, index) => ({
+        const overs = repeat(curr, curr.occurrences).map<OverpaymentDate>(
+          ({ date, value }, index) => ({
             date: generateDate(
               date,
               index * periodToNumber(curr.repeatPeriod as Period)
             ),
             value,
-          }));
+          })
+        );
 
         return [...acc, ...overs];
       } else {
@@ -63,7 +64,7 @@ export default class Store {
     }, []);
   }
 
-  public setOptions(options: Partial<OptionsObj>): void {
+  public setOptions(options: Partial<OptionsInterface>): void {
     this.options = { ...this.options, ...options };
   }
 
@@ -73,7 +74,7 @@ export default class Store {
     }
 
     const datesLength =
-      this.userInputs.period.value + this.options.vacationMonths.length;
+      this.userInputs.period.value + this.options.holidayMonths.length;
 
     return generateDatesArray(this.options.startDate, datesLength);
   }
@@ -134,7 +135,7 @@ export default class Store {
       amountLeft: this.userInputs.amount.value,
       installments: [],
     };
-    let vacationsBehind = 0;
+    let holidaysBehind = 0;
 
     const result = this.dates.reduce<{
       amountLeft: number;
@@ -144,16 +145,17 @@ export default class Store {
         return acc;
       }
 
-      const vacationMonth = checkVacationMonth(this.options.vacationMonths, curr);
+      const holidayMonth = checkHolidayMonth(this.options.holidayMonths, curr);
 
       const installment = countInstallment(
         acc.amountLeft,
         gross,
-        this.userInputs.period.value + vacationsBehind - index, vacationMonth
-      )
+        this.userInputs.period.value + holidaysBehind - index,
+        holidayMonth
+      );
 
-      if (vacationMonth) {
-        vacationsBehind++;
+      if (holidayMonth) {
+        holidaysBehind++;
       }
 
       const overpayments = overpaymentsForDate(
@@ -176,15 +178,11 @@ export default class Store {
           { date: curr, value: installment, amountPaid },
         ],
         amountLeft: rounder(
-          acc.amountLeft - amountPaid + odsetki(acc.amountLeft, gross)
+          acc.amountLeft - amountPaid + interest(acc.amountLeft, gross)
         ),
       };
     }, initialReducerValue);
     return result.installments;
-  }
-
-  get overpaymentsTotal(): number {
-    return overpaymentsReduce(this.overpaymentDates);
   }
 
   public setUserInput(key: InputNames, value: number): void {

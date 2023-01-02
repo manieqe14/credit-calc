@@ -14,35 +14,35 @@ import {
   DialogContentText,
 } from '@mui/material';
 import { InputIconStyle } from '../Input/Input.styles';
-import { VacationDate } from '../../view/list/ListView.types';
 import { dateToId, idToDate } from '../../Utils/dateToId';
 import { numberToMonth } from '../../Utils/numberToMonth';
 import { isMobile } from '../../Utils/isMobile';
+import { HolidayDate } from '../../view/list/ListView.types';
 
 const Holidays: React.FC = () => {
   const store = useStore();
   const { options } = store;
   const { t, i18n } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
-  const [vacationMonths, setVacationMonths] = useState<VacationDate[]>(
-    options.vacationMonths
+  const [holidayMonths, setHolidayMonths] = useState<HolidayDate[]>(
+    options.holidayMonths
   );
 
   const handleCloseDialog = (): void => {
     setShowDialog(false);
-    store.setOptions({ vacationMonths });
+    store.setOptions({ holidayMonths });
   };
 
-  const handleDeleteVacation = (id: string): void => {
-    const transformedVacationDate = idToDate(id);
-    const filteredMonths = vacationMonths.filter(
+  const handleDeleteHoliday = (id: string): void => {
+    const transformedHolidayDate = idToDate(id);
+    const filteredMonths = holidayMonths.filter(
       (item) =>
-        item.month !== transformedVacationDate.month ||
-        item.year !== transformedVacationDate.year
+        item.month !== transformedHolidayDate.month ||
+        item.year !== transformedHolidayDate.year
     );
 
-    setVacationMonths(filteredMonths);
-    store.setOptions({ vacationMonths: filteredMonths });
+    setHolidayMonths(filteredMonths);
+    store.setOptions({ holidayMonths: filteredMonths });
   };
 
   const addDialog = (): ReactElement => {
@@ -53,19 +53,20 @@ const Holidays: React.FC = () => {
             <ListView
               row={isMobile() ? 3 : 5}
               onClick={(id: string) =>
-                setVacationMonths([...vacationMonths, idToDate(id)])
+                setHolidayMonths([...holidayMonths, idToDate(id)])
               }
             >
               {store.dates.map((date) => (
                 <ListViewItem
                   active={
-                    vacationMonths.find(
-                      (vacationDate) =>
-                        vacationDate.month === date.getMonth() &&
-                        vacationDate.year === date.getFullYear()
+                    holidayMonths.find(
+                      (month) =>
+                        month.month === date.getMonth() &&
+                        month.year === date.getFullYear()
                     ) !== undefined
                   }
                   id={dateToId(date)}
+                  key={dateToId(date)}
                 >
                   <ListViewItem.Title>
                     {`${numberToMonth(
@@ -90,15 +91,15 @@ const Holidays: React.FC = () => {
   return (
     <Box>
       {showDialog ? addDialog() : null}
-      <Subtitle variant="overline">{t('Vacation months')}</Subtitle>
+      <Subtitle variant="overline">{t('Holiday months')}</Subtitle>
       <AddIcon sx={InputIconStyle} onClick={() => setShowDialog(true)} />
-      <ListView row={2} onDelete={handleDeleteVacation}>
-        {options.vacationMonths.map((vacationDate) => (
-          <ListViewItem id={dateToId(vacationDate)}>
+      <ListView row={2} onDelete={handleDeleteHoliday}>
+        {options.holidayMonths.map((holidayDate) => (
+          <ListViewItem id={dateToId(holidayDate)} key={dateToId(holidayDate)}>
             <ListViewItem.Title>
-              {numberToMonth(vacationDate.month, i18n.language)}
+              {numberToMonth(holidayDate.month, i18n.language)}
             </ListViewItem.Title>
-            <ListViewItem.Info>{vacationDate.year}</ListViewItem.Info>
+            <ListViewItem.Info>{holidayDate.year}</ListViewItem.Info>
           </ListViewItem>
         ))}
       </ListView>

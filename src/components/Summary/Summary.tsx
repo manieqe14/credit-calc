@@ -48,12 +48,12 @@ const Summary: React.FC = () => {
     <Wrapper sx={{ textAlign: 'center' }}>
       <Subtitle>{t('Summary')}</Subtitle>
       {summaryElements.map(({ title, value }) => (
-        <>
+        <React.Fragment key={title}>
           <Divider sx={{ fontSize: '0.75em', opacity: 0.6 }} {...dividerProps}>
             {t(title).toUpperCase()}
           </Divider>
           <Box sx={{ marginBottom: '0.5rem' }}>{value}</Box>
-        </>
+        </React.Fragment>
       ))}
     </Wrapper>
   );
@@ -62,5 +62,5 @@ const Summary: React.FC = () => {
 export default observer(Summary);
 
 const dividerProps: DividerProps = {
-  textAlign: 'center',
+  textAlign: "center"
 };

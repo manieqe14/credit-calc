@@ -17,16 +17,15 @@ import {
   ListViewItemStyle,
 } from './ListView.styles';
 
-function ListViewItem({
+const ListViewItem = ({
   children,
   ...props
-}: ListItemComposition): ReactElement {
+}: ListItemComposition): ReactElement => {
   const { Title, id, active = false, ...parentProps } = props;
   const { onClick, onDelete, noBorder = false, row = 1 } = useListViewContext();
 
   return (
     <ListItem
-      key={id}
       alignItems="flex-start"
       {...(isNil(onClick) ? null : { onClick: () => onClick(id) })}
       sx={{
@@ -49,13 +48,17 @@ function ListViewItem({
       {children}
     </ListItem>
   );
-}
+};
 
 const ListViewItemTitle: FC<TypographyProps> = ({
   children,
   ...props
 }: TypographyProps) => {
-  return <Typography {...props}>{children}</Typography>;
+  return (
+    <Typography component={'span'} {...props}>
+      {children}
+    </Typography>
+  );
 };
 
 const ListViewItemDate: FC<ListViewItemDateProps> = ({
