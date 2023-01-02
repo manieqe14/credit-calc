@@ -38,6 +38,7 @@ const ListViewItem = ({
         onDelete != null ? (
           <IconButton
             edge="end"
+            size="small"
             onClick={() => !isNil(onDelete) && onDelete(id)}
           >
             <RemoveIcon />

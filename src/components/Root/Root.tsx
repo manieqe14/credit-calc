@@ -11,6 +11,7 @@ const Root = (): ReactElement => {
   // TODO overpayment number of occurrences switch
   // TODO custom start date -> hint -> today
   // TODO options provider
+  // TODO dark mode
 
   return (
     <Grid container spacing={2}>

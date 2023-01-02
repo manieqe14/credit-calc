@@ -18,30 +18,30 @@ import { dateToId, idToDate } from '../../Utils/dateToId';
 import { numberToMonth } from '../../Utils/numberToMonth';
 import { isMobile } from '../../Utils/isMobile';
 import { HolidayDate } from '../../view/list/ListView.types';
+import { sortHolidayMonths } from '../../Utils/sortHolidayMonths';
 
 const Holidays: React.FC = () => {
   const store = useStore();
   const { options } = store;
+  const { holidayMonths } = options;
   const { t, i18n } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
-  const [holidayMonths, setHolidayMonths] = useState<HolidayDate[]>(
-    options.holidayMonths
-  );
+  const [months, setMonths] = useState<HolidayDate[]>(holidayMonths);
 
   const handleCloseDialog = (): void => {
     setShowDialog(false);
-    store.setOptions({ holidayMonths });
+    store.setOptions({ holidayMonths: months });
   };
 
-  const handleDeleteHoliday = (id: string): void => {
+  const handleDeleteMonth = (id: string): void => {
     const transformedHolidayDate = idToDate(id);
-    const filteredMonths = holidayMonths.filter(
+    const filteredMonths = months.filter(
       (item) =>
         item.month !== transformedHolidayDate.month ||
         item.year !== transformedHolidayDate.year
     );
 
-    setHolidayMonths(filteredMonths);
+    setMonths(filteredMonths);
     store.setOptions({ holidayMonths: filteredMonths });
   };
 
@@ -53,13 +53,13 @@ const Holidays: React.FC = () => {
             <ListView
               row={isMobile() ? 3 : 5}
               onClick={(id: string) =>
-                setHolidayMonths([...holidayMonths, idToDate(id)])
+                setMonths([...sortHolidayMonths(months), idToDate(id)])
               }
             >
               {store.dates.map((date) => (
                 <ListViewItem
                   active={
-                    holidayMonths.find(
+                    months.find(
                       (month) =>
                         month.month === date.getMonth() &&
                         month.year === date.getFullYear()
@@ -93,8 +93,12 @@ const Holidays: React.FC = () => {
       {showDialog ? addDialog() : null}
       <Subtitle variant="overline">{t('Holiday months')}</Subtitle>
       <AddIcon sx={InputIconStyle} onClick={() => setShowDialog(true)} />
-      <ListView row={2} onDelete={handleDeleteHoliday}>
-        {options.holidayMonths.map((holidayDate) => (
+      <ListView
+        row={2}
+        onDelete={handleDeleteMonth}
+        sx={{ maxHeight: '150px', overflowY: 'scroll' }}
+      >
+        {sortHolidayMonths(holidayMonths).map((holidayDate) => (
           <ListViewItem id={dateToId(holidayDate)} key={dateToId(holidayDate)}>
             <ListViewItem.Title>
               {numberToMonth(holidayDate.month, i18n.language)}

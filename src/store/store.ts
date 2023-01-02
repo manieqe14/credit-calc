@@ -10,7 +10,7 @@ import {
 } from '../components/types';
 import { generateDatesArray } from '../Utils/generateDatesArray';
 import { InitialValues } from '../Utils/initialValues';
-import { countInstallment, interest, rounder } from '../Utils/Helpers';
+import { countInstallment, interest } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
 import { isNil, min, repeat, sum } from 'ramda';
@@ -105,6 +105,10 @@ export default class Store {
     this.error = false;
   }
 
+  public get totalGross(): number {
+    return this.userInputs.wibor.value + this.userInputs.bankgross.value;
+  }
+
   public get endDate(): Date {
     return this.dates.at(-1) ?? new Date();
   }
@@ -130,7 +134,6 @@ export default class Store {
   }
 
   public get installments(): Installment[] {
-    const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
     const initialReducerValue = {
       amountLeft: this.userInputs.amount.value,
       installments: [],
@@ -149,7 +152,7 @@ export default class Store {
 
       const installment = countInstallment(
         acc.amountLeft,
-        gross,
+        this.totalGross,
         this.userInputs.period.value + holidaysBehind - index,
         holidayMonth
       );
@@ -166,20 +169,20 @@ export default class Store {
       const reducedOverpayments = overpaymentsReduce(overpayments);
 
       const amountPaid = min(
-        this.options.constRateOverpayment
-          ? this.options.constRateOverpaymentValue + reducedOverpayments
-          : installment + reducedOverpayments,
+        (this.options.constRateOverpayment
+          ? this.options.constRateOverpaymentValue
+          : installment) + reducedOverpayments,
         acc.amountLeft
       );
+      const amountLeft =
+        acc.amountLeft - amountPaid + interest(acc.amountLeft, this.totalGross);
 
       return {
         installments: [
           ...acc.installments,
           { date: curr, value: installment, amountPaid },
         ],
-        amountLeft: rounder(
-          acc.amountLeft - amountPaid + interest(acc.amountLeft, gross)
-        ),
+        amountLeft,
       };
     }, initialReducerValue);
     return result.installments;

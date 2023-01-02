@@ -17,7 +17,7 @@ export function countInstallment(
 }
 
 export function interest(value: number, percent: number): number {
-  return (((value * percent) / 100) * 30) / 365;
+  return rounder((((value * percent) / 100) * 30) / 365);
 }
 
 export function zeroPad(number: number): string {

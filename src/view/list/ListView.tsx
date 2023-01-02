@@ -10,6 +10,7 @@ function ListView({
   onDelete,
   noBorder,
   row,
+  sx,
   ...props
 }: ListViewProps): JSX.Element {
   const context = useMemo(
@@ -22,8 +23,8 @@ function ListView({
       <List
         sx={
           !isNil(row)
-            ? { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }
-            : null
+            ? { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', ...sx }
+            : { ...sx }
         }
         {...props}
       >
