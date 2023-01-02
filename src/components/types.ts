@@ -1,13 +1,13 @@
-import { VacationDate } from '../view/list/ListView.types';
+import { HolidayDate } from '../view/list/ListView.types';
 
-export interface OptionsObj {
+export interface OptionsInterface {
   constRateOverpayment: boolean;
   constRateOverpaymentValue: number;
   startDate: Date;
-  vacationMonths: VacationDate[];
+  holidayMonths: HolidayDate[];
 }
 
-export interface UserInput {
+export interface UserInputInterface {
   name: string;
   value: number;
   unit: string;
@@ -16,7 +16,7 @@ export interface UserInput {
 
 export type InputNames = 'amount' | 'wibor' | 'bankgross' | 'period';
 
-export type UserInputs = Record<InputNames, UserInput>;
+export type UserInputs = Record<InputNames, UserInputInterface>;
 
 export interface Installment {
   date: Date;

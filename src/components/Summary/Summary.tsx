@@ -14,17 +14,17 @@ import { numberToMonth } from '../../Utils/numberToMonth';
 const Summary: React.FC = () => {
   const store = useStore();
   const { t, i18n } = useTranslation();
-  const { userInputs, totalCost, installments } = store;
-  const { wibor, bankgross } = userInputs;
+  const { totalCost, installments, totalGross } = store;
 
-  const gross = wibor.value + bankgross.value;
   const rates = installments.length;
   const lastInstallmentDate = installments.at(-1)?.date;
 
   const summaryElements: SummaryElement[] = [
     {
       title: 'Total gross',
-      value: `${rounder(gross)} ${InitialValues.formValues.bankgross.unit}`,
+      value: `${rounder(totalGross)} ${
+        InitialValues.formValues.bankgross.unit
+      }`,
     },
     {
       title: 'Total cost',
@@ -48,12 +48,12 @@ const Summary: React.FC = () => {
     <Wrapper sx={{ textAlign: 'center' }}>
       <Subtitle>{t('Summary')}</Subtitle>
       {summaryElements.map(({ title, value }) => (
-        <>
+        <React.Fragment key={title}>
           <Divider sx={{ fontSize: '0.75em', opacity: 0.6 }} {...dividerProps}>
             {t(title).toUpperCase()}
           </Divider>
           <Box sx={{ marginBottom: '0.5rem' }}>{value}</Box>
-        </>
+        </React.Fragment>
       ))}
     </Wrapper>
   );

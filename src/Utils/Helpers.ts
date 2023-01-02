@@ -16,8 +16,8 @@ export function countInstallment(
   return rounder(amount / sum);
 }
 
-export function odsetki(value: number, percent: number): number {
-  return (((value * percent) / 100) * 30) / 365;
+export function interest(value: number, percent: number): number {
+  return rounder((((value * percent) / 100) * 30) / 365);
 }
 
 export function zeroPad(number: number): string {

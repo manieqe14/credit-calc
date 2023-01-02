@@ -1,5 +1,5 @@
-import useDataForChart from "../../Utils/Hooks/useDataForChart";
-import React, { FC } from "react";
+import useDataForChart from '../../Utils/Hooks/useDataForChart';
+import React, { FC } from 'react';
 
 import { Line } from 'react-chartjs-2';
 import {
@@ -12,8 +12,8 @@ import {
   LineElement,
   Legend,
 } from 'chart.js';
-import { useStore } from "../../context/store.context";
-import { observer } from "mobx-react-lite";
+import { useStore } from '../../context/store.context';
+import { observer } from 'mobx-react-lite';
 
 ChartJS.register(
   CategoryScale,
@@ -25,12 +25,12 @@ ChartJS.register(
   Legend
 );
 
-const Chart: FC<{}> = () => {
+const Chart: FC = () => {
   const store = useStore();
   const { installments, options } = store;
 
   const chartData = useDataForChart({ installments, options });
-  return (<Line {...chartData} />);
-}
+  return <Line {...chartData} />;
+};
 
 export default observer(Chart);

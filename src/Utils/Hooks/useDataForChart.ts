@@ -1,20 +1,25 @@
 import { useMemo } from 'react';
-import { Installment, OptionsObj } from '../../components/types';
+import { Installment, OptionsInterface } from '../../components/types';
 import { InitialValues } from '../initialValues';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@mui/material';
+import { ChartProps } from 'react-chartjs-2';
+import { Chart } from 'chart.js';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const useDataForChart = ({
   installments,
   options,
 }: {
   installments: Installment[];
-  options: OptionsObj;
-}) => {
+  options: OptionsInterface;
+}): ChartProps<'line'> => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
-  return useMemo(() => {
-    const dataForChart = {
+  Chart.defaults.color = theme.palette.primary.dark;
+
+  return useMemo<ChartProps<'line'>>(
+    () => ({
       type: 'line',
       data: {
         labels: installments.map(
@@ -22,20 +27,21 @@ const useDataForChart = ({
         ),
         datasets: [
           {
-            label: t('Installment rate'),
+            label: t('Installment rate').toString(),
             data: installments.map((obj) => obj.value),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            backgroundColor: theme.palette.secondary.dark,
+            borderColor: theme.palette.secondary.main,
           },
           {
-            label: t('Monthly payment'),
+            label: t('Monthly payment').toString(),
             data: installments.map((obj) => obj.amountPaid),
-            borderColor: 'rgb(0, 0, 25)',
-            backgroundColor: 'rgb(0, 0, 25)',
+            backgroundColor: theme.palette.primary.main,
+            borderColor: theme.palette.primary.dark,
           },
         ],
       },
       options: {
+        backgroundColor: theme.palette.primary.light,
         plugins: {
           legend: {
             position: 'top' as const,
@@ -51,14 +57,9 @@ const useDataForChart = ({
           },
         },
       },
-    };
-
-    if (options.constRateOverpayment) {
-      dataForChart.data.datasets.push();
-    }
-
-    return dataForChart;
-  }, [installments, options, t]);
+    }),
+    [installments, options, t]
+  );
 };
 
 export default useDataForChart;

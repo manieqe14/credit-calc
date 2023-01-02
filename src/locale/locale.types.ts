@@ -29,7 +29,7 @@ export type Phrases =
   | 'Saving values failed'
   | 'Values cleared'
   | 'Values clear failed'
-  | 'Vacation months'
+  | 'Holiday months'
   | 'Cancel'
   | 'OK'
   | 'Constant overpayments';

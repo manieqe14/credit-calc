@@ -1,5 +1,5 @@
 import { List } from '@mui/material';
-import React, { Children, cloneElement, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ListViewProps } from './ListView.types';
 import Provider, { ListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
@@ -10,6 +10,7 @@ function ListView({
   onDelete,
   noBorder,
   row,
+  sx,
   ...props
 }: ListViewProps): JSX.Element {
   const context = useMemo(
@@ -22,14 +23,12 @@ function ListView({
       <List
         sx={
           !isNil(row)
-            ? { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }
-            : null
+            ? { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', ...sx }
+            : { ...sx }
         }
         {...props}
       >
-        {Children.map(children, (el, i) =>
-          cloneElement(el, { key: i, index: i })
-        )}
+        {children}
       </List>
     </Provider>
   );

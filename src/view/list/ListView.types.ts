@@ -23,7 +23,7 @@ export interface ListViewItemDateProps extends TypographyProps {
   date: Date;
 }
 
-export interface VacationDate {
+export interface HolidayDate {
   month: number;
   year: number;
 }

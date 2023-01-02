@@ -31,8 +31,8 @@ const LanguageSelector = (): JSX.Element => {
     <ListView row={2} noBorder onClick={setLanguage}>
       {Languages.map((lang) => (
         <ListViewItem
-          key={lang.code}
           id={lang.code}
+          key={lang.code}
           active={lang.code === language}
         >
           <ReactCountryFlag countryCode={lang.flagCode} svg style={FlagImage} />
