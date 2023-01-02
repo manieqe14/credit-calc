@@ -1,6 +1,12 @@
 import { createTheme } from '@mui/material';
-import { cyan } from '@mui/material/colors';
 
+const colours = {
+  black: '#000000',
+  oxfordBlue: '#14213d',
+  orangeWeb: '#fca311',
+  platinum: '#e5e5e5',
+  white: '#ffffff',
+};
 export const theme = createTheme({
   typography: {
     fontFamily: 'Roboto',
@@ -13,16 +19,22 @@ export const theme = createTheme({
   },
   palette: {
     primary: {
-      main: cyan[300],
-      light: cyan.A200,
+      main: colours.oxfordBlue,
+      light: colours.platinum,
       dark: '009faf',
       contrastText: 'white',
+    },
+    secondary: {
+      main: colours.orangeWeb,
     },
     grey: {
       100: 'rgba(0, 0, 0, 0.1)',
     },
     text: {
       primary: 'rgb(37, 40, 42)',
+    },
+    background: {
+      paper: colours.white,
     },
   },
 });
