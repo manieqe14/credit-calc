@@ -16,7 +16,7 @@ export const pl: Translation = {
     'Total gross': 'Całkowite oprocentowanie',
     'Total cost': 'Całkowity koszt',
     Rates: 'Ilość rat',
-    'Payment last day': 'Dzień ostatniej raty',
+    'Payment last month': 'Ostatnia rata',
     'Repeat period': 'Powtórzenia',
     Occurrences: 'Ilość',
     'Installment rate': 'Wysokość raty',
@@ -27,8 +27,8 @@ export const pl: Translation = {
     'Values cleared': 'Dane usunięte',
     'Values clear failed': 'Usuwanie danych zakończone niepowodzeniem',
     'Vacation months': 'Miesiące wakacji',
-    'Cancel': 'Anuluj',
-    'OK': 'Potwierdź',
-    'Constant overpayments': 'Stała płatność'
+    Cancel: 'Anuluj',
+    OK: 'Potwierdź',
+    'Constant overpayments': 'Stała płatność',
   },
 };

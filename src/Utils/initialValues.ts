@@ -11,7 +11,7 @@ const InitialFormValues: UserInputs = {
   },
   wibor: {
     name: 'WIBOR',
-    value: 6.5,
+    value: 7.4,
     unit: '%',
     step: 0.1,
   },

@@ -5,6 +5,7 @@ import {
   OptionsObj,
   Overpayment,
   OverpaymentDate,
+  Period,
   UserInputs,
 } from '../components/types';
 import { generateDatesArray } from '../Utils/generateDatesArray';
@@ -20,7 +21,6 @@ import { periodToNumber } from '../Utils/periodToNumber';
 import { generateDate } from '../Utils/generateDate';
 
 export default class Store {
-  
   userInputs: UserInputs;
 
   options: OptionsObj;
@@ -47,8 +47,14 @@ export default class Store {
   get overpaymentDates(): OverpaymentDate[] {
     return this.overpayments.reduce<OverpaymentDate[]>((acc, curr) => {
       if (!isNil(curr.repeatPeriod)) {
-        const overs = repeat<OverpaymentDate>(curr, curr.occurrences)
-          .map<OverpaymentDate>(({date, value}, index) => ({ date: generateDate(date, index * periodToNumber(curr.repeatPeriod)), value }));
+        const overs = repeat(curr, curr.occurrences)
+          .map<OverpaymentDate>(({ date, value }, index) => ({
+            date: generateDate(
+              date,
+              index * periodToNumber(curr.repeatPeriod as Period)
+            ),
+            value,
+          }));
 
         return [...acc, ...overs];
       } else {
@@ -62,16 +68,14 @@ export default class Store {
   }
 
   get dates(): Date[] {
-    if(isNil(this.userInputs.period.value)){
+    if (isNil(this.userInputs.period.value)) {
       return [];
     }
 
-    const datesLength = this.userInputs.period.value + this.options.vacationMonths.length;
+    const datesLength =
+      this.userInputs.period.value + this.options.vacationMonths.length;
 
-    return generateDatesArray(
-      this.options.startDate,
-      datesLength
-    );
+    return generateDatesArray(this.options.startDate, datesLength);
   }
 
   public saveValuesInStorage(): void {
@@ -113,7 +117,7 @@ export default class Store {
   }
 
   public get totalCost(): number {
-    return sum(this.installments.map(installment => installment.amountPaid));
+    return sum(this.installments.map((installment) => installment.amountPaid));
   }
 
   public addOverpayment(item: Overpayment): void {
@@ -126,46 +130,56 @@ export default class Store {
 
   public get installments(): Installment[] {
     const gross = this.userInputs.wibor.value + this.userInputs.bankgross.value;
-    const initialReducerValue = { amountLeft: this.userInputs.amount.value, installments: [] };
+    const initialReducerValue = {
+      amountLeft: this.userInputs.amount.value,
+      installments: [],
+    };
     let vacationsBehind = 0;
 
     const result = this.dates.reduce<{
       amountLeft: number;
       installments: Installment[];
-    }>(
-      (acc, curr, index) => {
-        if(acc.amountLeft === 0) {
-          return acc;
-        }
+    }>((acc, curr, index) => {
+      if (acc.amountLeft === 0) {
+        return acc;
+      }
 
-        const vacationMonth = checkVacationMonth(this.options.vacationMonths, curr);
+      const vacationMonth = checkVacationMonth(this.options.vacationMonths, curr);
 
-        const installment = vacationMonth ? countInstallment(
-                acc.amountLeft,
-                gross,
-                this.userInputs.period.value + vacationsBehind - index
-              )
-            : vacationsBehind++ && 0;
+      const installment = countInstallment(
+        acc.amountLeft,
+        gross,
+        this.userInputs.period.value + vacationsBehind - index, vacationMonth
+      )
 
-        const overpayments = overpaymentsForDate(this.overpaymentDates, acc.installments.at(-1)?.date, curr);
-        const reducedOverpayments = overpaymentsReduce(overpayments);
+      if (vacationMonth) {
+        vacationsBehind++;
+      }
 
-        const amountPaid = min(this.options.constRateOverpayment
-          ? this.options.constRateOverpaymentValue +
-            reducedOverpayments
-          : installment + reducedOverpayments, acc.amountLeft);
+      const overpayments = overpaymentsForDate(
+        this.overpaymentDates,
+        acc.installments.at(-1)?.date,
+        curr
+      );
+      const reducedOverpayments = overpaymentsReduce(overpayments);
 
+      const amountPaid = min(
+        this.options.constRateOverpayment
+          ? this.options.constRateOverpaymentValue + reducedOverpayments
+          : installment + reducedOverpayments,
+        acc.amountLeft
+      );
 
-        return {
-          installments: [
-            ...acc.installments,
-            { date: curr, value: installment, amountPaid },
-          ],
-          amountLeft:
-            rounder(acc.amountLeft - amountPaid + odsetki(acc.amountLeft, gross)),
-        };
-      }, initialReducerValue
-    );
+      return {
+        installments: [
+          ...acc.installments,
+          { date: curr, value: installment, amountPaid },
+        ],
+        amountLeft: rounder(
+          acc.amountLeft - amountPaid + odsetki(acc.amountLeft, gross)
+        ),
+      };
+    }, initialReducerValue);
     return result.installments;
   }
 
@@ -176,7 +190,10 @@ export default class Store {
   public setUserInput(key: InputNames, value: number): void {
     this.userInputs = {
       ...this.userInputs,
-      [key]: { ...this.userInputs[key], value: isNaN(value) ? undefined : value },
+      [key]: {
+        ...this.userInputs[key],
+        value: isNaN(value) ? undefined : value,
+      },
     };
   }
 

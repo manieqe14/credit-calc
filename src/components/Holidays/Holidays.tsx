@@ -17,7 +17,7 @@ import { InputIconStyle } from '../Input/Input.styles';
 import { VacationDate } from '../../view/list/ListView.types';
 import { dateToId, idToDate } from '../../Utils/dateToId';
 import { numberToMonth } from '../../Utils/numberToMonth';
-import { toJS } from 'mobx';
+import { isMobile } from '../../Utils/isMobile';
 
 const Holidays: React.FC = () => {
   const store = useStore();
@@ -51,7 +51,7 @@ const Holidays: React.FC = () => {
         <DialogContent>
           <DialogContentText>
             <ListView
-              row={5}
+              row={isMobile() ? 3 : 5}
               onClick={(id: string) =>
                 setVacationMonths([...vacationMonths, idToDate(id)])
               }
