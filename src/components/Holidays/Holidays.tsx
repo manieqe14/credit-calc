@@ -49,40 +49,42 @@ const Holidays: React.FC = () => {
     return (
       <Dialog open={showDialog}>
         <DialogContent>
-          <DialogContentText>
-            <ListView
-              row={isMobile() ? 3 : 5}
-              onClick={(id: string) =>
-                setMonths([...sortHolidayMonths(months), idToDate(id)])
-              }
-            >
-              {store.dates.map((date) => (
-                <ListViewItem
-                  active={
-                    months.find(
-                      (month) =>
-                        month.month === date.getMonth() &&
-                        month.year === date.getFullYear()
-                    ) !== undefined
-                  }
-                  id={dateToId(date)}
-                  key={dateToId(date)}
-                >
-                  <ListViewItem.Title>
-                    {`${numberToMonth(
-                      date.getMonth(),
-                      i18n.language,
-                      false
-                    )}-${date.getFullYear()}`}
-                  </ListViewItem.Title>
-                </ListViewItem>
-              ))}
-            </ListView>
-          </DialogContentText>
+          <ListView
+            row={isMobile() ? 3 : 5}
+            onClick={(id: string) =>
+              setMonths([...sortHolidayMonths(months), idToDate(id)])
+            }
+          >
+            {store.dates.map((date) => (
+              <ListViewItem
+                active={
+                  months.find(
+                    (month) =>
+                      month.month === date.getMonth() &&
+                      month.year === date.getFullYear()
+                  ) !== undefined
+                }
+                id={dateToId(date)}
+                key={dateToId(date)}
+              >
+                <ListViewItem.Title>
+                  {`${numberToMonth(
+                    date.getMonth(),
+                    i18n.language,
+                    false
+                  )}-${date.getFullYear()}`}
+                </ListViewItem.Title>
+              </ListViewItem>
+            ))}
+          </ListView>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowDialog(false)}>{t('Cancel')}</Button>
-          <Button onClick={handleCloseDialog}>{t('OK')}</Button>
+          <Button color="error" onClick={() => setShowDialog(false)}>
+            {t('Cancel')}
+          </Button>
+          <Button color="success" onClick={handleCloseDialog}>
+            {t('OK')}
+          </Button>
         </DialogActions>
       </Dialog>
     );

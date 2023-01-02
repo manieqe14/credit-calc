@@ -16,7 +16,7 @@ const useDataForChart = ({
   const { t } = useTranslation();
   const theme = useTheme();
 
-  Chart.defaults.color = theme.palette.mode === 'dark' ? '#FFF' : '#000';
+  Chart.defaults.color = theme.palette.primary.dark;
 
   return useMemo<ChartProps<'line'>>(
     () => ({
@@ -41,6 +41,7 @@ const useDataForChart = ({
         ],
       },
       options: {
+        backgroundColor: theme.palette.primary.light,
         plugins: {
           legend: {
             position: 'top' as const,

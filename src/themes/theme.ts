@@ -1,5 +1,4 @@
 import { createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
-import { assoc } from 'ramda';
 
 const colours = {
   black: '#000000',
@@ -7,6 +6,7 @@ const colours = {
   orangeWeb: '#fca311',
   platinum: '#e5e5e5',
   white: '#ffffff',
+  lightWhite: 'rgba(255, 255, 255, 0.2)',
 };
 
 const palette: PaletteOptions = {
@@ -35,7 +35,11 @@ const getPalette = (
     return {
       ...palette,
       mode,
-      primary: assoc('dark', colours.white, palette.primary),
+      primary: {
+        ...palette.primary,
+        dark: colours.white,
+        light: colours.lightWhite,
+      },
       text: {
         primary: colours.white,
       },

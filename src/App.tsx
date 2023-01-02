@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState } from 'react';
 import './App.less';
 import Root from './components/Root/Root';
 import { Header } from './components/Header/Header';
@@ -12,12 +12,15 @@ import { isNil } from 'ramda';
 import { loadDataFromStorage } from './Utils/dataFromStorage';
 import StoreContext from './context/store.context';
 import TopBanner from './components/TopBanner/TopBanner';
-import { Box, PaletteMode, ThemeProvider } from "@mui/material";
+import { Box, PaletteMode, ThemeProvider, useMediaQuery } from '@mui/material';
 import { theme } from './themes/theme';
 
 function App(): ReactElement {
   const valuesFromStorage = loadDataFromStorage();
-  const [mode, setMode] = useState<PaletteMode>('light');
+  const prefersDarkMode = useMediaQuery<boolean>('(prefers-color-scheme: dark');
+  const [mode, setMode] = useState<PaletteMode>(
+    prefersDarkMode ? 'dark' : 'light'
+  );
 
   const handleToggleMode = (): void => {
     if (mode === 'light') {
@@ -25,7 +28,7 @@ function App(): ReactElement {
     } else {
       setMode('light');
     }
-  }
+  };
 
   const store = new Store(
     !isNil(valuesFromStorage) ? valuesFromStorage : InitialValues
