@@ -9,10 +9,11 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 import { SummaryElement } from './Summary.types';
 import { isNil } from 'ramda';
+import { numberToMonth } from '../../Utils/numberToMonth';
 
 const Summary: React.FC = () => {
   const store = useStore();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { userInputs, totalCost, installments } = store;
   const { wibor, bankgross } = userInputs;
 
@@ -30,11 +31,14 @@ const Summary: React.FC = () => {
       value: `${rounder(totalCost)} ${InitialValues.formValues.amount.unit}`,
     },
     {
-      title: 'Payment last day',
+      title: 'Payment last month',
       value: `${
         isNil(lastInstallmentDate)
           ? ''
-          : lastInstallmentDate?.toLocaleDateString()
+          : `${numberToMonth(
+              lastInstallmentDate.getMonth(),
+              i18n.language
+            )} ${lastInstallmentDate.getFullYear()}`
       }`,
     },
     { title: 'Rates', value: rates.toString() },

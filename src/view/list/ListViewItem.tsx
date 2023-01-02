@@ -73,9 +73,7 @@ const ListViewItemInfo: FC<TypographyProps> = ({
   children,
 }: TypographyProps) => {
   return (
-    <Typography
-      sx={{ fontSize: '0.75rem', position: 'absolute', right: '10px' }}
-    >
+    <Typography sx={{ fontSize: '0.65rem', opacity: 0.9 }}>
       {children}
     </Typography>
   );

@@ -10,7 +10,6 @@ const Root = (): ReactElement => {
   // TODO fetch current WIBOR
   // TODO overpayment number of occurrences switch
   // TODO custom start date -> hint -> today
-  // TODO wakacje kredytowe
   // TODO options provider
 
   return (

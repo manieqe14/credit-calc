@@ -16,7 +16,7 @@ export const en: Translation = {
     'Total gross': 'Total gross',
     'Total cost': 'Total cost',
     Rates: 'Rates',
-    'Payment last day': 'Payment last day',
+    'Payment last month': 'Payment last month',
     'Repeat period': 'Repeat period',
     Occurrences: 'Occurrences',
     'Installment rate': 'Installment rate',
@@ -27,8 +27,8 @@ export const en: Translation = {
     'Values cleared': 'Values cleared',
     'Values clear failed': 'Clearing values failed',
     'Vacation months': 'Vacation months',
-    'Cancel': 'Cancel',
-    'OK': 'OK',
-    'Constant overpayments': 'Constant payment'
+    Cancel: 'Cancel',
+    OK: 'OK',
+    'Constant overpayments': 'Constant payment',
   },
 };

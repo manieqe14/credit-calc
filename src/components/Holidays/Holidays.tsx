@@ -17,6 +17,7 @@ import { InputIconStyle } from '../Input/Input.styles';
 import { VacationDate } from '../../view/list/ListView.types';
 import { dateToId, idToDate } from '../../Utils/dateToId';
 import { numberToMonth } from '../../Utils/numberToMonth';
+import { isMobile } from '../../Utils/isMobile';
 
 const Holidays: React.FC = () => {
   const store = useStore();
@@ -36,9 +37,10 @@ const Holidays: React.FC = () => {
     const transformedVacationDate = idToDate(id);
     const filteredMonths = vacationMonths.filter(
       (item) =>
-        item.month !== transformedVacationDate.month &&
+        item.month !== transformedVacationDate.month ||
         item.year !== transformedVacationDate.year
     );
+
     setVacationMonths(filteredMonths);
     store.setOptions({ vacationMonths: filteredMonths });
   };
@@ -49,7 +51,7 @@ const Holidays: React.FC = () => {
         <DialogContent>
           <DialogContentText>
             <ListView
-              row={5}
+              row={isMobile() ? 3 : 5}
               onClick={(id: string) =>
                 setVacationMonths([...vacationMonths, idToDate(id)])
               }
@@ -94,10 +96,9 @@ const Holidays: React.FC = () => {
         {options.vacationMonths.map((vacationDate) => (
           <ListViewItem id={dateToId(vacationDate)}>
             <ListViewItem.Title>
-              {`${numberToMonth(vacationDate.month, i18n.language, false)}-${
-                vacationDate.year
-              }`}
+              {numberToMonth(vacationDate.month, i18n.language)}
             </ListViewItem.Title>
+            <ListViewItem.Info>{vacationDate.year}</ListViewItem.Info>
           </ListViewItem>
         ))}
       </ListView>

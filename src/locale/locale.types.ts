@@ -19,7 +19,7 @@ export type Phrases =
   | 'Total gross'
   | 'Total cost'
   | 'Rates'
-  | 'Payment last day'
+  | 'Payment last month'
   | 'Repeat period'
   | 'Occurrences'
   | 'Installment rate'

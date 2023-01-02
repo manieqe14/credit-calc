@@ -3,16 +3,17 @@ export const rounder = (value: number): number => Math.round(value * 100) / 100;
 export function countInstallment(
   amount: number,
   gross: number,
-  period: number
+  period: number,
+  vacation: boolean
 ): number {
-  if (amount <= 0) {
+  if (amount <= 0 || vacation) {
     return 0;
   }
   let sum = 0;
   for (let i = 1; i < period; i++) {
     sum += Math.pow(1 + gross / 1200, -i);
   }
-  return rounder(amount / sum) as number;
+  return rounder(amount / sum);
 }
 
 export function odsetki(value: number, percent: number): number {
