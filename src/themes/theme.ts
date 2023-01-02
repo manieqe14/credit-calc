@@ -1,4 +1,4 @@
-import { createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
+import { Color, createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
 
 const colours = {
   black: '#000000',
@@ -37,6 +37,7 @@ const getPalette = (
       mode,
       primary: {
         ...palette.primary,
+        main: colours.oxfordBlue,
         dark: colours.white,
         light: colours.lightWhite,
       },
