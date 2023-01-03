@@ -14,11 +14,9 @@ import { countInstallment, interest } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
 import { isNil, min, repeat, sum } from 'ramda';
-import { overpaymentsReduce } from '../Utils/overpaymentsReduce';
-import { overpaymentsForDate } from '../Utils/overpaymentsForDate';
 import { periodToNumber } from '../Utils/periodToNumber';
 import { generateDate } from '../Utils/generateDate';
-import { checkHolidayMonth } from '../Utils/checkHolidayMonth';
+import { HolidayDate } from '../view/list/ListView.types';
 
 export default class Store {
   userInputs: UserInputs;
@@ -133,6 +131,30 @@ export default class Store {
     this.overpayments = this.overpayments.filter((item) => item.uuid !== id);
   }
 
+  public isHolidayMonth(
+    date: Date,
+    holidayMonths: HolidayDate[] = this.options.holidayMonths
+  ): boolean {
+    return (
+      holidayMonths.find(
+        (month) =>
+          month.month === date.getMonth() && month.year === date.getFullYear()
+      ) !== undefined
+    );
+  }
+
+  availableOverpayments(prev: Date | undefined, curr: Date): number {
+    const overpayments = this.overpaymentDates.filter((overpayment) => {
+      if (isNil(prev)) {
+        return overpayment.date < curr;
+      }
+
+      return overpayment.date > prev && overpayment.date < curr;
+    });
+
+    return overpayments.reduce<number>((acc, curr) => acc + curr.value, 0);
+  }
+
   public get installments(): Installment[] {
     const initialReducerValue = {
       amountLeft: this.userInputs.amount.value,
@@ -148,30 +170,28 @@ export default class Store {
         return acc;
       }
 
-      const holidayMonth = checkHolidayMonth(this.options.holidayMonths, curr);
+      const isHoliday = this.isHolidayMonth(curr);
 
       const installment = countInstallment(
         acc.amountLeft,
         this.totalGross,
         this.userInputs.period.value + holidaysBehind - index,
-        holidayMonth
+        isHoliday
       );
 
-      if (holidayMonth) {
+      if (isHoliday) {
         holidaysBehind++;
       }
 
-      const overpayments = overpaymentsForDate(
-        this.overpaymentDates,
+      const overpaymentsValue = this.availableOverpayments(
         acc.installments.at(-1)?.date,
         curr
       );
-      const reducedOverpayments = overpaymentsReduce(overpayments);
 
       const amountPaid = min(
         (this.options.constRateOverpayment
           ? this.options.constRateOverpaymentValue
-          : installment) + reducedOverpayments,
+          : installment) + overpaymentsValue,
         acc.amountLeft
       );
       const amountLeft =
@@ -185,6 +205,7 @@ export default class Store {
         amountLeft,
       };
     }, initialReducerValue);
+
     return result.installments;
   }
 
