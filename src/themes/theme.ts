@@ -18,6 +18,7 @@ const palette: PaletteOptions = {
   },
   secondary: {
     main: colours.orangeWeb,
+    light: '#666',
   },
   grey: {
     100: 'rgba(0, 0, 0, 0.1)',
@@ -37,9 +38,13 @@ const getPalette = (
       mode,
       primary: {
         ...palette.primary,
-        main: colours.oxfordBlue,
-        dark: colours.white,
+        main: colours.white,
         light: colours.lightWhite,
+      },
+      secondary: {
+        ...palette.secondary,
+        main: colours.orangeWeb,
+        light: colours.white,
       },
       text: {
         primary: colours.white,
