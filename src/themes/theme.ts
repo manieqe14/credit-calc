@@ -40,6 +40,8 @@ const getPalette = (
         ...palette.primary,
         main: colours.white,
         light: colours.lightWhite,
+        dark: colours.orangeWeb,
+        contrastText: colours.oxfordBlue,
       },
       secondary: {
         ...palette.secondary,

@@ -18,6 +18,11 @@ import { numberToMonth } from '../../Utils/numberToMonth';
 import { isMobile } from '../../Utils/isMobile';
 import { HolidayDate } from '../../view/list/ListView.types';
 import { sortHolidayMonths } from '../../Utils/sortHolidayMonths';
+import { isNil } from 'ramda';
+import {
+  holidayDateExists,
+  removeHolidayMonth,
+} from '../../Utils/holidayDateExists';
 
 const Holidays: React.FC = () => {
   const store = useStore();
@@ -32,13 +37,18 @@ const Holidays: React.FC = () => {
     store.setOptions({ holidayMonths: months });
   };
 
+  const handleClickMonth = (id: string): void => {
+    const holidayDate: HolidayDate = idToDate(id);
+    if (!isNil(months) && holidayDateExists(months, holidayDate)) {
+      setMonths(removeHolidayMonth(months, holidayDate));
+    } else {
+      setMonths([...sortHolidayMonths(months), holidayDate]);
+    }
+  };
+
   const handleDeleteMonth = (id: string): void => {
     const transformedHolidayDate = idToDate(id);
-    const filteredMonths = months.filter(
-      (item) =>
-        item.month !== transformedHolidayDate.month ||
-        item.year !== transformedHolidayDate.year
-    );
+    const filteredMonths = removeHolidayMonth(months, transformedHolidayDate);
 
     setMonths(filteredMonths);
     store.setOptions({ holidayMonths: filteredMonths });
@@ -48,12 +58,7 @@ const Holidays: React.FC = () => {
     return (
       <Dialog open={showDialog}>
         <DialogContent>
-          <ListView
-            row={isMobile() ? 3 : 5}
-            onClick={(id: string) =>
-              setMonths([...sortHolidayMonths(months), idToDate(id)])
-            }
-          >
+          <ListView row={isMobile() ? 3 : 5} onClick={handleClickMonth}>
             {store.dates.map((date) => (
               <ListViewItem
                 active={

@@ -32,4 +32,5 @@ export const ListViewItemHover = {
 
 export const ActiveStyle = {
   backgroundColor: (theme: Theme) => `${theme.palette.secondary.main}`,
+  color: (theme: Theme) => `${theme.palette.primary.contrastText}`,
 };
