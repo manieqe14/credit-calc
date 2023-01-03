@@ -30,7 +30,7 @@ const Chart: FC = () => {
   const { installments, options } = store;
 
   const chartData = useDataForChart({ installments, options });
-  return <Line {...chartData} />;
+  return <Line {...chartData} aria-label="installments chart" />;
 };
 
 export default observer(Chart);

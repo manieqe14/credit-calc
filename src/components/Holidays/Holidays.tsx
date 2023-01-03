@@ -11,7 +11,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
 } from '@mui/material';
 import { InputIconStyle } from '../Input/Input.styles';
 import { dateToId, idToDate } from '../../Utils/dateToId';
@@ -93,8 +92,14 @@ const Holidays: React.FC = () => {
   return (
     <Box>
       {showDialog ? addDialog() : null}
-      <Subtitle variant="overline">{t('Holiday months')}</Subtitle>
-      <AddIcon sx={InputIconStyle} onClick={() => setShowDialog(true)} />
+      <Subtitle id="holiday-months" variant="overline">
+        {t('Holiday months')}
+      </Subtitle>
+      <AddIcon
+        aria-labelledby="holiday-months"
+        sx={InputIconStyle}
+        onClick={() => setShowDialog(true)}
+      />
       <ListView
         row={2}
         onDelete={handleDeleteMonth}

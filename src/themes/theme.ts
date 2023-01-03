@@ -1,4 +1,4 @@
-import { Color, createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
+import { createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
 
 const colours = {
   black: '#000000',
@@ -59,10 +59,13 @@ export const theme = (mode: PaletteMode): Theme =>
     typography: {
       fontFamily: 'Roboto',
       h1: {
-        fontSize: '4rem',
+        fontSize: '1.75rem',
+        fontWeight: '500',
       },
       h2: {
-        fontSize: '2.5rem',
+        fontSize: '1.5rem',
+        fontWeight: 400,
+        letterSpacing: '0.15rem',
       },
     },
   });

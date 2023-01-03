@@ -46,6 +46,12 @@ const useDataForChart = ({
           legend: {
             position: 'top' as const,
           },
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem): string =>
+                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`,
+            },
+          },
         },
         scales: {
           y: {

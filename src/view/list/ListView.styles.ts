@@ -7,7 +7,9 @@ export const ListViewItemStyle = (
   display: 'flex',
   flexDirection: 'column',
   bgColor: 'background.paper',
-  ...(!noBorder ? { border: '1px solid rgba(0, 0, 0, 0.1)' } : null),
+  ...(!noBorder
+    ? { borderWidth: `1px`, borderStyle: 'solid', borderColor: 'primary.light' }
+    : null),
   borderRadius: '5px',
   marginBottom: '5px',
   width: `calc(100%/${inRow} - ${spacing(inRow)}px)`,

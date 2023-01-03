@@ -6,7 +6,7 @@ export const Subtitle: React.FC<PropsWithChildren<TypographyProps>> = ({
   ...props
 }) => (
   <Typography
-    variant="h5"
+    variant="h2"
     sx={{ textAlign: 'center', marginBottom: '0.5rem' }}
     {...props}
   >
