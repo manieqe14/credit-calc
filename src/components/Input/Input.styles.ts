@@ -17,7 +17,7 @@ export const InputIconStyle = {
     borderRadius: '10%',
   },
   '&:hover path': {
-    color: 'white',
+    color: (theme: Theme) => theme.palette.primary.contrastText,
   },
   '&:active': {
     transform: 'scale(1.1)',

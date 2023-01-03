@@ -1,4 +1,4 @@
-import { Color, createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
+import { createTheme, PaletteMode, PaletteOptions, Theme } from '@mui/material';
 
 const colours = {
   black: '#000000',
@@ -18,6 +18,7 @@ const palette: PaletteOptions = {
   },
   secondary: {
     main: colours.orangeWeb,
+    light: '#666',
   },
   grey: {
     100: 'rgba(0, 0, 0, 0.1)',
@@ -37,9 +38,15 @@ const getPalette = (
       mode,
       primary: {
         ...palette.primary,
-        main: colours.oxfordBlue,
-        dark: colours.white,
+        main: colours.white,
         light: colours.lightWhite,
+        dark: colours.orangeWeb,
+        contrastText: colours.oxfordBlue,
+      },
+      secondary: {
+        ...palette.secondary,
+        main: colours.orangeWeb,
+        light: colours.white,
       },
       text: {
         primary: colours.white,
@@ -59,10 +66,13 @@ export const theme = (mode: PaletteMode): Theme =>
     typography: {
       fontFamily: 'Roboto',
       h1: {
-        fontSize: '4rem',
+        fontSize: '1.75rem',
+        fontWeight: '500',
       },
       h2: {
-        fontSize: '2.5rem',
+        fontSize: '1.5rem',
+        fontWeight: 400,
+        letterSpacing: '0.15rem',
       },
     },
   });

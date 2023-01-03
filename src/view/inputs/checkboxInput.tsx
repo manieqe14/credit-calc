@@ -3,8 +3,9 @@ import React from 'react';
 import { inputWrapper } from '../wrapper/inputWrapper';
 import { CheckboxInputProps } from './inputs.types';
 
-const CheckboxInput: React.FC<CheckboxInputProps> = (props) => (
+const CheckboxInput: React.FC<CheckboxInputProps> = ({ label, ...props }) => (
   <Checkbox
+    inputProps={{ 'aria-label': label }}
     {...props}
     sx={{
       position: 'absolute',

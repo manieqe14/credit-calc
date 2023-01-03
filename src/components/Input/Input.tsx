@@ -18,6 +18,7 @@ export const Input = ({ userInput, onChange }: OptionConfig): ReactElement => {
   return (
     <InputRow>
       <Remove
+        aria-roledescription="decrement value"
         sx={InputIconStyle}
         onClick={() => onChange(rounder(value - step))}
       />
@@ -30,6 +31,7 @@ export const Input = ({ userInput, onChange }: OptionConfig): ReactElement => {
       />
       <Add
         sx={InputIconStyle}
+        aria-roledescription="increment value"
         onClick={() => onChange(rounder(value + step))}
       />
     </InputRow>

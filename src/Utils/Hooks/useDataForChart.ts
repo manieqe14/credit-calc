@@ -16,7 +16,8 @@ const useDataForChart = ({
   const { t } = useTranslation();
   const theme = useTheme();
 
-  Chart.defaults.color = theme.palette.primary.dark;
+  Chart.defaults.color = theme.palette.secondary.light;
+  Chart.defaults.borderColor = theme.palette.primary.light;
 
   return useMemo<ChartProps<'line'>>(
     () => ({
@@ -29,22 +30,27 @@ const useDataForChart = ({
           {
             label: t('Installment rate').toString(),
             data: installments.map((obj) => obj.value),
-            backgroundColor: theme.palette.secondary.dark,
-            borderColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.primary.main,
+            borderColor: theme.palette.primary.main,
           },
           {
             label: t('Monthly payment').toString(),
             data: installments.map((obj) => obj.amountPaid),
-            backgroundColor: theme.palette.primary.main,
-            borderColor: theme.palette.primary.dark,
+            backgroundColor: theme.palette.secondary.main,
+            borderColor: theme.palette.secondary.main,
           },
         ],
       },
       options: {
-        backgroundColor: theme.palette.primary.light,
         plugins: {
           legend: {
             position: 'top' as const,
+          },
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem): string =>
+                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`,
+            },
           },
         },
         scales: {

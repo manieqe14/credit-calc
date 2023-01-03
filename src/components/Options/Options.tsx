@@ -24,7 +24,7 @@ const Options = (): ReactElement => {
         <Grid item sx={{ position: 'relative' }}>
           <CheckboxInput
             checked={constRateOverpayment}
-            id="const-rate-monthly-overpayment"
+            label="const-rate-monthly-overpayment-switch"
             onChange={() =>
               setOptions({ constRateOverpayment: !constRateOverpayment })
             }
@@ -45,7 +45,6 @@ const Options = (): ReactElement => {
         </Grid>
         <Grid item>
           <TextInput
-            id="overpayment-date"
             label={t('Custom start date')}
             type="date"
             value={getDateForInput(startDate)}

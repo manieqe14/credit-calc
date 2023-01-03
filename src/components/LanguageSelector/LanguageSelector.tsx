@@ -35,7 +35,12 @@ const LanguageSelector = (): JSX.Element => {
           key={lang.code}
           active={lang.code === language}
         >
-          <ReactCountryFlag countryCode={lang.flagCode} svg style={FlagImage} />
+          <ReactCountryFlag
+            alt={`${lang.name} flag`}
+            countryCode={lang.flagCode}
+            svg
+            style={FlagImage}
+          />
         </ListViewItem>
       ))}
     </ListView>

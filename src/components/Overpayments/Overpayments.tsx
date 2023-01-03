@@ -93,7 +93,7 @@ const Overpayments = (): ReactElement => {
         <RepeatingSectionWrapper>
           <CheckboxInput
             checked={repeat}
-            label="repeat"
+            label="repeat-switch"
             onChange={() => setRepeat(!repeat)}
           />
           <SelectInput
