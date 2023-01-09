@@ -22,6 +22,7 @@ export interface Installment {
   date: Date;
   value: number;
   amountPaid: number;
+  amountLeft: number;
 }
 
 export enum Period {
