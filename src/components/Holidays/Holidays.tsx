@@ -40,9 +40,9 @@ const Holidays: React.FC = () => {
   const handleClickMonth = (id: string): void => {
     const holidayDate: HolidayDate = idToDate(id);
     if (!isNil(months) && holidayDateExists(months, holidayDate)) {
-      setMonths(removeHolidayMonth(months, holidayDate));
+      setMonths((items) => removeHolidayMonth(items, holidayDate));
     } else {
-      setMonths([...sortHolidayMonths(months), holidayDate]);
+      setMonths((items) => [...sortHolidayMonths(items), holidayDate]);
     }
   };
 

@@ -156,17 +156,20 @@ export default class Store {
   public get installments(): Installment[] {
     let holidaysBehind = 0;
 
-    return this.dates.reduce<Installment[]>((acc, curr, index) => {
-      const left = acc.at(-1)?.amountLeft ?? this.userInputs.amount.value;
+    return this.dates.reduce<Installment[]>((acc, date, index) => {
+      const previous = acc.at(-1) ?? {
+        amountLeft: this.userInputs.amount.value,
+        date: this.options.startDate,
+      };
 
-      if (left === 0) {
+      if (previous.amountLeft === 0) {
         return acc;
       }
 
-      const isHoliday = this.isHolidayMonth(curr);
+      const isHoliday = this.isHolidayMonth(date);
 
-      const installment = countInstallment(
-        left,
+      const value = countInstallment(
+        previous.amountLeft,
         this.totalGross,
         this.userInputs.period.value + holidaysBehind - index,
         isHoliday
@@ -176,23 +179,20 @@ export default class Store {
         holidaysBehind++;
       }
 
-      const overpaymentsValue = this.availableOverpayments(
-        acc.at(-1)?.date,
-        curr
-      );
+      const overpaymentsValue = this.availableOverpayments(previous.date, date);
 
       const amountPaid = min(
         (this.options.constRateOverpayment
           ? this.options.constRateOverpaymentValue
-          : installment) + overpaymentsValue,
-        left
+          : value) + overpaymentsValue,
+        previous.amountLeft
       );
-      const amountLeft = left - amountPaid + interest(left, this.totalGross);
+      const amountLeft =
+        previous.amountLeft -
+        amountPaid +
+        interest(previous.amountLeft, this.totalGross);
 
-      return [
-        ...acc,
-        { date: curr, value: installment, amountPaid, amountLeft },
-      ];
+      return [...acc, { date, value, amountPaid, amountLeft }];
     }, []);
   }
 
