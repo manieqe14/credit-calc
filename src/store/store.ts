@@ -13,7 +13,7 @@ import { InitialValues } from '../Utils/initialValues';
 import { countInstallment, interest } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
-import { isNil, min, repeat, sum } from 'ramda';
+import { equals, isNil, min, repeat, sum } from 'ramda';
 import { periodToNumber } from '../Utils/periodToNumber';
 import { generateDate } from '../Utils/generateDate';
 import { HolidayDate } from '../view/list/ListView.types';
@@ -140,7 +140,7 @@ export default class Store {
       year: date.getFullYear(),
     };
 
-    return holidayMonths.includes(holidayDate);
+    return holidayMonths.some((month) => equals(month, holidayDate));
   }
 
   availableOverpayments(prev: Date | undefined, curr: Date): number {
