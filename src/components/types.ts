@@ -37,7 +37,7 @@ export interface OverpaymentDate {
 }
 
 export interface Overpayment extends OverpaymentDate {
-  repeatPeriod?: Period | undefined;
+  repeatPeriod?: Period;
   occurrences: number;
   uuid: string;
 }
