@@ -30,5 +30,6 @@ export const en: Translation = {
     Cancel: 'Cancel',
     OK: 'OK',
     'Constant overpayments': 'Constant payment',
+    'Amount left': 'Amount left',
   },
 };

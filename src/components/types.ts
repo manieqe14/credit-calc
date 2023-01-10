@@ -22,6 +22,7 @@ export interface Installment {
   date: Date;
   value: number;
   amountPaid: number;
+  amountLeft: number;
 }
 
 export enum Period {
@@ -36,7 +37,7 @@ export interface OverpaymentDate {
 }
 
 export interface Overpayment extends OverpaymentDate {
-  repeatPeriod?: Period | undefined;
+  repeatPeriod?: Period;
   occurrences: number;
   uuid: string;
 }

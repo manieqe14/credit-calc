@@ -30,5 +30,6 @@ export const pl: Translation = {
     Cancel: 'Anuluj',
     OK: 'Potwierdź',
     'Constant overpayments': 'Stała płatność',
+    'Amount left': 'Pozostały kapitał',
   },
 };

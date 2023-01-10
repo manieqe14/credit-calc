@@ -32,5 +32,5 @@ export type Phrases =
   | 'Holiday months'
   | 'Cancel'
   | 'OK'
-  | 'Constant overpayments';
-  
+  | 'Constant overpayments'
+  | 'Amount left';

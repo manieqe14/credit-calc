@@ -32,12 +32,21 @@ const useDataForChart = ({
             data: installments.map((obj) => obj.value),
             backgroundColor: theme.palette.primary.main,
             borderColor: theme.palette.primary.main,
+            yAxisID: 'y',
           },
           {
             label: t('Monthly payment').toString(),
             data: installments.map((obj) => obj.amountPaid),
             backgroundColor: theme.palette.secondary.main,
             borderColor: theme.palette.secondary.main,
+            yAxisID: 'y',
+          },
+          {
+            label: t('Amount left').toString(),
+            data: installments.map((obj) => obj.amountLeft),
+            backgroundColor: '#662211',
+            borderColor: '#662211',
+            yAxisID: 'y1',
           },
         ],
       },
@@ -55,7 +64,13 @@ const useDataForChart = ({
         },
         scales: {
           y: {
-            beginAtZero: true,
+            ticks: {
+              callback: (value: string | number) =>
+                `${value} ${InitialValues.formValues.amount.unit}`,
+            },
+          },
+          y1: {
+            position: 'right',
             ticks: {
               callback: (value: string | number) =>
                 `${value} ${InitialValues.formValues.amount.unit}`,

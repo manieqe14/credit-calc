@@ -26,7 +26,7 @@ import {
 
 const Holidays: React.FC = () => {
   const store = useStore();
-  const { options } = store;
+  const { options, isHolidayMonth } = store;
   const { holidayMonths } = options;
   const { t, i18n } = useTranslation();
   const [showDialog, setShowDialog] = useState(false);
@@ -40,9 +40,9 @@ const Holidays: React.FC = () => {
   const handleClickMonth = (id: string): void => {
     const holidayDate: HolidayDate = idToDate(id);
     if (!isNil(months) && holidayDateExists(months, holidayDate)) {
-      setMonths(removeHolidayMonth(months, holidayDate));
+      setMonths((items) => removeHolidayMonth(items, holidayDate));
     } else {
-      setMonths([...sortHolidayMonths(months), holidayDate]);
+      setMonths((items) => [...sortHolidayMonths(items), holidayDate]);
     }
   };
 
@@ -61,13 +61,7 @@ const Holidays: React.FC = () => {
           <ListView row={isMobile() ? 3 : 5} onClick={handleClickMonth}>
             {store.dates.map((date) => (
               <ListViewItem
-                active={
-                  months.find(
-                    (month) =>
-                      month.month === date.getMonth() &&
-                      month.year === date.getFullYear()
-                  ) !== undefined
-                }
+                active={isHolidayMonth(date, months)}
                 id={dateToId(date)}
                 key={dateToId(date)}
               >
