@@ -42,6 +42,13 @@ const useDataForChart = ({
             yAxisID: 'y',
           },
           {
+            label: t('Interest').toString(),
+            data: installments.map((obj) => obj.interest),
+            backgroundColor: '#f9c87c',
+            borderColor: '#f9c87c',
+            yAxisID: 'y',
+          },
+          {
             label: t('Amount left').toString(),
             data: installments.map((obj) => obj.amountLeft),
             backgroundColor: '#662211',

@@ -31,5 +31,7 @@ export const pl: Translation = {
     OK: 'Potwierdź',
     'Constant overpayments': 'Stała płatność',
     'Amount left': 'Pozostały kapitał',
+    Interest: 'Odsetki',
+    'Total interest': 'Całkowite odsetki',
   },
 };

@@ -23,7 +23,10 @@ export interface Installment {
   value: number;
   amountPaid: number;
   amountLeft: number;
+  interest: number;
 }
+
+export type InstallmentValue = Pick<Installment, 'interest' | 'value'>;
 
 export enum Period {
   MONTH = 'month',

@@ -14,6 +14,7 @@ export const Wrapper: React.FC<PropsWithChildren<WrapperProps>> = ({
         sx={{
           margin: '10px',
           padding: '1.75rem',
+          position: 'relative',
           ...sx,
         }}
       >
