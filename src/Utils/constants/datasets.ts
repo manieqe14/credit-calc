@@ -1,3 +1,4 @@
+import { Theme } from '@mui/material';
 import { DatasetsInterface } from '../../components/Chart/Chart.types';
 
 export const Datasets: DatasetsInterface = {
@@ -5,28 +6,28 @@ export const Datasets: DatasetsInterface = {
     label: 'Installment rate',
     visible: true,
     data: 'value',
-    colour: 'primary',
+    colour: (theme: Theme) => theme.palette.primary.main,
     yAxisID: 'y',
   },
   monthlyPayment: {
     label: 'Monthly payment',
     visible: true,
     data: 'amountPaid',
-    colour: 'secondary',
+    colour: (theme: Theme) => theme.palette.secondary.main,
     yAxisID: 'y',
   },
   interest: {
     label: 'Interest',
     visible: true,
     data: 'interest',
-    colour: '#f9c87c',
+    colour: (theme: Theme) => '#f9c87c',
     yAxisID: 'y',
   },
   amountLeft: {
     label: 'Amount left',
     visible: true,
     data: 'amountLeft',
-    colour: '#662211',
+    colour: (theme: Theme) => '#662211',
     yAxisID: 'y1',
   },
 };
