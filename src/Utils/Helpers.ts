@@ -54,7 +54,7 @@ export const isNanOrZero = (value: any): boolean => {
   return isNaN(value) || value === 0;
 };
 
-export function mapAndSum<T extends object>(
+export function sumProp<T extends object>(
   propName: string
 ): (array: T[]) => number {
   return compose(sum, map<T, number>(prop(propName) as (x: T) => number));
