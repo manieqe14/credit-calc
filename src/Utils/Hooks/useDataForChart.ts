@@ -12,6 +12,7 @@ import {
   DatasetsInterface
 } from '../../components/Chart/Chart.types';
 import { Datasets } from '../constants/datasets';
+import { chartTicksCallback } from '../chartTicksCallback';
 
 const useDataForChart = ({
   installments,
@@ -67,19 +68,21 @@ const useDataForChart = ({
           }
         },
         scales: {
-          y: {
-            ticks: {
-              callback: (value: string | number) =>
-                `${value} ${InitialValues.formValues.amount.unit}`
+          ...(chartDatasets.find((item) => item.yAxisID === 'y') && {
+            y: {
+              ticks: {
+                callback: chartTicksCallback
+              }
             }
-          },
-          y1: {
-            position: 'right',
-            ticks: {
-              callback: (value: string | number) =>
-                `${value} ${InitialValues.formValues.amount.unit}`
+          }),
+          ...(chartDatasets.find((item) => item.yAxisID === 'y1') && {
+            y1: {
+              position: 'right',
+              ticks: {
+                callback: chartTicksCallback
+              }
             }
-          }
+          })
         }
       }
     }),

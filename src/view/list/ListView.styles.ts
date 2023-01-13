@@ -7,15 +7,17 @@ export const ListViewItemStyle = (
   display: 'flex',
   flexDirection: 'column',
   bgColor: 'background.paper',
-  ...(!noBorder
-    ? { borderWidth: `1px`, borderStyle: 'solid', borderColor: 'primary.light' }
-    : null),
+  ...(!noBorder && {
+    borderWidth: `1px`,
+    borderStyle: 'solid',
+    borderColor: 'primary.light'
+  }),
   borderRadius: '5px',
   marginBottom: '5px',
   width: `calc(100%/${inRow} - ${spacing(inRow)}px)`,
   [propertyName(inRow)]: {
-    ...(inRow > 1 ? { marginRight: '5px' } : null),
-  },
+    ...(inRow > 1 && { marginRight: '5px' })
+  }
 });
 
 const spacing = (inRow: number): number =>
@@ -26,11 +28,11 @@ const propertyName = (inRow: number): string =>
 
 export const ListViewItemHover = {
   '&:hover': {
-    cursor: 'pointer',
-  },
+    cursor: 'pointer'
+  }
 };
 
 export const ActiveStyle = {
   backgroundColor: (theme: Theme) => `${theme.palette.secondary.main}`,
-  color: (theme: Theme) => `${theme.palette.primary.contrastText}`,
+  color: (theme: Theme) => `${theme.palette.primary.contrastText}`
 };

@@ -53,9 +53,12 @@ const Chart: FC = () => {
   });
 
   return (
-    <Wrapper sx={{ display: 'flex', flexDirection: 'row' }} fullwidth>
+    <Wrapper
+      sx={{ display: 'flex', flexDirection: ['column', null, 'row'] }}
+      fullwidth
+    >
       <ChartOptions datasets={data} handleClick={handleSetData} />
-      <Box sx={{ width: '80%' }}>
+      <Box sx={{ width: ['100%', null, '80%'] }}>
         <Line {...chartData} aria-label="installments chart" />
       </Box>
     </Wrapper>
