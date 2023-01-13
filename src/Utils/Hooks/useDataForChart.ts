@@ -4,20 +4,47 @@ import { InitialValues } from '../initialValues';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material';
 import { ChartProps } from 'react-chartjs-2';
-import { Chart } from 'chart.js';
+import { Chart, ChartDataset } from 'chart.js';
+import { isColourType } from '../typeChecker';
+import { compose, filter, map, propEq } from 'ramda';
+import {
+  DatasetInterface,
+  DatasetsInterface
+} from '../../components/Chart/Chart.types';
+import { Datasets } from '../constants/datasets';
+import { chartTicksCallback } from '../chartTicksCallback';
 
 const useDataForChart = ({
   installments,
   options,
+  datasets
 }: {
   installments: Installment[];
   options: OptionsInterface;
+  datasets: DatasetsInterface;
 }): ChartProps<'line'> => {
   const { t } = useTranslation();
   const theme = useTheme();
 
   Chart.defaults.color = theme.palette.secondary.light;
   Chart.defaults.borderColor = theme.palette.primary.light;
+
+  const datasetMap = map((item: DatasetInterface) => ({
+    ...item,
+    label: t(item.label as string).toString(),
+    data: installments.map<number>(
+      (installment) => installment[item.data] as number
+    ),
+    backgroundColor: item.colour(theme),
+    borderColor: item.colour(theme)
+  }));
+
+  const datasetProcessor = compose(datasetMap, filter(propEq('visible', true)));
+
+  const chartDatasets: Array<ChartDataset<'line'>> = useMemo(
+    () => Object.values(datasetProcessor(datasets)),
+    [installments, theme, datasets]
+  );
 
   return useMemo<ChartProps<'line'>>(
     () => ({
@@ -26,60 +53,40 @@ const useDataForChart = ({
         labels: installments.map(
           (obj) => `${obj.date.getMonth() + 1}.${obj.date.getFullYear()}`
         ),
-        datasets: [
-          {
-            label: t('Installment rate').toString(),
-            data: installments.map((obj) => obj.value),
-            backgroundColor: theme.palette.primary.main,
-            borderColor: theme.palette.primary.main,
-            yAxisID: 'y',
-          },
-          {
-            label: t('Monthly payment').toString(),
-            data: installments.map((obj) => obj.amountPaid),
-            backgroundColor: theme.palette.secondary.main,
-            borderColor: theme.palette.secondary.main,
-            yAxisID: 'y',
-          },
-          {
-            label: t('Amount left').toString(),
-            data: installments.map((obj) => obj.amountLeft),
-            backgroundColor: '#662211',
-            borderColor: '#662211',
-            yAxisID: 'y1',
-          },
-        ],
+        datasets: chartDatasets
       },
       options: {
         plugins: {
           legend: {
-            position: 'top' as const,
+            display: false
           },
           tooltip: {
             callbacks: {
               label: (tooltipItem): string =>
-                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`,
-            },
-          },
+                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`
+            }
+          }
         },
         scales: {
-          y: {
-            ticks: {
-              callback: (value: string | number) =>
-                `${value} ${InitialValues.formValues.amount.unit}`,
-            },
-          },
-          y1: {
-            position: 'right',
-            ticks: {
-              callback: (value: string | number) =>
-                `${value} ${InitialValues.formValues.amount.unit}`,
-            },
-          },
-        },
-      },
+          ...(chartDatasets.find((item) => item.yAxisID === 'y') && {
+            y: {
+              ticks: {
+                callback: chartTicksCallback
+              }
+            }
+          }),
+          ...(chartDatasets.find((item) => item.yAxisID === 'y1') && {
+            y1: {
+              position: 'right',
+              ticks: {
+                callback: chartTicksCallback
+              }
+            }
+          })
+        }
+      }
     }),
-    [installments, options, t]
+    [installments, options, chartDatasets]
   );
 };
 

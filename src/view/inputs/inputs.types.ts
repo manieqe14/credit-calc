@@ -10,6 +10,7 @@ export interface TextInputProps extends StandardTextFieldProps {
 
 export interface CheckboxInputProps extends CheckboxProps {
   label?: string;
+  end?: boolean;
 }
 
 export interface SelectInputProps extends SelectProps {

@@ -14,7 +14,7 @@ import { numberToMonth } from '../../Utils/numberToMonth';
 const Summary: React.FC = () => {
   const store = useStore();
   const { t, i18n } = useTranslation();
-  const { totalCost, installments, totalGross } = store;
+  const { totalCost, installments, totalGross, totalInterest } = store;
 
   const rates = installments.length;
   const lastInstallmentDate = installments.at(-1)?.date;
@@ -28,7 +28,9 @@ const Summary: React.FC = () => {
     },
     {
       title: 'Total cost',
-      value: `${rounder(totalCost)} ${InitialValues.formValues.amount.unit}`,
+      value: `${rounder(totalCost).toLocaleString()} ${
+        InitialValues.formValues.amount.unit
+      }`,
     },
     {
       title: 'Payment last month',
@@ -42,6 +44,12 @@ const Summary: React.FC = () => {
       }`,
     },
     { title: 'Rates', value: rates.toString() },
+    {
+      title: 'Total interest',
+      value: `${rounder(totalInterest).toLocaleString()} ${
+        InitialValues.formValues.amount.unit
+      }`,
+    },
   ];
 
   return (

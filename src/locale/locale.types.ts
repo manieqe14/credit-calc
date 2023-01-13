@@ -33,4 +33,6 @@ export type Phrases =
   | 'Cancel'
   | 'OK'
   | 'Constant overpayments'
-  | 'Amount left';
+  | 'Amount left'
+  | 'Interest'
+  | 'Total interest';

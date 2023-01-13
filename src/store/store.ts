@@ -10,10 +10,10 @@ import {
 } from '../components/types';
 import { generateDatesArray } from '../Utils/generateDatesArray';
 import { InitialValues } from '../Utils/initialValues';
-import { countInstallment, interest } from '../Utils/Helpers';
+import { countInstallment, sumProp } from '../Utils/Helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
-import { equals, isNil, min, repeat, sum } from 'ramda';
+import { compose, equals, filter, isNil, min, repeat } from 'ramda';
 import { periodToNumber } from '../Utils/periodToNumber';
 import { generateDate } from '../Utils/generateDate';
 import { HolidayDate } from '../view/list/ListView.types';
@@ -120,7 +120,7 @@ export default class Store {
   }
 
   public get totalCost(): number {
-    return sum(this.installments.map((installment) => installment.amountPaid));
+    return sumProp('amountPaid')(this.installments);
   }
 
   public addOverpayment(item: Overpayment): void {
@@ -144,17 +144,26 @@ export default class Store {
   }
 
   availableOverpayments(prev: Date | undefined, curr: Date): number {
-    const overpayments = this.overpaymentDates.filter((overpayment) =>
+    const filterHelper = (overpayment: OverpaymentDate): boolean =>
       isNil(prev)
         ? overpayment.date < curr
-        : overpayment.date > prev && overpayment.date < curr
-    );
+        : overpayment.date > prev && overpayment.date < curr;
 
-    return overpayments.reduce<number>((acc, curr) => acc + curr.value, 0);
+    const withFilter = compose(sumProp('value'), filter(filterHelper));
+    return withFilter(this.overpaymentDates);
+  }
+
+  public get totalInterest(): number {
+    return sumProp('interest')(this.installments) ?? 0;
   }
 
   public get installments(): Installment[] {
     let holidaysBehind = 0;
+    const gross = this.totalGross;
+
+    if (isNil(gross)) {
+      return [];
+    }
 
     return this.dates.reduce<Installment[]>((acc, date, index) => {
       const previous = acc.at(-1) ?? {
@@ -168,12 +177,11 @@ export default class Store {
 
       const isHoliday = this.isHolidayMonth(date);
 
-      const value = countInstallment(
+      const { value, interest } = countInstallment(
         previous.amountLeft,
-        this.totalGross,
-        this.userInputs.period.value + holidaysBehind - index,
-        isHoliday
-      );
+        gross,
+        this.userInputs.period.value + holidaysBehind - index
+      )(isHoliday);
 
       if (isHoliday) {
         holidaysBehind++;
@@ -188,11 +196,11 @@ export default class Store {
         previous.amountLeft
       );
       const amountLeft =
-        previous.amountLeft -
-        amountPaid +
-        interest(previous.amountLeft, this.totalGross);
+        amountPaid === previous.amountLeft
+          ? 0
+          : previous.amountLeft - amountPaid + interest;
 
-      return [...acc, { date, value, amountPaid, amountLeft }];
+      return [...acc, { date, value, amountPaid, amountLeft, interest }];
     }, []);
   }
 
