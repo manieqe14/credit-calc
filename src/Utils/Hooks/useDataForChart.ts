@@ -5,19 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material';
 import { ChartProps } from 'react-chartjs-2';
 import { Chart, ChartDataset } from 'chart.js';
-import { isColourType } from '../typeChecker';
 import { compose, filter, map, propEq } from 'ramda';
 import {
   DatasetInterface,
-  DatasetsInterface
+  DatasetsInterface,
 } from '../../components/Chart/Chart.types';
-import { Datasets } from '../constants/datasets';
 import { chartTicksCallback } from '../chartTicksCallback';
 
 const useDataForChart = ({
   installments,
   options,
-  datasets
+  datasets,
 }: {
   installments: Installment[];
   options: OptionsInterface;
@@ -36,7 +34,7 @@ const useDataForChart = ({
       (installment) => installment[item.data] as number
     ),
     backgroundColor: item.colour(theme),
-    borderColor: item.colour(theme)
+    borderColor: item.colour(theme),
   }));
 
   const datasetProcessor = compose(datasetMap, filter(propEq('visible', true)));
@@ -53,38 +51,38 @@ const useDataForChart = ({
         labels: installments.map(
           (obj) => `${obj.date.getMonth() + 1}.${obj.date.getFullYear()}`
         ),
-        datasets: chartDatasets
+        datasets: chartDatasets,
       },
       options: {
         plugins: {
           legend: {
-            display: false
+            display: false,
           },
           tooltip: {
             callbacks: {
               label: (tooltipItem): string =>
-                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`
-            }
-          }
+                `${tooltipItem.formattedValue} ${InitialValues.formValues.amount.unit}`,
+            },
+          },
         },
         scales: {
-          ...(chartDatasets.find((item) => item.yAxisID === 'y') && {
+          ...((chartDatasets.find((item) => item.yAxisID === 'y') != null) && {
             y: {
               ticks: {
-                callback: chartTicksCallback
-              }
-            }
+                callback: chartTicksCallback,
+              },
+            },
           }),
-          ...(chartDatasets.find((item) => item.yAxisID === 'y1') && {
+          ...((chartDatasets.find((item) => item.yAxisID === 'y1') != null) && {
             y1: {
               position: 'right',
               ticks: {
-                callback: chartTicksCallback
-              }
-            }
-          })
-        }
-      }
+                callback: chartTicksCallback,
+              },
+            },
+          }),
+        },
+      },
     }),
     [installments, options, chartDatasets]
   );

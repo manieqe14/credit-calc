@@ -37,6 +37,7 @@ const ListViewItem = ({
       secondaryAction={
         onDelete != null ? (
           <IconButton
+            sx={{ right: '-.75rem' }}
             edge="end"
             size="small"
             onClick={() => !isNil(onDelete) && onDelete(id)}

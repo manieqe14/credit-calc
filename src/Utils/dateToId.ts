@@ -1,6 +1,6 @@
-import { VacationDate } from '../view/list/ListView.types';
+import { HolidayDate } from '../view/list/ListView.types';
 
-export const dateToId = (date: Date | VacationDate): string => {
+export const dateToId = (date: Date | HolidayDate): string => {
   if (date instanceof Date) {
     return JSON.stringify({
       month: date.getMonth(),
@@ -11,4 +11,4 @@ export const dateToId = (date: Date | VacationDate): string => {
   }
 };
 
-export const idToDate = (date: string): VacationDate => JSON.parse(date);
+export const idToDate = (date: string): HolidayDate => JSON.parse(date);

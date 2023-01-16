@@ -26,7 +26,7 @@ export const pl: Translation = {
     'Saving values failed': 'Zapis danych nieudany!',
     'Values cleared': 'Dane usunięte',
     'Values clear failed': 'Usuwanie danych zakończone niepowodzeniem',
-    'Holiday months': 'Miesiące wakacji',
+    'Holiday months': 'Wakacje kredytowe',
     Cancel: 'Anuluj',
     OK: 'Potwierdź',
     'Constant overpayments': 'Stała płatność',
