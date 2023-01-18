@@ -1,4 +1,4 @@
-import { rounder } from '../../Utils/Helpers';
+import { rounder } from '../../Utils/helpers';
 import React from 'react';
 import { InitialValues } from '../../Utils/initialValues';
 import { useStore } from '../../context/store.context';

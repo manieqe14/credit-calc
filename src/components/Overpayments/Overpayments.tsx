@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
-import { getDateForInput } from '../../Utils/Helpers';
+import { getDateForInput } from '../../Utils/helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { useStore } from '../../context/store.context';
 import { Subtitle } from '../../view/titles/titles';
