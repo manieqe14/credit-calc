@@ -28,7 +28,7 @@ const InitialFormValues: UserInputs = {
     step: 1,
   },
 };
-const InitialOptions = {
+export const InitialOptions = {
   constRateOverpayment: false,
   constRateOverpaymentValue: 0,
   startDate: today,
