@@ -8,14 +8,13 @@ import {
   Period,
   UserInputs,
 } from '../components/types';
-import { generateDatesArray } from '../Utils/generateDatesArray';
+import { generateDate, generateDatesArray } from '../Utils/generateDatesArray';
 import { InitialValues } from '../Utils/initialValues';
-import { countInstallment, sumProp } from '../Utils/Helpers';
+import { countInstallment, sumProp } from '../Utils/helpers';
 import { clearStorageData, saveDataToStorage } from '../Utils/dataFromStorage';
 import { Message, messages } from './messages';
-import { compose, equals, filter, isNil, min, repeat } from 'ramda';
+import { compose, filter, isNil, min, repeat, whereEq } from 'ramda';
 import { periodToNumber } from '../Utils/periodToNumber';
-import { generateDate } from '../Utils/generateDate';
 import { HolidayDate } from '../view/list/ListView.types';
 
 export default class Store {
@@ -135,12 +134,9 @@ export default class Store {
     date: Date,
     holidayMonths: HolidayDate[] = this.options.holidayMonths
   ): boolean {
-    const holidayDate: HolidayDate = {
-      month: date.getMonth(),
-      year: date.getFullYear(),
-    };
-
-    return holidayMonths.some((month) => equals(month, holidayDate));
+    return holidayMonths.some(
+      whereEq({ month: date.getMonth(), year: date.getFullYear() })
+    );
   }
 
   availableOverpayments(prev: Date | undefined, curr: Date): number {

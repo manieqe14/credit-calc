@@ -9,7 +9,7 @@ import { ListItemComposition, ListViewItemDateProps } from './ListView.types';
 import { MutedText } from '../titles/text';
 import { useListViewContext } from '../../context/ListViewContext';
 import { isNil } from 'ramda';
-import { getFormattedDate } from '../../Utils/Helpers';
+import { getFormattedDate } from '../../Utils/helpers';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {
   ActiveStyle,
@@ -37,6 +37,7 @@ const ListViewItem = ({
       secondaryAction={
         onDelete != null ? (
           <IconButton
+            sx={{ right: '-.75rem' }}
             edge="end"
             size="small"
             onClick={() => !isNil(onDelete) && onDelete(id)}

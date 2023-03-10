@@ -1,5 +1,5 @@
 import { Add, Remove } from '@mui/icons-material';
-import { rounder } from '../../Utils/Helpers';
+import { rounder } from '../../Utils/helpers';
 import React, { ReactElement } from 'react';
 import { UserInputInterface } from '../types';
 import TextInput from '../../view/inputs/textInput';

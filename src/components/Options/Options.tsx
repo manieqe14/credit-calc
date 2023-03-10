@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { getDateForInput } from '../../Utils/Helpers';
+import { getDateForInput } from '../../Utils/helpers';
 import { useStore } from '../../context/store.context';
 import { Subtitle } from '../../view/titles/titles';
 import TextInput from '../../view/inputs/textInput';
@@ -19,7 +19,6 @@ const Options = (): ReactElement => {
   return (
     <Wrapper>
       <Subtitle>{t('Options')}</Subtitle>
-      <Subtitle variant="overline">{t('Constant overpayments')}</Subtitle>
       <Grid style={{ marginLeft: '20px' }}>
         <Grid item sx={{ position: 'relative' }}>
           <CheckboxInput

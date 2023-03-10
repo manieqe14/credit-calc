@@ -30,9 +30,8 @@ const holiday = curry(
 
 export const countInstallment = compose(holiday, installment);
 
-function interest(value: number, gross: number): number {
-  return rounder((((value * gross) / 100) * 30) / 365);
-}
+const interest = (value: number, gross: number): number =>
+  rounder((((value * gross) / 100) * 30) / 365);
 
 export function zeroPad(number: number): string {
   if (number.toString().length === 1) {
