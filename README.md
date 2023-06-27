@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Credit Calculator APP
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Deployed demo application available under:
+
+https://manieqe14.github.io/credit-calc/
 
 ## Available Scripts
 
